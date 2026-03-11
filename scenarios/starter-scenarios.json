@@ -106,5 +106,167 @@
     },
     "reference_interpretation": "Autonomy not permitted — Decision Reversibility at Level A (mispriced policy binds the insurer) and Regulatory Exposure at Level A (cross-border regulatory requirements)",
     "jurisdiction_notes": "Cross-border GBA coverage triggers PIPL + PDPO simultaneously; IA solvency requirements; HKMA-IA coordination on bancassurance"
+  },
+  {
+    "id": "aml-screening-002",
+    "domain": "AML/KYC Screening",
+    "industry": "Insurance",
+    "risk_tier": "high",
+    "based_on": "AIA HK$23M fine by Insurance Authority, Aug 2024 — algorithm failed to flag PEPs in screening alerts over a 6-year period",
+    "sources": [
+      "Insurance Authority press release, 2 Aug 2024: https://www.ia.org.hk/en/infocenter/press_releases/20240802.html",
+      "Insurance Journal, 'Hong Kong Hits AIA With Record Fine', 2 Aug 2024: https://www.insurancejournal.com/news/international/2024/08/02/786736.htm"
+    ],
+    "scenario": "An AI agent runs ongoing AML screening for an insurer with 4 million policyholders. The PEP screening algorithm generates 12,000 alerts per month but has a known 8% false-negative rate for Politically Exposed Persons — it misses certain PEPs whose names appear in non-standard transliterations from Mandarin. The operations team wants to auto-clear alerts below a 60% match threshold to reduce workload. The agent can auto-clear autonomously or route all alerts to human reviewers.",
+    "reference_fingerprint": {
+      "decision_reversibility": "A",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "C",
+      "data_confidence": "B",
+      "accountability_chain": "B",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Autonomy not permitted — auto-clearing AML alerts with a known false-negative rate is irreversible (missed PEPs are not re-screened) and directly regulated. The AIA precedent shows regulators fine for timeliness gaps, not just ultimate outcomes.",
+    "jurisdiction_notes": "IA enforcement precedent (AIA HK$23M fine, Aug 2024); HKMA AML/CFT requirements; FATF mutual evaluation"
+  },
+  {
+    "id": "algo-trading-deployment-001",
+    "domain": "Algorithmic Trading",
+    "industry": "Capital Markets",
+    "risk_tier": "high",
+    "based_on": "Knight Capital $440M loss, Aug 2012 — deployment error on one of ten servers caused 45 minutes of catastrophic automated trading across 154 stocks",
+    "sources": [
+      "SEC Administrative Proceeding File No. 3-15570, 16 Oct 2013: https://www.sec.gov/litigation/admin/2013/34-70694.pdf",
+      "Henricodolfing.ch, 'The $440 Million Software Error at Knight Capital': https://www.henricodolfing.ch/en/case-study-4-the-440-million-software-error-at-knight-capital/"
+    ],
+    "scenario": "A proprietary trading desk at a Hong Kong brokerage deploys a new version of its order routing algorithm to production. The algorithm executes trades across 80+ equities on HKEx with sub-second latency. Pre-deployment testing passed on staging, but one of six production servers missed the update and is running the previous version with a deprecated order type. The agent detects a 15% increase in rejected orders in the first 3 minutes of trading. It can autonomously halt all algorithmic trading, reduce position sizes by 90%, or alert the trading desk (average human response: 4 minutes).",
+    "reference_fingerprint": {
+      "decision_reversibility": "A",
+      "failure_blast_radius": "A",
+      "regulatory_exposure": "A",
+      "human_override_latency": "A",
+      "data_confidence": "C",
+      "accountability_chain": "C",
+      "graceful_degradation": "A"
+    },
+    "reference_interpretation": "Autonomy not permitted for continued trading — but autonomous halt is the safe-failure path. The interesting question is whether the kill switch itself should be autonomous.",
+    "jurisdiction_notes": "SFC Circular 24EC55; HKEx electronic trading rules; Knight Capital is the canonical precedent for deployment-error losses"
+  },
+  {
+    "id": "genai-data-leakage-001",
+    "domain": "Data Loss Prevention",
+    "industry": "Banking",
+    "risk_tier": "medium",
+    "based_on": "Samsung ChatGPT data leak, Apr 2023 — three employees uploaded source code, defect data, and meeting transcripts to ChatGPT",
+    "sources": [
+      "TechCrunch, 'Samsung bans use of generative AI tools like ChatGPT after April internal data leak', 2 May 2023: https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/",
+      "Dark Reading, 'Samsung Engineers Feed Sensitive Data to ChatGPT', 6 Apr 2023: https://www.darkreading.com/vulnerabilities-threats/samsung-engineers-sensitive-data-chatgpt-warnings-ai-use-workplace"
+    ],
+    "scenario": "A Hong Kong bank's DLP agent monitors employee interactions with approved GenAI tools. The agent detects that a relationship manager has pasted a client's portfolio summary (including account numbers, holdings, and net worth) into an internal GenAI assistant to draft a meeting brief. The GenAI tool is approved for internal use but the data classification policy prohibits client PII in prompts. The agent can block the request and delete the prompt, allow it with a warning, or silently log and escalate to compliance.",
+    "reference_fingerprint": {
+      "decision_reversibility": "C",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "B",
+      "human_override_latency": "C",
+      "data_confidence": "C",
+      "accountability_chain": "C",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Ready with prerequisites — blocking is easily reversible, blast radius is single-customer, but regulatory guidance on GenAI data handling applies. The tension: blocking disrupts workflow, allowing risks data leakage.",
+    "jurisdiction_notes": "HKMA GenAI Circular consumer protection; PDPO personal data handling; PCPD AI Framework data governance requirements"
+  },
+  {
+    "id": "claims-denial-001",
+    "domain": "Claims Adjudication",
+    "industry": "Insurance",
+    "risk_tier": "high",
+    "based_on": "UnitedHealth/NaviHealth nH Predict algorithm — AI denied rehabilitation care to elderly patients with a known 90% override rate when reviewed by humans",
+    "sources": [
+      "STAT News, 'UnitedHealth faces class action lawsuit over use of algorithm to deny rehab care to Medicare Advantage patients', 14 Nov 2023: https://www.statnews.com/2023/11/14/unitedhealth-class-action-lawsuit-algorithm-medicare-advantage/",
+      "CBS News, 'UnitedHealth sued for using AI to deny elderly patients coverage for care', 14 Nov 2023: https://www.cbsnews.com/news/unitedhealth-lawsuit-ai-deny-claims-medicare-advantage-health-insurance-denials/"
+    ],
+    "scenario": "An insurer's AI agent evaluates post-surgery rehabilitation claims for elderly policyholders. The model recommends denying extended care (beyond 14 days) for a 78-year-old hip replacement patient, predicting recovery within the standard window. However, the treating physician recommends 28 days based on the patient's comorbidities. Historical data shows human reviewers override this model's denial recommendations 40% of the time for patients over 75. The agent can deny the extension autonomously, approve it, or route to a medical reviewer (3-day turnaround).",
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "A",
+      "human_override_latency": "C",
+      "data_confidence": "B",
+      "accountability_chain": "B",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Human-in-loop required — denying care against physician recommendation is a direct regulatory exposure. The 40% override rate signals the model is unreliable for this subpopulation. Autonomous denial creates legal and reputational risk.",
+    "jurisdiction_notes": "IA policyholder protection requirements; PDPO for health data; precedent from US class action against UnitedHealth for algorithmic claims denial"
+  },
+  {
+    "id": "cross-border-model-001",
+    "domain": "Model Governance",
+    "industry": "Banking",
+    "risk_tier": "medium",
+    "based_on": "PIPL/PDPO cross-border data transfer tensions for HK financial institutions with mainland operations",
+    "sources": [
+      "KPMG, 'Implications of Cross-Border Data Transfers for HKSAR-Based Financial Institutions', Sep 2023: https://assets.kpmg.com/content/dam/kpmg/cn/pdf/en/2023/09/implications-of-cross-border-data-transfers-for-hksar-based-financial-institution.pdf",
+      "PIPL Articles 38-43, NPC Standing Committee, effective 1 Nov 2021: http://en.npc.gov.cn.cdurl.cn/2021-12/29/c_694559.htm",
+      "CAC & ITIB, GBA Standard Contract for Cross-boundary Flow of Personal Information, 13 Dec 2023"
+    ],
+    "scenario": "A Hong Kong bank's data science team wants to deploy a credit risk model trained on 2 million mainland customer records to score Hong Kong applicants. The model was developed by the bank's Shenzhen subsidiary using mainland behavioral data (payment patterns, e-commerce activity, social media signals). The model performs well on backtests. The team proposes transferring the trained model weights (not raw data) to Hong Kong for inference. The agent can approve the deployment, block it pending legal review, or approve with a data governance audit trail.",
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "C",
+      "accountability_chain": "B",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human-in-loop required — even model weights (not raw data) trained on mainland personal information may trigger PIPL cross-border transfer requirements. GBA SCCs may apply. Regulatory exposure is Level A due to dual-jurisdiction compliance.",
+    "jurisdiction_notes": "PIPL Articles 38-43 on cross-border transfer; GBA Standard Contracts (Dec 2023); PDPO applicability; HKMA model risk management expectations"
+  },
+  {
+    "id": "trade-surveillance-gap-001",
+    "domain": "Trade Surveillance",
+    "industry": "Capital Markets",
+    "risk_tier": "high",
+    "based_on": "JP Morgan $548M fine, 2024 — billions of order messages went unsurveilled for 7 years due to misconfigured data feeds into surveillance systems",
+    "sources": [
+      "CFTC Press Release 8914-24, 'CFTC Orders JPMorgan to Pay $200 Million for Widespread Failures in Trade Surveillance', 14 Mar 2024: https://www.cftc.gov/PressRoom/PressReleases/8914-24",
+      "CNBC, 'JPMorgan to pay nearly $350 million in penalties for inadequate trade reporting', 14 Mar 2024: https://www.cnbc.com/2024/03/14/jpmorgan-to-pay-nearly-350-million-in-penalties-for-inadequate-trade-reporting-.html"
+    ],
+    "scenario": "A Hong Kong brokerage's compliance team discovers that its trade surveillance AI has not been receiving order data from three Direct Market Access (DMA) clients for 14 months due to a data feed misconfiguration after a system upgrade. During this period, an estimated 800,000 orders (~HK$45 billion notional) went unsurveilled. No manipulation has been detected retrospectively, but the gap has not been fully analyzed. The compliance agent can self-report to SFC immediately, conduct a full retrospective analysis first (estimated 6 weeks), or both in parallel.",
+    "reference_fingerprint": {
+      "decision_reversibility": "A",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "A",
+      "accountability_chain": "A",
+      "graceful_degradation": "A"
+    },
+    "reference_interpretation": "Autonomy not permitted — the surveillance gap itself is irreversible, data confidence is Level A (we don't know what happened during the gap), and accountability chain is broken. This is a regulatory disclosure decision that requires senior management and legal counsel.",
+    "jurisdiction_notes": "SFC Circular 24EC55; SFC Code of Conduct obligation to self-report; JP Morgan precedent ($548M fine for similar surveillance failures)"
+  },
+  {
+    "id": "robo-advisory-001",
+    "domain": "Investment Advisory",
+    "industry": "Wealth Management",
+    "risk_tier": "medium",
+    "based_on": "SFC Circular 24EC55 requirements for AI in investment recommendations; broader robo-advisor regulatory scrutiny",
+    "sources": [
+      "SFC Circular 24EC55, 'Circular to Licensed Corporations — Use of generative AI language models', 12 Nov 2024: https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/intermediaries/supervision/doc?refNo=24EC55",
+      "SFC Code of Conduct for Persons Licensed by or Registered with the SFC, suitability requirements: https://www.sfc.hk/en/Rules-and-standards/Codes-and-guidelines/Codes"
+    ],
+    "scenario": "A licensed robo-advisor in Hong Kong uses an AI agent to generate personalized portfolio rebalancing recommendations for 15,000 retail clients. The model detects that rising interest rates warrant shifting 20% of client portfolios from growth equities to short-duration bonds. The recommended trades would affect HK$2.3 billion in AUM. Each client's suitability profile was assessed at onboarding (average 18 months ago). The agent can execute rebalancing automatically, send recommendations requiring client approval, or flag for the advisory team.",
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "C",
+      "accountability_chain": "C",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human-in-loop required — investment advice to retail clients under SFC 24EC55 requires human oversight of AI-generated content. Stale suitability profiles (18 months) weaken data confidence. Autonomous execution across 15,000 clients amplifies blast radius.",
+    "jurisdiction_notes": "SFC Circular 24EC55 high-risk application requirements; SFC suitability obligations; HKMA-SFC joint circular on selling of investment products"
   }
 ]

@@ -21,7 +21,7 @@ Add your OpenRouter API key to `.env.local`:
 OPENROUTER_API_KEY=your-key-here
 ```
 
-Run the evaluation pipeline (6 scenarios × 3 personality variants = 18 LLM calls, ~$0.002):
+Run the evaluation pipeline (13 scenarios × 3 personality variants = 39 LLM calls, ~$0.005):
 ```bash
 python3 labs/lab-01-risk-fingerprinting.py
 ```
