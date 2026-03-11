@@ -2,7 +2,7 @@
 
 **Agentic Readiness Assessment** — An open evaluation framework for determining when enterprises can safely deploy autonomous AI agents.
 
-Developed by [IRAI Labs](https://irai.co) × [Digital Rain Technologies](https://digitalrain.studio) as part of the HKU MFFinTech capstone programme.
+Developed by [IRAI Labs](https://irai.co) × [Digital Rain Technologies](https://digitalrain.studio).
 
 ## What This Is
 
@@ -85,7 +85,7 @@ The framework synthesizes international governance standards (NIST AI RMF, EU AI
 ## How It Works
 
 1. Scenarios describe potential autonomous AI actions (e.g., "an AI blocks a $2M wire transfer at 2:47 AM")
-2. An LLM judge evaluates each scenario from 3 stakeholder perspectives (compliance officer, CRO, operations director) using the [ConFIRM methodology](https://digitalrain.studio/capstone/methodology)
+2. An LLM judge evaluates each scenario from 3 stakeholder perspectives (compliance officer, CRO, operations director) using ConFIRM-based personality variants
 3. Each evaluation produces a **risk fingerprint** — e.g., `C-B-A-A-C-B-C`
 4. **Deterministic gating rules** (not the LLM) classify readiness: Ready Now / Ready with Prerequisites / Human-in-Loop Required
 5. Personality deltas surface where stakeholders disagree — revealing where organizational alignment is needed before deployment
@@ -96,12 +96,6 @@ All requests, responses, token usage, cost, and provider metadata are logged to 
 
 See [`labs/`](labs/) for runnable evaluation exercises.
 
-## Links
-
-- [Capstone Proposal](https://digitalrain.studio/capstone)
-- [Evaluation Methodology](https://digitalrain.studio/capstone/methodology)
-
 ## License
 
 Framework and methodology: open.
-Partner-specific data and findings: proprietary to each engagement.

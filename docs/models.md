@@ -29,7 +29,7 @@ Solid judge quality at significantly lower cost. Good for iterating on scenarios
 
 | Model | OpenRouter ID | Input/1M | Output/1M | Context | Notes |
 |-------|---------------|----------|-----------|---------|-------|
-| **Qwen3 235B Instruct** | `qwen/qwen3-235b-a22b-2507` | **$0.07** | **$0.10** | 262K | **Best value for judge tasks** — 235B MoE (22B active), strong instruction following, multilingual, tool-calling; absurdly cheap for its capability class |
+| **Qwen3 235B Instruct** | `qwen/qwen3-235b-a22b-2507` | **$0.07** | **$0.10** | 262K | 235B MoE (22B active), strong instruction following, multilingual, tool-calling; extremely cheap for its capability class |
 | Qwen3 235B | `qwen/qwen3-235b-a22b` | $0.46 | $1.82 | 131K | Base model with thinking/non-thinking modes; more expensive but supports reasoning chains |
 | Claude Sonnet 4 | `anthropic/claude-sonnet-4` | $3.00 | $15.00 | 200K | Proven judge model; current default in lab-01 |
 | GPT-4.1 | `openai/gpt-4.1` | $2.00 | $8.00 | 1M | Good structured output; competitive pricing |
@@ -53,7 +53,7 @@ Each ARA-Eval run evaluates 6 scenarios x 3 personalities = 18 LLM calls.
 
 | Model | Est. Cost per Run | Notes |
 |-------|-------------------|-------|
-| **Qwen3 235B Instruct** | **~$0.003** | **Recommended default** — frontier-class quality at near-zero cost |
+| **Qwen3 235B Instruct** | **~$0.003** | Current default — needs eval to confirm judge quality |
 | Gemini 2.5 Flash | ~$0.03 | Good alternative if Qwen output is inconsistent |
 | Claude Sonnet 4.6 | ~$0.50 | Premium quality baseline |
 | Claude Opus 4.6 | ~$0.90 | Use for establishing reference fingerprints |
