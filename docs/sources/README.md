@@ -6,8 +6,8 @@ Local copies of cited sources for scenario and jurisdiction documentation, in ca
 
 ## Successfully Archived
 
-| File | Source | Original URL |
-|------|--------|-------------|
+| File | Source | Original URL / Raw File |
+|------|--------|------------------------|
 | `aia-hk23m-fine-ia-press-release.md` | HK Insurance Authority press release | https://www.ia.org.hk/en/infocenter/press_releases/20240802.html |
 | `aia-hk23m-fine-insurance-journal.md` | Insurance Journal | https://www.insurancejournal.com/news/international/2024/08/02/786736.htm |
 | `jpmorgan-trade-surveillance-cftc.md` | CFTC Press Release 8914-24 | https://www.cftc.gov/PressRoom/PressReleases/8914-24 |
@@ -16,32 +16,40 @@ Local copies of cited sources for scenario and jurisdiction documentation, in ca
 | `unitedhealth-nh-predict-stat-news.md` | STAT News | https://www.statnews.com/2023/11/14/unitedhealth-class-action-lawsuit-algorithm-medicare-advantage/ |
 | `unitedhealth-nh-predict-cbs-news.md` | CBS News | https://www.cbsnews.com/news/unitedhealth-lawsuit-ai-deny-claims-medicare-advantage-health-insurance-denials/ |
 | `cac-algorithm-provisions-stanford-digichina.md` | Stanford DigiChina (translation) | https://digichina.stanford.edu/work/translation-internet-information-service-algorithmic-recommendation-management-provisions/ |
-| `pipl-npc-official-translation.md` | NPC official translation (Articles 1–25) | http://en.npc.gov.cn.cdurl.cn/2021-12/29/c_694559.htm |
-| `hkma-genai-sandbox-report.md` | HKMA GenA.I. Sandbox report (42pp) | `raw/20251031-6-EN.pdf` (manual download) |
+| `pipl-npc-official-translation.md` | NPC official translation (Articles 1–25) | `raw/Personal Information Protection Law...html` |
+| `hkma-genai-sandbox-report.md` | HKMA GenA.I. Sandbox report (42pp, Oct 2025) | `raw/20251031-6-EN.pdf` |
+| `hkma-high-level-principles-ai.md` | HKMA High-level Principles on AI (Nov 2019) | `raw/20191101-1-EN.pdf` |
+| `hkma-genai-consumer-protection-circular.md` | HKMA GenAI Consumer Protection Circular (Aug 2024) | `raw/20241107-1-EN.pdf` |
+| `sec-knight-capital-order.md` | SEC Admin Proceeding File No. 3-15570 | `raw/34-70694.pdf` |
+| `sfc-circular-24ec55-genai.md` | SFC Circular 24EC55 — GenAI for LCs | `raw/Circular to licensed corporations...html` |
+| `pcpd-ai-framework.md` | PCPD AI Model Personal Data Protection Framework (Jun 2024) | `raw/ai_protection_framework.pdf` |
+| `kpmg-cross-border-data-transfers.md` | KPMG Cross-Border Data Transfers (Sep 2023) | `raw/implications-of-cross-border-data-transfers...pdf` |
+| `dark-reading-samsung-chatgpt.md` | Dark Reading — Samsung ChatGPT leak | `raw/Samsung Engineers Feed Sensitive Data...html` |
+| `cnbc-jpmorgan-trade-reporting-fine.md` | CNBC — JPMorgan $350M trade reporting fine | `raw/JPMorgan fined nearly $350 million...html` |
+| `sfc-code-of-conduct.md` | SFC Code of Conduct (Jan 2026 edition) | `raw/Code_of_conduct Dec 2025_Eng Final...pdf` |
 
 ## Raw Downloads
 
 Manual browser downloads stored in `raw/` for reference:
 
-| File | Notes |
-|------|-------|
-| `raw/Personal Information Protection Law of the People's Republic of China.html` | Full page save of PIPL; extracted to `pipl-npc-official-translation.md` |
-| `raw/20241202-6-EN.pdf` | HKMA circular — **Payment Card DDA** (Ref B1/15C, B9/67C, 5 Nov 2024), not directly relevant but included for completeness |
-| `raw/20251031-6-EN.pdf` | HKMA **Responsible Innovation with GenA.I. in the Banking Industry** — GenA.I. Sandbox report (42pp, Oct 2025). Extracted to `hkma-genai-sandbox-report.md` |
+| File | Description |
+|------|-------------|
+| `raw/20191101-1-EN.pdf` | HKMA High-level Principles on AI (4pp, Nov 2019) |
+| `raw/20241107-1-EN.pdf` | HKMA GenAI Consumer Protection Circular (9pp, Aug 2024) |
+| `raw/20241125-2-EN.pdf` | HKMA circular (duplicate copy) |
+| `raw/20241202-6-EN.pdf` | HKMA Payment Card DDA circular (not directly relevant) |
+| `raw/20251031-6-EN.pdf` | HKMA GenA.I. Sandbox report (42pp, Oct 2025) |
+| `raw/34-70694.pdf` | SEC Knight Capital administrative proceeding (5pp) |
+| `raw/ai_protection_framework.pdf` | PCPD AI Framework (54pp, Jun 2024) |
+| `raw/Code_of_conduct Dec 2025_Eng Final with Bookmark_Jan 2026.pdf` | SFC Code of Conduct (full, Jan 2026) |
+| `raw/implications-of-cross-border-data-transfers...pdf` | KPMG cross-border data transfers flyer (5pp) |
+| `raw/Circular to licensed corporations...html` | SFC Circular 24EC55 (full page save) |
+| `raw/JPMorgan fined nearly $350 million...html` | CNBC article (full page save) |
+| `raw/Samsung Engineers Feed Sensitive Data...html` | Dark Reading article (full page save) |
+| `raw/Personal Information Protection Law...html` | PIPL NPC translation (page 1 of 3) |
 
-## Not Archived (Manual Download Needed)
+## Not Archived
 
-These sources could not be fetched automatically due to paywalls, JS rendering, PDF-only format, or TLS issues:
-
-| Source | URL | Reason |
-|--------|-----|--------|
-| Dark Reading (Samsung leak) | https://www.darkreading.com/vulnerabilities-threats/samsung-engineers-sensitive-data-chatgpt-warnings-ai-use-workplace | HTTP 403 |
-| CNBC (JP Morgan penalties) | https://www.cnbc.com/2024/03/14/jpmorgan-to-pay-nearly-350-million-in-penalties-for-inadequate-trade-reporting-.html | Returns CSS only (paywall/JS) |
-| SEC Admin Proceeding (Knight Capital) | https://www.sec.gov/litigation/admin/2013/34-70694.pdf | HTTP 403 (PDF) |
-| SFC Circular 24EC55 | https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/intermediaries/supervision/doc?refNo=24EC55 | JS-rendered page |
-| SFC Code of Conduct | https://www.sfc.hk/en/Rules-and-standards/Codes-and-guidelines/Codes | Index page only, full PDF needed |
-| HKMA GenAI Circular (Nov 2024) | https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2024/20241105e1.pdf | TLS cert error; redirect served DDA circular. **But** GenA.I. Sandbox report (Oct 2025) archived above covers GenAI guidance comprehensively. |
-| HKMA BDAI Principles (Nov 2019) | https://www.hkma.gov.hk/media/eng/doc/key-information/guidelines-and-circular/2019/20191101e1.pdf | TLS cert error (expected) |
-| PCPD AI Framework (Aug 2024) | https://www.pcpd.org.hk/english/resources_centre/publications/files/ai_framework_2024.pdf | PDF binary |
-| KPMG Cross-Border Data Transfers | https://assets.kpmg.com/content/dam/kpmg/cn/pdf/en/2023/09/implications-of-cross-border-data-transfers-for-hksar-based-financial-institution.pdf | PDF binary |
-| GBA Standard Contracts (Dec 2023) | No public URL available | Government gazette only |
+| Source | Reason |
+|--------|--------|
+| GBA Standard Contracts for Cross-boundary Flow of Personal Information (Dec 2023) | Government gazette only; no public English URL |

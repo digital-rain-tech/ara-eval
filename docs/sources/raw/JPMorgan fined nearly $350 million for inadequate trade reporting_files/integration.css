@@ -1,0 +1,57 @@
+/*
+  !IMPORTANT: This code is not compiled and is simply copied from src/integration.css to public/integration.css
+  so this means imports are not resolved. Updating integration.webpack.js to compile this file is an outstanding todo. 
+*/
+
+.zephrIframeOutcome.OverlayCramerInvestingGuide,
+.zephrIframeOutcome.OverlayHomeStretch,
+.zephrIframeOutcome.OverlayMadMoneyCramer,
+.zephrIframeOutcome.OverlayApplicationPro,
+.zephrIframeOutcome.OverlayApplicationProRss,
+.zephrIframeOutcome.OverlayProNews,
+.zephrIframeOutcome.OverlayThreeUp,
+.zephrIframeOutcome.OverlayProPersonalFinance {
+  z-index: 9999;
+}
+
+.zephrIframeOutcome.TopBarYourMoney,
+.zephrIframeOutcome.BottomBarExpandable,
+.zephrIframeOutcome.BottomBarProRSSFeed,
+.zephrIframeOutcome.BottomBarProTargeting,
+.zephrIframeOutcome.BottomBarStockAtNight {
+  z-index: 998;
+}
+
+/* stylelint-disable selector-id-pattern, media-feature-range-notation */
+.zephrIframeOutcome.TopBarYourMoney ~ #root #GlobalNavigation,
+.zephrIframeOutcome.TopBarYourMoney ~ #root #MakeItGlobalNavigation,
+.zephrIframeOutcome.TopBarYourMoney ~ #root #GlobalNavigation-Persistent {
+  margin-top: 80px;
+}
+
+.zephrIframeOutcome.TopBarYourMoney ~ #root #MainContentContainer {
+  margin-top: 165px;
+}
+
+@media (max-width: 760px) {
+  .zephrIframeOutcome.TopBarYourMoney ~ #root #GlobalNavigation,
+  .zephrIframeOutcome.TopBarYourMoney ~ #root #MakeItGlobalNavigation,
+  .zephrIframeOutcome.TopBarYourMoney ~ #root #GlobalNavigation-Persistent {
+    margin-top: 196px;
+  }
+
+  .zephrIframeOutcome.TopBarYourMoney ~ #root #MainContentContainer {
+    margin-top: 241px;
+  }
+}
+/* stylelint-enable selector-id-pattern, media-feature-range-notation */
+
+/* stylelint-disable-next-line media-feature-range-notation */
+@media (max-width: 760px) {
+  .zephrIframeOutcome.BottomBarExpandable,
+  .zephrIframeOutcome.BottomBarProRSSFeed,
+  .zephrIframeOutcome.BottomBarProTargeting,
+  .zephrIframeOutcome.BottomBarStockAtNight {
+    transform: translateY(-54px);
+  }
+}
