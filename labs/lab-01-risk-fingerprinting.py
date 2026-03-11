@@ -2,7 +2,7 @@
 ARA-Eval Lab 01: Risk Fingerprinting with LLM-Assisted Evaluation
 =================================================================
 
-Students run scenarios through an LLM judge using the 7-dimension rubric,
+Run scenarios through an LLM judge using the 7-dimension rubric,
 then apply gating rules to determine autonomy readiness. ConFIRM-based
 personality variants surface where stakeholder archetypes disagree.
 
@@ -85,7 +85,10 @@ PROMPTS_DIR = _root / "prompts"
 
 
 def load_prompt(relative_path: str) -> str:
-    return (PROMPTS_DIR / relative_path).read_text()
+    resolved = (PROMPTS_DIR / relative_path).resolve()
+    if not str(resolved).startswith(str(PROMPTS_DIR.resolve())):
+        raise ValueError(f"Prompt path escapes prompts directory: {relative_path}")
+    return resolved.read_text()
 
 
 def load_index(subdir: str) -> dict:
@@ -186,9 +189,18 @@ def init_db(db_path: Path) -> sqlite3.Connection:
             parsed_result TEXT,
             openrouter_id TEXT,
             system_fingerprint TEXT,
+            jurisdiction TEXT,
+            rubric TEXT,
             FOREIGN KEY (run_id) REFERENCES eval_runs(run_id)
         )
     """)
+
+    # Migration: add columns for existing databases
+    for col, col_type in [("jurisdiction", "TEXT"), ("rubric", "TEXT")]:
+        try:
+            conn.execute(f"ALTER TABLE ai_provider_requests ADD COLUMN {col} {col_type}")
+        except sqlite3.OperationalError:
+            pass  # column already exists
 
     conn.execute("CREATE INDEX IF NOT EXISTS idx_run_id ON ai_provider_requests(run_id)")
     conn.execute("CREATE INDEX IF NOT EXISTS idx_request_id ON ai_provider_requests(request_id)")
@@ -222,6 +234,8 @@ def log_request(
     parsed_result: Optional[dict],
     openrouter_id: Optional[str],
     system_fingerprint: Optional[str],
+    jurisdiction: Optional[str] = None,
+    rubric: Optional[str] = None,
 ):
     """Persist a single LLM request/response with full metadata."""
     conn.execute(
@@ -232,8 +246,8 @@ def log_request(
             total_tokens, cost_usd, response_time_ms, fingerprint_string,
             gating_classification, gating_rules_triggered,
             raw_request, raw_response, parsed_result,
-            openrouter_id, system_fingerprint)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            openrouter_id, system_fingerprint, jurisdiction, rubric)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
         (
             str(uuid.uuid4()),
             datetime.now(timezone.utc).isoformat(),
@@ -261,6 +275,8 @@ def log_request(
             json.dumps(parsed_result) if parsed_result else None,
             openrouter_id,
             system_fingerprint,
+            jurisdiction,
+            rubric,
         ),
     )
     conn.commit()
@@ -358,18 +374,78 @@ def extract_cost(data: dict) -> Optional[float]:
 
 
 def parse_llm_json(text: str) -> dict:
-    """Parse JSON from LLM response, handling markdown fences and thinking tags."""
-    # Strip thinking tags (Qwen3 may include <think>...</think>)
+    """
+    Parse JSON from LLM response with multi-strategy fallback.
+
+    Strategies (in order):
+      1. Strip thinking tags and markdown fences, then direct parse
+      2. json_repair for truncated/malformed output
+      3. Fix common syntax issues (trailing commas, double commas)
+      4. Brace-counting extraction (handles preamble/postamble text)
+    """
+    import re
+    from json_repair import repair_json
+
+    # Pre-processing: strip thinking tags (Qwen3 may include <think>...</think>)
     if "<think>" in text:
-        # Remove everything between <think> and </think>
-        import re
         text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL).strip()
 
-    # Handle markdown code fences
+    # Pre-processing: strip markdown code fences
     if text.startswith("```"):
         text = text.split("\n", 1)[1].rsplit("```", 1)[0].strip()
 
-    return json.loads(text)
+    # Strategy 1: Direct parse
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError:
+        pass
+
+    # Strategy 2: json_repair library (handles truncation, missing brackets, etc.)
+    try:
+        repaired = repair_json(text, skip_json_loads=True)
+        parsed = json.loads(repaired)
+        if isinstance(parsed, dict):
+            return parsed
+    except Exception:
+        pass
+
+    # Strategy 3: Fix common syntax issues, then repair
+    cleaned = text
+    cleaned = re.sub(r",,+", ",", cleaned)              # double commas
+    cleaned = re.sub(r",(\s*[}\]])", r"\1", cleaned)     # trailing commas
+    try:
+        repaired = repair_json(cleaned, skip_json_loads=True)
+        parsed = json.loads(repaired)
+        if isinstance(parsed, dict):
+            return parsed
+    except Exception:
+        pass
+
+    # Strategy 4: Brace-counting extraction (LLM added preamble/postamble)
+    start = text.find("{")
+    if start != -1:
+        depth = 0
+        for i in range(start, len(text)):
+            if text[i] == "{":
+                depth += 1
+            elif text[i] == "}":
+                depth -= 1
+                if depth == 0:
+                    candidate = text[start:i + 1]
+                    try:
+                        repaired = repair_json(candidate, skip_json_loads=True)
+                        parsed = json.loads(repaired)
+                        if isinstance(parsed, dict):
+                            return parsed
+                    except Exception:
+                        pass
+                    break
+
+    # All strategies failed — raise with context
+    raise json.JSONDecodeError(
+        f"All JSON parsing strategies failed. Response preview: {text[:200]}",
+        text, 0
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -447,6 +523,8 @@ def evaluate_scenario(
             parsed_result=parsed,
             openrouter_id=provider_info["openrouter_id"],
             system_fingerprint=provider_info["system_fingerprint"],
+            jurisdiction=jurisdiction,
+            rubric=rubric,
         )
 
         return {"parsed": parsed, "gating": gating, "usage": usage, "cost": cost,
@@ -486,6 +564,8 @@ def evaluate_scenario(
             parsed_result=None,
             openrouter_id=None,
             system_fingerprint=None,
+            jurisdiction=jurisdiction,
+            rubric=rubric,
         )
         raise
 
@@ -657,7 +737,8 @@ def main():
 
             try:
                 result = evaluate_scenario(
-                    http_client, db_conn, run_id, scenario, personality_id
+                    http_client, db_conn, run_id, scenario, personality_id,
+                    jurisdiction="hk", rubric="rubric.md"
                 )
 
                 personality_results[personality_id] = result

@@ -174,7 +174,7 @@ def show_detail(conn: sqlite3.Connection, request_id: str):
     print(f"  Status:          {row['response_status'] or '-'}")
     print(f"  Latency:         {row['response_time_ms']}ms")
     print(f"  Tokens:          {row['input_tokens'] or '-'} in / {row['output_tokens'] or '-'} out / {row['total_tokens'] or '-'} total")
-    print(f"  Cost:            ${row['cost_usd']:.6f}" if row['cost_usd'] else "  Cost:            -")
+    print(f"  Cost:            ${row['cost_usd']:.6f}" if row['cost_usd'] is not None else "  Cost:            -")
     print(f"  Fingerprint:     {row['fingerprint_string'] or '-'}")
     print(f"  Classification:  {(row['gating_classification'] or '-').replace('_', ' ')}")
 

@@ -8,5 +8,10 @@
     "file": "hk-grounded.md",
     "label": "Hong Kong",
     "description": "Grounded with actual regulatory requirements from each framework"
+  },
+  "generic": {
+    "file": "generic.md",
+    "label": "Generic",
+    "description": "No jurisdiction-specific context — control condition"
   }
 }

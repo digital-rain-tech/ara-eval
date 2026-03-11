@@ -37,12 +37,16 @@ ARA-Eval uses LLM-as-judge to produce 7-dimension risk fingerprints. The archite
 
 ## Priority Recommendation
 
-1. **Model comparison** (Lab 03) — directly tests reproducibility, the core credibility question
-2. **Temperature stability** (Lab 04) — tests whether classifications are noise or signal
-3. **Rubric granularity** (Lab 05) — tests whether detailed dimension definitions actually matter
+Revised after ADR-002 experimental design review:
 
-These three, combined with the existing jurisdiction grounding experiment (Lab 02), cover the main threats to LLM-as-judge validity: model dependence, stochastic variance, prompt sensitivity, and knowledge grounding.
+1. **Intra-rater reliability** (Lab 03) — must prove the instrument is stable before testing anything else
+2. **Human vs LLM agreement** — ground truth validation against reference fingerprints
+3. **Model comparison** (Lab 04) — only meaningful after establishing single-model reliability
+4. **Temperature stability** — can be folded into Lab 03 by varying temperature across runs
+5. **Rubric ablation** (Lab 05) — tests whether detailed definitions matter
+
+These cover the main threats to LLM-as-judge validity: stochastic variance, ground truth accuracy, model dependence, and prompt sensitivity.
 
 ## Decision
 
-Proceed with rubric-minimal as the next immediate knob (Tier 2, lowest effort — just a new template file). Design Labs 03-05 incrementally.
+Built three rubric tiers (full, compact, bare), a generic control jurisdiction, and Lab 03 (intra-rater reliability). See ADR-002 for the full design review.

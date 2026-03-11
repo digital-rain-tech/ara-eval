@@ -56,3 +56,51 @@ Runs the same 6 scenarios × 3 personalities under two conditions:
 - Does grounding make the judge stricter or looser? Is the effect uniform across personalities?
 - For which scenarios does grounding change the readiness classification (e.g., from "ready with prerequisites" to "human-in-loop required")?
 - What does this reveal about how much the LLM "knows" vs. what it needs to be told?
+
+---
+
+## Lab 03: Intra-Rater Reliability
+
+Does the LLM judge agree with itself? If the same scenario × personality produces different fingerprints on repeated runs, the instrument is unreliable and nothing else we test matters.
+
+### Run
+
+```bash
+python labs/lab-03-intra-rater-reliability.py
+python labs/lab-03-intra-rater-reliability.py --repetitions 5
+python labs/lab-03-intra-rater-reliability.py --scenarios banking-fraud-001,banking-customer-service-001
+```
+
+Runs each scenario × personality N times (default 5) and reports:
+- Per-dimension agreement rate (how often the modal classification appears)
+- Which dimensions are most unstable
+- Which scenario × personality cells are perfectly stable vs noisy
+
+### Key Questions
+
+- Which dimensions are most stable? Which are noisiest?
+- Are "easy" scenarios (all-D) more stable than "hard" scenarios (mixed A/B/C)?
+- What agreement rate is acceptable for a governance framework? (Hint: if it's below 80%, the framework has a reliability problem)
+- Does stability vary by personality? Are some stakeholder perspectives more deterministic than others?
+
+---
+
+## Rubric Variants
+
+Three rubric detail levels are available for ablation experiments:
+
+| Rubric | Detail Level | File |
+|--------|-------------|------|
+| **Full** | Dimension names, definitions, A/B/C/D anchors with examples | `prompts/rubric.md` |
+| **Compact** | Dimension names, A/B/C/D labels, one-line definitions | `prompts/rubric-compact.md` |
+| **Bare** | Dimension names only, no definitions or examples | `prompts/rubric-bare.md` |
+
+Pass `rubric="rubric-compact.md"` or `rubric="rubric-bare.md"` to `evaluate_scenario()`.
+
+## Jurisdiction Variants
+
+| Jurisdiction | Detail Level | File |
+|-------------|-------------|------|
+| `generic` | No jurisdiction-specific context (control) | `prompts/jurisdictions/generic.md` |
+| `hk` | Framework names only | `prompts/jurisdictions/hk.md` |
+| `hk-grounded` | Full regulatory requirements | `prompts/jurisdictions/hk-grounded.md` |

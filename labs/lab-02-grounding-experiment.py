@@ -57,7 +57,7 @@ def compare_fingerprints(result_a: dict, result_b: dict, label_a: str, label_b: 
         shifts[DIMENSION_LABELS[dim]] = {
             label_a: level_a,
             label_b: level_b,
-            "shift": shift,  # negative = grounded is stricter, positive = grounded is looser
+            "shift": shift,  # positive = grounded is stricter (higher risk), negative = grounded is looser
             "changed": level_a != level_b,
             "reasoning_a": result_a["parsed"]["dimensions"][dim]["reasoning"],
             "reasoning_b": result_b["parsed"]["dimensions"][dim]["reasoning"],
@@ -124,6 +124,9 @@ def main():
         print(f"{'='*70}")
 
         condition_results[jurisdiction] = {}
+        run_stats = {"successful": 0, "failed": 0, "input_tokens": 0,
+                     "output_tokens": 0, "cost": 0.0}
+        condition_start = time.monotonic()
 
         for scenario in scenarios:
             sid = scenario["id"]
@@ -142,9 +145,29 @@ def main():
                     cost = f"${result.get('cost', 0):.6f}" if result.get("cost") else ""
                     print(f"{fp} {cost}")
 
+                    run_stats["successful"] += 1
+                    usage = result.get("usage", {})
+                    run_stats["input_tokens"] += usage.get("input_tokens") or 0
+                    run_stats["output_tokens"] += usage.get("output_tokens") or 0
+                    run_stats["cost"] += result.get("cost") or 0.0
+
                 except Exception as e:
                     print(f"ERROR: {e}")
                     condition_results[jurisdiction][sid][personality_id] = None
+                    run_stats["failed"] += 1
+
+        # Finalize run record
+        lab01.update_run(
+            db_conn, run_id,
+            finished_at=datetime.now(timezone.utc).isoformat(),
+            successful_calls=run_stats["successful"],
+            failed_calls=run_stats["failed"],
+            total_input_tokens=run_stats["input_tokens"],
+            total_output_tokens=run_stats["output_tokens"],
+            total_cost_usd=run_stats["cost"],
+            total_duration_ms=int((time.monotonic() - condition_start) * 1000),
+            python_version=sys.version,
+        )
 
     # Compare conditions
     print(f"\n{'='*70}")
