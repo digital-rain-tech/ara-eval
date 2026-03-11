@@ -10,12 +10,41 @@ Most AI governance frameworks answer "should we use AI?" ARA answers a harder qu
 
 The framework evaluates operational domains across 7 dimensions, producing a **risk fingerprint** — a pattern of level classifications (A–D) that preserves reasoning rather than collapsing it into a single score. Gating rules then determine readiness: which domains are ready now, which need prerequisites, which should stay human-in-loop.
 
+## Quickstart
+
+```bash
+pip install -r requirements.txt
+```
+
+Add your OpenRouter API key to `.env.local`:
+```
+OPENROUTER_API_KEY=your-key-here
+```
+
+Run the evaluation pipeline (6 scenarios × 3 personality variants = 18 LLM calls, ~$0.002):
+```bash
+python3 labs/lab-01-risk-fingerprinting.py
+```
+
+Browse results:
+```bash
+python3 labs/view-requests.py              # list runs
+python3 labs/view-requests.py --last       # show most recent run
+python3 labs/view-requests.py --stats      # aggregate stats
+python3 labs/view-requests.py detail <id>  # full request/response detail
+```
+
+Output: `results/lab-01-output.json` (structured results) and `results/ara-eval.db` (SQLite request log with full provenance).
+
+See [`docs/models.md`](docs/models.md) for recommended models and pricing.
+
 ## Repository Structure
 
 ```
-docs/           # Framework specification, rubric definitions, gating rules
+docs/           # Framework specification, rubric definitions, model guide
 labs/           # Runnable Python labs for the eval pipeline
 scenarios/      # Starter scenario library (JSON)
+results/        # Output (gitignored) — JSON results + SQLite request log
 ```
 
 ## The 7 Dimensions
@@ -52,6 +81,16 @@ The framework synthesizes international governance standards (NIST AI RMF, EU AI
 - SFC Circular 24EC55 (Nov 2024)
 - PCPD AI Framework (Jun 2024)
 - Cross-border complexity: PIPL, GBA data flows, CAC algorithm registration
+
+## How It Works
+
+1. Scenarios describe potential autonomous AI actions (e.g., "an AI blocks a $2M wire transfer at 2:47 AM")
+2. An LLM judge evaluates each scenario from 3 stakeholder perspectives (compliance officer, CRO, operations director) using the [ConFIRM methodology](https://digitalrain.studio/capstone/methodology)
+3. Each evaluation produces a **risk fingerprint** — e.g., `C-B-A-A-C-B-C`
+4. **Deterministic gating rules** (not the LLM) classify readiness: Ready Now / Ready with Prerequisites / Human-in-Loop Required
+5. Personality deltas surface where stakeholders disagree — revealing where organizational alignment is needed before deployment
+
+All requests, responses, token usage, cost, and provider metadata are logged to SQLite for full traceability and reproducibility.
 
 ## Labs
 

@@ -50,7 +50,7 @@ MODEL = "qwen/qwen3-235b-a22b-2507"
 
 OPENROUTER_HEADERS = {
     "Authorization": f"Bearer {OPENROUTER_API_KEY}",
-    "HTTP-Referer": "https://github.com/ara-eval",
+    "HTTP-Referer": "https://github.com/digital-rain-tech/ara-eval",
     "X-Title": "ARA-Eval (Agentic Readiness Assessment)",
     "Content-Type": "application/json",
 }
