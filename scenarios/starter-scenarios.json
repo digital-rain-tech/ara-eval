@@ -1,6 +1,7 @@
 [
   {
     "id": "banking-fraud-001",
+    "core": false,
     "domain": "Fraud Detection",
     "industry": "Banking",
     "risk_tier": "high",
@@ -19,6 +20,7 @@
   },
   {
     "id": "capital-markets-surveillance-001",
+    "core": false,
     "domain": "Market Surveillance",
     "industry": "Capital Markets",
     "risk_tier": "high",
@@ -37,6 +39,7 @@
   },
   {
     "id": "insurance-claims-001",
+    "core": true,
     "domain": "Claims Processing",
     "industry": "Insurance",
     "risk_tier": "medium",
@@ -55,6 +58,7 @@
   },
   {
     "id": "digital-banking-credit-001",
+    "core": false,
     "domain": "Credit Scoring",
     "industry": "Digital Banking",
     "risk_tier": "medium",
@@ -73,6 +77,7 @@
   },
   {
     "id": "banking-customer-service-001",
+    "core": true,
     "domain": "Customer Service",
     "industry": "Banking",
     "risk_tier": "low",
@@ -91,6 +96,7 @@
   },
   {
     "id": "insurance-underwriting-001",
+    "core": false,
     "domain": "Underwriting",
     "industry": "Insurance",
     "risk_tier": "high",
@@ -109,6 +115,7 @@
   },
   {
     "id": "aml-screening-002",
+    "core": false,
     "domain": "AML/KYC Screening",
     "industry": "Insurance",
     "risk_tier": "high",
@@ -132,6 +139,7 @@
   },
   {
     "id": "algo-trading-deployment-001",
+    "core": true,
     "domain": "Algorithmic Trading",
     "industry": "Capital Markets",
     "risk_tier": "high",
@@ -155,6 +163,7 @@
   },
   {
     "id": "genai-data-leakage-001",
+    "core": true,
     "domain": "Data Loss Prevention",
     "industry": "Banking",
     "risk_tier": "medium",
@@ -178,6 +187,7 @@
   },
   {
     "id": "claims-denial-001",
+    "core": true,
     "domain": "Claims Adjudication",
     "industry": "Insurance",
     "risk_tier": "high",
@@ -201,6 +211,7 @@
   },
   {
     "id": "cross-border-model-001",
+    "core": true,
     "domain": "Model Governance",
     "industry": "Banking",
     "risk_tier": "medium",
@@ -225,6 +236,7 @@
   },
   {
     "id": "trade-surveillance-gap-001",
+    "core": false,
     "domain": "Trade Surveillance",
     "industry": "Capital Markets",
     "risk_tier": "high",
@@ -248,6 +260,7 @@
   },
   {
     "id": "robo-advisory-001",
+    "core": false,
     "domain": "Investment Advisory",
     "industry": "Wealth Management",
     "risk_tier": "medium",

@@ -10,7 +10,8 @@ Prerequisites:
     pip install -r requirements.txt
 
 Usage:
-    python labs/lab-01-risk-fingerprinting.py
+    python labs/lab-01-risk-fingerprinting.py          # core scenarios only (6)
+    python labs/lab-01-risk-fingerprinting.py --all     # all 13 scenarios
 
 Output:
     results/lab-01-output.json — structured risk fingerprints per scenario × personality
@@ -678,11 +679,25 @@ def print_run_summary(run_stats: dict):
 # Main
 # ---------------------------------------------------------------------------
 
-def main():
-    # Load scenarios
+def load_scenarios(use_all: bool = False) -> list:
+    """Load scenarios, filtering to core set unless --all is specified."""
     scenarios_path = _root / "scenarios" / "starter-scenarios.json"
     with open(scenarios_path) as f:
-        scenarios = json.load(f)
+        all_scenarios = json.load(f)
+    if use_all:
+        return all_scenarios
+    core = [s for s in all_scenarios if s.get("core", False)]
+    return core if core else all_scenarios
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="ARA-Eval Lab 01: Risk Fingerprinting")
+    parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
+    args = parser.parse_args()
+
+    # Load scenarios
+    scenarios = load_scenarios(use_all=args.all)
 
     # Init SQLite
     results_dir = _root / "results"

@@ -16,7 +16,8 @@ Prerequisites:
     pip install -r requirements.txt
 
 Usage:
-    python labs/lab-02-grounding-experiment.py
+    python labs/lab-02-grounding-experiment.py          # core scenarios only (6)
+    python labs/lab-02-grounding-experiment.py --all     # all 13 scenarios
 
 Output:
     results/lab-02-grounding.json — side-by-side comparison
@@ -78,10 +79,13 @@ def print_comparison(scenario_id: str, personality: str, shifts: dict):
 
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="ARA-Eval Lab 02: Grounding Experiment")
+    parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
+    args = parser.parse_args()
+
     # Load scenarios
-    scenarios_path = _root / "scenarios" / "starter-scenarios.json"
-    with open(scenarios_path) as f:
-        scenarios = json.load(f)
+    scenarios = lab01.load_scenarios(use_all=args.all)
 
     # Init DB and HTTP
     results_dir = _root / "results"

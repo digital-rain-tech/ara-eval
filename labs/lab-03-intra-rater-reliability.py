@@ -11,7 +11,8 @@ Prerequisites:
     pip install -r requirements.txt
 
 Usage:
-    python labs/lab-03-intra-rater-reliability.py
+    python labs/lab-03-intra-rater-reliability.py              # core scenarios only (6)
+    python labs/lab-03-intra-rater-reliability.py --all         # all 13 scenarios
     python labs/lab-03-intra-rater-reliability.py --repetitions 5
     python labs/lab-03-intra-rater-reliability.py --scenarios banking-fraud-001,banking-customer-service-001
 
@@ -94,24 +95,22 @@ def compute_cohens_kappa_self(classifications: list[str]) -> float:
 
 def main():
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 03: Intra-Rater Reliability")
+    parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
     parser.add_argument("--repetitions", type=int, default=5, help="Number of repetitions per cell (default: 5)")
-    parser.add_argument("--scenarios", type=str, default=None, help="Comma-separated scenario IDs to test (default: all)")
+    parser.add_argument("--scenarios", type=str, default=None, help="Comma-separated scenario IDs to test (overrides --all)")
     parser.add_argument("--jurisdiction", type=str, default="hk", help="Jurisdiction to use (default: hk)")
     args = parser.parse_args()
 
     # Load scenarios
-    scenarios_path = _root / "scenarios" / "starter-scenarios.json"
-    with open(scenarios_path) as f:
-        all_scenarios = json.load(f)
-
     if args.scenarios:
+        all_scenarios = lab01.load_scenarios(use_all=True)
         selected_ids = set(args.scenarios.split(","))
         scenarios = [s for s in all_scenarios if s["id"] in selected_ids]
         if not scenarios:
             print(f"No matching scenarios found. Available: {[s['id'] for s in all_scenarios]}")
             sys.exit(1)
     else:
-        scenarios = all_scenarios
+        scenarios = lab01.load_scenarios(use_all=args.all)
 
     reps = args.repetitions
     total_calls = len(scenarios) * len(lab01.PERSONALITIES) * reps
