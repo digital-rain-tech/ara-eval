@@ -12,14 +12,14 @@ Developed for the HKU MFFinTech capstone programme, focused on Hong Kong financi
 
 ```bash
 # Setup
-pip install anthropic python-dotenv
-export ANTHROPIC_API_KEY=your-key-here
+pip install -r requirements.txt
+# Add OPENROUTER_API_KEY to .env.local
 
 # Run Lab 01 (risk fingerprinting pipeline)
 python labs/lab-01-risk-fingerprinting.py
 ```
 
-Output goes to `results/lab-01-output.json` (gitignored).
+Output goes to `results/` (gitignored): `lab-01-output.json` (results) and `ara-eval.db` (SQLite request log).
 
 ## Architecture
 
@@ -35,7 +35,7 @@ Output goes to `results/lab-01-output.json` (gitignored).
 - Gating rules are deterministic code, never delegated to the LLM — this is intentional separation of probabilistic classification from deterministic policy
 - Level A–D is ordinal (A=0 highest risk, D=3 lowest risk), defined in `LEVEL_ORDER`
 - The 7 dimensions are ordered and the fingerprint string preserves that order (e.g., "C-B-A-A-C-B-C")
-- Uses Claude Sonnet (`claude-sonnet-4-20250514`) as the judge model
+- LLM calls go through OpenRouter (`anthropic/claude-sonnet-4`) with `httpx`; all request/response metadata persisted to SQLite (`results/ara-eval.db`) following 8bitoracle-next's `ai_provider_requests` pattern
 
 **Scenario format** (`scenarios/starter-scenarios.json`): Each scenario has `id`, `domain`, `industry`, `risk_tier`, `scenario` (narrative), `reference_fingerprint` (human-authored ground truth), and `jurisdiction_notes`.
 

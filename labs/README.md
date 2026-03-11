@@ -9,8 +9,12 @@ Students run pre-built scenarios through an LLM judge using the 7-dimension rubr
 ### Setup
 
 ```bash
-pip install anthropic python-dotenv
-export ANTHROPIC_API_KEY=your-key-here
+pip install -r requirements.txt
+```
+
+Add your OpenRouter API key to `.env.local`:
+```
+OPENROUTER_API_KEY=your-key-here
 ```
 
 ### Run
