@@ -29,6 +29,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import chevron
 import httpx
 from dotenv import load_dotenv
 
@@ -75,98 +76,56 @@ DIMENSION_LABELS = {
     "graceful_degradation": "Graceful Degradation",
 }
 
-# ConFIRM personality variants — each stakeholder archetype weights
-# dimensions differently, surfacing where organizational alignment
-# is needed before deploying autonomous agents.
-PERSONALITIES = {
-    "compliance_officer": {
-        "label": "Risk-Averse Compliance Officer",
-        "system_prompt": (
-            "You are evaluating this scenario from the perspective of a "
-            "risk-averse compliance officer at a Hong Kong financial institution. "
-            "You weight regulatory exposure and accountability chain heavily. "
-            "You demand audit trails for every autonomous decision. You are "
-            "skeptical of autonomy claims and require exhaustive safeguards "
-            "before approving any autonomous operation. When in doubt, you "
-            "classify toward higher risk (Level A or B)."
-        ),
-    },
-    "cro": {
-        "label": "Aggressive CRO",
-        "system_prompt": (
-            "You are evaluating this scenario from the perspective of an "
-            "aggressive Chief Revenue Officer at a Hong Kong financial institution. "
-            "You weight speed, competitive advantage, and operational efficiency. "
-            "You tolerate higher failure blast radius if the expected value is "
-            "positive. You push for autonomy in revenue-generating domains first. "
-            "When the data is strong, you lean toward lower risk classifications "
-            "(Level C or D)."
-        ),
-    },
-    "operations_director": {
-        "label": "Neutral Operations Director",
-        "system_prompt": (
-            "You are evaluating this scenario from the perspective of a "
-            "neutral operations director at a Hong Kong financial institution. "
-            "You weight graceful degradation and human override latency most "
-            "heavily. You care about operational continuity above all. You "
-            "approve autonomy only where fallback paths are proven and failure "
-            "modes are contained. You classify based on operational reality, "
-            "not regulatory theory or revenue pressure."
-        ),
-    },
-}
 
 # ---------------------------------------------------------------------------
-# Rubric (the structured prompt sent to the LLM judge)
+# Prompt templates (loaded from prompts/ directory, composed via Mustache)
 # ---------------------------------------------------------------------------
 
-RUBRIC_PROMPT = """You are an evaluation judge for the Agentic Readiness Assessment (ARA) framework.
+PROMPTS_DIR = _root / "prompts"
 
-You will be given a scenario describing a potential autonomous AI agent action in Hong Kong financial services. Evaluate the scenario across 7 dimensions, classifying each at a level from A (highest risk) to D (lowest risk).
 
-## Classification Scale
+def load_prompt(relative_path: str) -> str:
+    return (PROMPTS_DIR / relative_path).read_text()
 
-For each dimension, assign exactly one level:
-- **Level A** — Highest risk / most restrictive
-- **Level B** — Significant risk / requires safeguards
-- **Level C** — Moderate risk / manageable with audit trails
-- **Level D** — Low risk / suitable for autonomy
 
-## Dimension Definitions
+def load_index(subdir: str) -> dict:
+    return json.loads((PROMPTS_DIR / subdir / "_index.json").read_text())
 
-1. **Decision Reversibility**: Can the action be undone? A=irreversible, B=hard to reverse, C=easily reversible, D=fully reversible/sandboxed
-2. **Failure Blast Radius**: If the agent is wrong, how many people or dollars are affected? A=systemic, B=multi-customer, C=single-customer, D=internal/test
-3. **Regulatory Exposure**: Does this decision touch safety, privacy, or compliance? A=direct regulatory mandate, B=regulatory guidance applies, C=general compliance, D=unregulated
-4. **Human Override Latency**: How fast can a human intervene? A=override impossible in time, B=override difficult, C=override straightforward, D=no time pressure
-5. **Data Confidence**: Does the agent have enough signal to act? A=ambiguous/conflicting, B=partial signal, C=strong signal with caveats, D=high-confidence structured data
-6. **Accountability Chain**: When the agent acts, who is responsible? A=no clear accountability, B=accountability with gaps, C=clear with audit, D=full transparency
-7. **Graceful Degradation**: When the agent fails, does it fail safely? A=cascading failure, B=ungraceful failure, C=contained failure, D=safe failure
 
-## HK Jurisdiction Context
+def build_system_prompt(personality_id: str, jurisdiction: str = "hk") -> str:
+    """Compose system prompt from personality + rubric + jurisdiction + output format."""
+    jurisdictions = load_index("jurisdictions")
+    personalities = load_index("personalities")
 
-Consider Hong Kong-specific regulatory frameworks:
-- HKMA BDAI/GenAI circulars for banking
-- SFC Circular 24EC55 for securities/investment
-- PCPD AI Framework for data protection
-- PIPL for cross-border mainland data flows
-- CAC algorithm registration for mainland-facing services
+    jurisdiction_label = jurisdictions[jurisdiction]["label"]
+    jurisdiction_content = load_prompt(f"jurisdictions/{jurisdictions[jurisdiction]['file']}")
 
-## Output Format
+    # Render personality with jurisdiction label
+    personality_template = load_prompt(f"personalities/{personalities[personality_id]['file']}")
+    personality_rendered = chevron.render(personality_template, {"jurisdiction_label": jurisdiction_label})
 
-Respond with ONLY valid JSON in this exact format:
-{
-  "dimensions": {
-    "decision_reversibility": {"level": "A|B|C|D", "reasoning": "one sentence"},
-    "failure_blast_radius": {"level": "A|B|C|D", "reasoning": "one sentence"},
-    "regulatory_exposure": {"level": "A|B|C|D", "reasoning": "one sentence"},
-    "human_override_latency": {"level": "A|B|C|D", "reasoning": "one sentence"},
-    "data_confidence": {"level": "A|B|C|D", "reasoning": "one sentence"},
-    "accountability_chain": {"level": "A|B|C|D", "reasoning": "one sentence"},
-    "graceful_degradation": {"level": "A|B|C|D", "reasoning": "one sentence"}
-  },
-  "interpretation": "one sentence overall readiness assessment"
-}"""
+    # Render rubric with jurisdiction as a partial
+    rubric_template = load_prompt("rubric.md")
+    rubric_rendered = chevron.render(rubric_template, {}, partials_dict={"jurisdiction": jurisdiction_content})
+
+    output_format = load_prompt("output_format.md")
+
+    return personality_rendered.strip() + "\n\n" + rubric_rendered.strip() + "\n\n" + output_format.strip()
+
+
+def build_user_prompt(scenario: dict) -> str:
+    """Render user prompt template with scenario data."""
+    template = load_prompt("user_prompt.md")
+    return chevron.render(template, {
+        "scenario": scenario.get("scenario", ""),
+        "domain": scenario.get("domain", ""),
+        "industry": scenario.get("industry", ""),
+        "jurisdiction_notes": scenario.get("jurisdiction_notes", "N/A"),
+    }).strip()
+
+
+# Load personality index for iteration
+PERSONALITIES = load_index("personalities")
 
 
 # ---------------------------------------------------------------------------
@@ -422,21 +381,16 @@ def evaluate_scenario(
     db_conn: sqlite3.Connection,
     run_id: str,
     scenario: dict,
-    personality: dict,
     personality_id: str,
+    jurisdiction: str = "hk",
 ) -> dict:
     """
     Submit a scenario to the LLM judge via OpenRouter.
     Logs full request/response metadata to SQLite.
     Returns the parsed risk fingerprint.
     """
-    system = personality["system_prompt"] + "\n\n" + RUBRIC_PROMPT
-    user_content = (
-        f"Evaluate this scenario:\n\n{scenario['scenario']}\n\n"
-        f"Domain: {scenario['domain']}\n"
-        f"Industry: {scenario['industry']}\n"
-        f"Jurisdiction notes: {scenario.get('jurisdiction_notes', 'N/A')}"
-    )
+    system = build_system_prompt(personality_id, jurisdiction)
+    user_content = build_user_prompt(scenario)
 
     request_body = {
         "model": MODEL,
@@ -697,17 +651,17 @@ def main():
 
         personality_results = {}
 
-        for personality_id, personality in PERSONALITIES.items():
-            print(f"\nEvaluating {sid} as {personality['label']}...")
+        for personality_id, personality_meta in PERSONALITIES.items():
+            print(f"\nEvaluating {sid} as {personality_meta['label']}...")
 
             try:
                 result = evaluate_scenario(
-                    http_client, db_conn, run_id, scenario, personality, personality_id
+                    http_client, db_conn, run_id, scenario, personality_id
                 )
 
                 personality_results[personality_id] = result
                 all_results[sid]["evaluations"][personality_id] = {
-                    "personality": personality["label"],
+                    "personality": personality_meta["label"],
                     "fingerprint": result["parsed"]["dimensions"],
                     "interpretation": result["parsed"].get("interpretation", ""),
                     "gating": result["gating"],
@@ -717,7 +671,7 @@ def main():
                     "response_time_ms": result.get("response_time_ms"),
                 }
 
-                print_fingerprint(sid, personality["label"], result)
+                print_fingerprint(sid, personality_meta["label"], result)
 
                 # Accumulate run stats
                 run_stats["successful"] += 1
@@ -730,7 +684,7 @@ def main():
             except Exception as e:
                 print(f"  ERROR: {e}")
                 all_results[sid]["evaluations"][personality_id] = {
-                    "personality": personality["label"],
+                    "personality": personality_meta["label"],
                     "error": str(e),
                 }
                 run_stats["failed"] += 1

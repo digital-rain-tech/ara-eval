@@ -1,0 +1,14 @@
+{
+  "compliance_officer": {
+    "file": "compliance_officer.md",
+    "label": "Risk-Averse Compliance Officer"
+  },
+  "cro": {
+    "file": "cro.md",
+    "label": "Aggressive CRO"
+  },
+  "operations_director": {
+    "file": "operations_director.md",
+    "label": "Neutral Operations Director"
+  }
+}
