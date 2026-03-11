@@ -92,7 +92,7 @@ def load_index(subdir: str) -> dict:
     return json.loads((PROMPTS_DIR / subdir / "_index.json").read_text())
 
 
-def build_system_prompt(personality_id: str, jurisdiction: str = "hk") -> str:
+def build_system_prompt(personality_id: str, jurisdiction: str = "hk", rubric: str = "rubric.md") -> str:
     """Compose system prompt from personality + rubric + jurisdiction + output format."""
     jurisdictions = load_index("jurisdictions")
     personalities = load_index("personalities")
@@ -105,7 +105,7 @@ def build_system_prompt(personality_id: str, jurisdiction: str = "hk") -> str:
     personality_rendered = chevron.render(personality_template, {"jurisdiction_label": jurisdiction_label})
 
     # Render rubric with jurisdiction as a partial
-    rubric_template = load_prompt("rubric.md")
+    rubric_template = load_prompt(rubric)
     rubric_rendered = chevron.render(rubric_template, {}, partials_dict={"jurisdiction": jurisdiction_content})
 
     output_format = load_prompt("output_format.md")
@@ -383,13 +383,14 @@ def evaluate_scenario(
     scenario: dict,
     personality_id: str,
     jurisdiction: str = "hk",
+    rubric: str = "rubric.md",
 ) -> dict:
     """
     Submit a scenario to the LLM judge via OpenRouter.
     Logs full request/response metadata to SQLite.
     Returns the parsed risk fingerprint.
     """
-    system = build_system_prompt(personality_id, jurisdiction)
+    system = build_system_prompt(personality_id, jurisdiction, rubric)
     user_content = build_user_prompt(scenario)
 
     request_body = {

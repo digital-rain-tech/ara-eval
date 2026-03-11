@@ -2,6 +2,11 @@
   "hk": {
     "file": "hk.md",
     "label": "Hong Kong",
-    "description": "HKMA, SFC, PCPD, PIPL frameworks"
+    "description": "Framework names only — HKMA, SFC, PCPD, PIPL"
+  },
+  "hk-grounded": {
+    "file": "hk-grounded.md",
+    "label": "Hong Kong",
+    "description": "Grounded with actual regulatory requirements from each framework"
   }
 }
