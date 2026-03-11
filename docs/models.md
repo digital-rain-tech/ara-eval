@@ -47,13 +47,24 @@ Use for rapid prototyping, testing pipeline changes, or running large scenario s
 | GPT-4.1 Mini | `openai/gpt-4.1-mini` | $0.40 | $1.60 | 1M | Good for pipeline testing |
 | o4-mini | `openai/o4-mini` | $1.10 | $4.40 | 200K | Reasoning model; good for complex scenarios |
 
+### Free Tier: OpenRouter Free
+
+OpenRouter offers a rotating set of free models at `openrouter/free`. These are rate-limited and may change without notice, but cost nothing — useful for students exploring the pipeline without an API budget.
+
+| Model | OpenRouter ID | Input/1M | Output/1M | Notes |
+|-------|---------------|----------|-----------|-------|
+| OpenRouter Free | `openrouter/free` | $0.00 | $0.00 | Rotating model; no guarantees on quality or availability. Judge quality unknown — run Lab 03 to measure reliability before trusting results. |
+
+To use: set `MODEL = "openrouter/free"` in `lab-01-risk-fingerprinting.py`. Compare against Qwen3 235B results to see if the free model produces meaningfully different fingerprints — this is itself a good exercise (inter-model agreement).
+
 ## Cost Estimates
 
-Each ARA-Eval run evaluates 6 scenarios x 3 personalities = 18 LLM calls.
+Each ARA-Eval run evaluates 6 core scenarios × 3 personalities = 18 LLM calls.
 
 | Model | Est. Cost per Run | Notes |
 |-------|-------------------|-------|
-| **Qwen3 235B Instruct** | **~$0.003** | Current default — needs eval to confirm judge quality |
+| OpenRouter Free | **$0.00** | Unknown judge quality; run Lab 03 first |
+| **Qwen3 235B Instruct** | **~$0.003** | Current default — extremely cheap for its capability class |
 | Gemini 2.5 Flash | ~$0.03 | Good alternative if Qwen output is inconsistent |
 | Claude Sonnet 4.6 | ~$0.50 | Premium quality baseline |
 | Claude Opus 4.6 | ~$0.90 | Use for establishing reference fingerprints |

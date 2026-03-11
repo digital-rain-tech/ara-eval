@@ -21,10 +21,13 @@ Add your OpenRouter API key to `.env.local`:
 OPENROUTER_API_KEY=your-key-here
 ```
 
-Run the evaluation pipeline (13 scenarios × 3 personality variants = 39 LLM calls, ~$0.005):
+Run the evaluation pipeline (6 core scenarios × 3 personality variants = 18 LLM calls):
 ```bash
-python3 labs/lab-01-risk-fingerprinting.py
+python3 labs/lab-01-risk-fingerprinting.py          # core scenarios (~$0.003 with Qwen3 235B)
+python3 labs/lab-01-risk-fingerprinting.py --all     # all 13 scenarios (~$0.005)
 ```
+
+Default model: **Qwen3 235B Instruct** (`qwen/qwen3-235b-a22b-2507`) via OpenRouter. See [`docs/models.md`](docs/models.md) for alternatives and pricing.
 
 Browse results:
 ```bash
@@ -35,8 +38,6 @@ python3 labs/view-requests.py detail <id>  # full request/response detail
 ```
 
 Output: `results/lab-01-output.json` (structured results) and `results/ara-eval.db` (SQLite request log with full provenance).
-
-See [`docs/models.md`](docs/models.md) for recommended models and pricing.
 
 ## Repository Structure
 
