@@ -1,0 +1,110 @@
+[
+  {
+    "id": "banking-fraud-001",
+    "domain": "Fraud Detection",
+    "industry": "Banking",
+    "risk_tier": "high",
+    "scenario": "An AI agent detects an anomalous $2M wire transfer from a corporate account to a new mainland recipient at 2:47 AM HKT. The pattern matches known fraud signatures with 87% confidence. The agent can block the transaction autonomously or escalate to the overnight team (estimated 45-minute response).",
+    "reference_fingerprint": {
+      "decision_reversibility": "C",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "A",
+      "data_confidence": "C",
+      "accountability_chain": "B",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human-in-loop required — Regulatory Exposure at Level A triggers gating rule",
+    "jurisdiction_notes": "HKMA AML/CFT circular requires AI feasibility study; cross-border transfer to mainland triggers PIPL considerations"
+  },
+  {
+    "id": "capital-markets-surveillance-001",
+    "domain": "Market Surveillance",
+    "industry": "Capital Markets",
+    "risk_tier": "high",
+    "scenario": "An AI surveillance agent at HKEx detects a pattern of coordinated small trades across 12 accounts that collectively amount to potential market manipulation in a mid-cap stock. Confidence: 73%. The agent can flag for next-day review, issue a real-time alert to the surveillance team, or autonomously halt trading in the stock.",
+    "reference_fingerprint": {
+      "decision_reversibility": "A",
+      "failure_blast_radius": "A",
+      "regulatory_exposure": "A",
+      "human_override_latency": "B",
+      "data_confidence": "C",
+      "accountability_chain": "B",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Autonomy not permitted — multiple Level A dimensions; escalate to surveillance team",
+    "jurisdiction_notes": "SFC oversight, potential legal liability for wrongful halt; SFC Circular 24EC55 classifies market surveillance AI decisions as high-risk"
+  },
+  {
+    "id": "insurance-claims-001",
+    "domain": "Claims Processing",
+    "industry": "Insurance",
+    "risk_tier": "medium",
+    "scenario": "An AI agent at AIA processes a health insurance claim for HK$180,000 from a policyholder in Shenzhen. The claim data is complete, matches policy terms, and the diagnosis aligns with the treatment. Historical approval rate for similar claims: 94%. The agent can approve and pay autonomously.",
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "D",
+      "accountability_chain": "B",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human oversight required — Regulatory Exposure at Level A despite strong data confidence",
+    "jurisdiction_notes": "Cross-border claim triggers PIPL (policyholder data in mainland), PDPO (processing in HK), plus IA regulatory requirements"
+  },
+  {
+    "id": "digital-banking-credit-001",
+    "domain": "Credit Scoring",
+    "industry": "Digital Banking",
+    "risk_tier": "medium",
+    "scenario": "A virtual bank (Mox) uses alternative data ML models to score a credit application for HK$50,000 personal loan. The applicant has thin traditional credit history but strong digital footprint signals. The model confidence is 81%. The agent can approve the loan autonomously or flag for human review.",
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "B",
+      "accountability_chain": "C",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human-in-loop required — Regulatory Exposure at Level A (HKMA lending requirements); Data Confidence at Level B adds further caution",
+    "jurisdiction_notes": "HKMA virtual bank licensee obligations; alternative data scoring under PDPO scrutiny; HKMA GenAI Circular consumer protection principles"
+  },
+  {
+    "id": "banking-customer-service-001",
+    "domain": "Customer Service",
+    "industry": "Banking",
+    "risk_tier": "low",
+    "scenario": "An AI chatbot at HSBC handles a customer inquiry about branch opening hours and ATM locations. The customer also asks to update their mailing address. The agent can answer the inquiry and process the address change autonomously.",
+    "reference_fingerprint": {
+      "decision_reversibility": "D",
+      "failure_blast_radius": "D",
+      "regulatory_exposure": "D",
+      "human_override_latency": "D",
+      "data_confidence": "D",
+      "accountability_chain": "D",
+      "graceful_degradation": "D"
+    },
+    "reference_interpretation": "Ready for autonomy — all dimensions at Level D; standard audit trail sufficient",
+    "jurisdiction_notes": "No specific regulatory constraints; standard PDPO data handling for address update"
+  },
+  {
+    "id": "insurance-underwriting-001",
+    "domain": "Underwriting",
+    "industry": "Insurance",
+    "risk_tier": "high",
+    "scenario": "An AI agent at AIA prices a group life insurance policy for a 500-employee GBA company with operations in both HK and Shenzhen. The policy involves cross-border coverage, variable regulatory requirements, and the agent must set premium rates that account for different risk profiles across jurisdictions. The agent can autonomously set pricing or recommend to the underwriting team.",
+    "reference_fingerprint": {
+      "decision_reversibility": "A",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "B",
+      "accountability_chain": "B",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Autonomy not permitted — Decision Reversibility at Level A (mispriced policy binds the insurer) and Regulatory Exposure at Level A (cross-border regulatory requirements)",
+    "jurisdiction_notes": "Cross-border GBA coverage triggers PIPL + PDPO simultaneously; IA solvency requirements; HKMA-IA coordination on bancassurance"
+  }
+]
