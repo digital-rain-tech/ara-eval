@@ -1,12 +1,14 @@
 # ARA-Eval
 
-**Agentic Readiness Assessment** — An open evaluation framework for determining when enterprises can safely deploy autonomous AI agents.
+An open framework for determining when an AI agent can act autonomously — without human approval.
+
+Most AI governance frameworks ask: *Should we use AI?*
+
+ARA-Eval asks the harder question: **When can an AI safely take action on its own?**
 
 Developed by [IRAI Labs](https://irai.co) × [Digital Rain Technologies](https://digitalrain.studio).
 
 ## What This Is
-
-Most AI governance frameworks answer "should we use AI?" ARA answers a harder question: **"Under what conditions can we trust AI to act autonomously — without human approval?"**
 
 The framework evaluates operational domains across 7 dimensions, producing a **risk fingerprint** — a pattern of level classifications (A–D) that preserves reasoning rather than collapsing it into a single score. Gating rules then determine readiness: which domains are ready now, which need prerequisites, which should stay human-in-loop.
 
