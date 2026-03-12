@@ -48,7 +48,7 @@ if not OPENROUTER_API_KEY:
 # ---------------------------------------------------------------------------
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-MODEL = "qwen/qwen3-235b-a22b-2507"
+MODEL = os.environ.get("ARA_MODEL", "qwen/qwen3-235b-a22b-2507")
 
 OPENROUTER_HEADERS = {
     "Authorization": f"Bearer {OPENROUTER_API_KEY}",
@@ -495,8 +495,26 @@ def evaluate_scenario(
         cost = extract_cost(data)
 
         # Parse the LLM's JSON output
-        text = data["choices"][0]["message"]["content"].strip()
+        content = data["choices"][0]["message"]["content"]
+        if content is None:
+            raise ValueError("LLM returned empty content (None)")
+        text = content.strip()
+        if not text:
+            raise ValueError("LLM returned empty content (blank string)")
         parsed = parse_llm_json(text)
+
+        # Validate parsed structure before applying gating rules
+        if not isinstance(parsed, dict) or "dimensions" not in parsed:
+            raise ValueError(f"LLM response missing 'dimensions' key. Got keys: {list(parsed.keys()) if isinstance(parsed, dict) else type(parsed).__name__}")
+        dims = parsed["dimensions"]
+        if not isinstance(dims, dict):
+            raise ValueError(f"'dimensions' is {type(dims).__name__}, expected dict")
+        missing = [d for d in DIMENSIONS if d not in dims]
+        if missing:
+            raise ValueError(f"Missing dimensions: {', '.join(missing)}")
+        for d in DIMENSIONS:
+            if not isinstance(dims[d], dict) or "level" not in dims[d]:
+                raise ValueError(f"Dimension '{d}' malformed: expected dict with 'level' key, got {dims[d]}")
 
         # Apply gating rules
         gating = apply_gating_rules(parsed["dimensions"])
@@ -831,13 +849,22 @@ def main():
         "python_version": sys.version,
     }
 
-    # Save results
-    output_path = results_dir / "lab-01-output.json"
+    # Save results — timestamped file per run, plus a latest symlink
+    model_slug = MODEL.replace("/", "_").replace(":", "_")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    output_filename = f"lab-01-{model_slug}-{timestamp}.json"
+    output_path = results_dir / output_filename
     with open(output_path, "w") as f:
         json.dump(all_results, f, indent=2, default=str)
 
+    # Symlink latest for convenience
+    latest_path = results_dir / "lab-01-output.json"
+    latest_path.unlink(missing_ok=True)
+    latest_path.symlink_to(output_filename)
+
     print_run_summary(run_stats)
     print(f"\n  Results: {output_path}")
+    print(f"  Latest:  {latest_path} → {output_filename}")
     print(f"  DB log:  {db_path}")
 
     http_client.close()

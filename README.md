@@ -27,7 +27,12 @@ python3 labs/lab-01-risk-fingerprinting.py          # core scenarios (~$0.003 wi
 python3 labs/lab-01-risk-fingerprinting.py --all     # all 13 scenarios (~$0.005)
 ```
 
-Default model: **Qwen3 235B Instruct** (`qwen/qwen3-235b-a22b-2507`) via OpenRouter. See [`docs/models.md`](docs/models.md) for alternatives and pricing.
+Default model: **Qwen3 235B Instruct** (`qwen/qwen3-235b-a22b-2507`) via OpenRouter. Swap models without touching code:
+```bash
+ARA_MODEL=openrouter/free python3 labs/lab-01-risk-fingerprinting.py  # free tier
+```
+
+See [`docs/models.md`](docs/models.md) for alternatives and pricing.
 
 Browse results:
 ```bash

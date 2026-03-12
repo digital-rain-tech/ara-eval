@@ -71,11 +71,17 @@ Each ARA-Eval run evaluates 6 core scenarios × 3 personalities = 18 LLM calls.
 
 ## Changing the Model
 
-In `labs/lab-01-risk-fingerprinting.py`, update the `MODEL` constant:
+Set the `ARA_MODEL` environment variable — no code changes needed:
 
-```python
-MODEL = "google/gemini-2.5-flash"  # or any OpenRouter model ID
+```bash
+# In .env.local (persistent)
+ARA_MODEL=openrouter/free
+
+# Or inline (one-off)
+ARA_MODEL=google/gemini-2.5-flash python3 labs/lab-01-risk-fingerprinting.py
 ```
+
+Default (if unset): `qwen/qwen3-235b-a22b-2507`
 
 ## Multi-Model Comparison
 

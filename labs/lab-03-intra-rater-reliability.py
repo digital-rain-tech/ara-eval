@@ -302,11 +302,19 @@ def main():
         "cell_reports": cell_reports,
     }
 
-    output_path = results_dir / "lab-03-reliability.json"
+    model_slug = lab01.MODEL.replace("/", "_").replace(":", "_")
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+    output_filename = f"lab-03-{model_slug}-{timestamp}.json"
+    output_path = results_dir / output_filename
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
 
+    latest_path = results_dir / "lab-03-reliability.json"
+    latest_path.unlink(missing_ok=True)
+    latest_path.symlink_to(output_filename)
+
     print(f"\n  Results: {output_path}")
+    print(f"  Latest:  {latest_path} → {output_filename}")
     print(f"  Time: {elapsed/1000:.1f}s")
 
     http_client.close()
