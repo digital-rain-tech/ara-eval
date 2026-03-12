@@ -25,13 +25,16 @@ Add your OpenRouter API key to `.env.local`:
 OPENROUTER_API_KEY=your-key-here
 ```
 
-Run the evaluation pipeline (6 core scenarios × 3 personality variants = 18 LLM calls):
+Run the labs:
 ```bash
-python3 labs/lab-01-risk-fingerprinting.py          # core scenarios (~$0.003 with Qwen3 235B)
-python3 labs/lab-01-risk-fingerprinting.py --all     # all 13 scenarios (~$0.005)
+python3 labs/lab-01-risk-fingerprinting.py             # risk fingerprinting (6 scenarios × 3 personalities)
+python3 labs/lab-01-risk-fingerprinting.py --structured # with structured input decomposition
+python3 labs/lab-01-risk-fingerprinting.py --all        # all 13 scenarios
+python3 labs/lab-02-grounding-experiment.py             # regulatory grounding experiment
+python3 labs/lab-03-intra-rater-reliability.py          # intra-rater reliability (5 reps default)
 ```
 
-Default model: **Arcee Trinity Large** (`arcee-ai/trinity-large-preview:free`) via OpenRouter. Swap models without touching code:
+Default model: **Arcee Trinity Large** (`arcee-ai/trinity-large-preview:free`) via OpenRouter — zero cost. Swap models without touching code:
 ```bash
 ARA_MODEL=qwen/qwen3-235b-a22b-2507 python3 labs/lab-01-risk-fingerprinting.py  # paid tier
 ```
@@ -46,15 +49,18 @@ python3 labs/view-requests.py --stats      # aggregate stats
 python3 labs/view-requests.py detail <id>  # full request/response detail
 ```
 
-Output: `results/lab-01-output.json` (structured results) and `results/ara-eval.db` (SQLite request log with full provenance).
+Output goes to date-stamped subdirectories under `results/` (gitignored): JSON results, a `latest` symlink, and `ara-eval.db` (SQLite request log with full provenance). Malformed LLM responses are retried up to 2 times automatically.
 
 ## Repository Structure
 
 ```
-docs/           # Framework specification, rubric definitions, model guide
-labs/           # Runnable Python labs for the eval pipeline
-scenarios/      # Starter scenario library (JSON)
-results/        # Output (gitignored) — JSON results + SQLite request log
+docs/               # Framework specification, rubric definitions, model guide
+  course-formats/   # 5-week MBA and 10-week undergraduate syllabi
+  adr/              # Architecture Decision Records
+labs/               # Runnable Python labs (see below)
+prompts/            # LLM prompt templates (system, user, rubric, jurisdictions)
+scenarios/          # Starter scenario library (JSON)
+results/            # Output (gitignored) — date-stamped JSON + SQLite log
 ```
 
 ## The 7 Dimensions
@@ -104,7 +110,14 @@ All requests, responses, token usage, cost, and provider metadata are logged to 
 
 ## Labs
 
-See [`labs/`](labs/) for runnable evaluation exercises.
+| Lab | Purpose | Calls | Key Output |
+|-----|---------|-------|------------|
+| **01: Risk Fingerprinting** | Evaluate scenarios across 7 dimensions with 3 stakeholder personalities | 18 | Risk fingerprints, gate decisions, personality deltas, reference comparison |
+| **01: Structured Input** (`--structured`) | Same pipeline but with decomposed inputs (subject/object/action/regulatory triggers) | 18 | Compare determinism vs narrative prompts |
+| **02: Grounding Experiment** | Test whether explicit regulatory citations change classifications | 36 | Dimension sensitivity to jurisdiction context |
+| **03: Intra-Rater Reliability** | Repeat evaluations to measure LLM self-consistency | 90 (5 reps) | Per-dimension agreement rates, stability analysis |
+
+See [`labs/README.md`](labs/README.md) for exercises and key questions. Course syllabi: [`5-week MBA`](docs/course-formats/5-week-mba-capstone.md) | [`10-week undergraduate`](docs/course-formats/10-week-undergraduate.md).
 
 ## License
 
