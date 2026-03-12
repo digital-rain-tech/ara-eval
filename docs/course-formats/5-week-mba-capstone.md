@@ -80,7 +80,16 @@ Get an API key at [openrouter.ai](https://openrouter.ai). The default model is `
 | Core | 6 | Yes | 1 low-risk, 2 medium-risk, 3 high-risk. Selected for maximum discrimination across dimensions. |
 | Backup | 7 | `--all` flag | Real-incident-based scenarios for extra credit and validation. |
 
-Core scenarios span banking customer service (trivially autonomous), insurance claims (single hard gate), data leakage prevention (arguable middle), claims denial (ethical tension, based on UnitedHealth/nH Predict), algorithmic trading (time-pressure extreme, based on Knight Capital), and cross-border model governance (jurisdiction-sensitive, PIPL/PDPO).
+**Core scenarios:**
+
+| Scenario | Why It's in the Core Set |
+|----------|-------------------------|
+| Banking customer service | Control case — trivially autonomous, near-all-D profile |
+| Insurance claims processing | Single hard gate (Regulatory Exposure = A) on an otherwise permissive profile |
+| GenAI data leakage prevention | The "messy middle" — maximum personality divergence expected |
+| Claims denial (UnitedHealth/nH Predict) | Ethical tension — real-incident basis |
+| Algo trading deployment (Knight Capital) | Time-pressure extreme — 5 A-level dimensions in reference |
+| Cross-border model governance | Jurisdiction-sensitive — PIPL/PDPO cross-border transfer rules |
 
 ---
 
@@ -197,7 +206,9 @@ For the two scenarios that showed the largest grounding effect, write an analyti
 
 ### Going Deeper
 
-Run Lab 02 with `--all` to include backup scenarios. The `cross-border-model-001` scenario involves PIPL Articles 38--43 and the GBA Standard Contract for cross-boundary data flows — highly technical regulatory content. Compare its grounding delta against simpler scenarios. Does the LLM benefit more from grounding when the regulation is more obscure? Write a one-page analysis.
+Run Lab 02 with `--all` to include backup scenarios. The `cross-border-model-001` scenario involves PIPL Articles 38--43 and the GBA Standard Contract for cross-boundary data flows — highly technical regulatory content.
+
+Compare its grounding delta against simpler scenarios. Does the LLM benefit more from grounding when the regulation is more obscure? Write a one-page analysis.
 
 ---
 
@@ -271,8 +282,8 @@ python labs/lab-01-risk-fingerprinting.py
 # Note the output file: results/lab-01-<model-slug>-<timestamp>.json
 
 # Run Lab 01 with a different model
-ARA_MODEL=anthropic/claude-sonnet-4 python labs/lab-01-risk-fingerprinting.py
-# Or try: google/gemini-2.5-flash, openai/gpt-4o, meta-llama/llama-4-maverick
+ARA_MODEL=<your-chosen-model> python labs/lab-01-risk-fingerprinting.py
+# See docs/models.md for current model recommendations and pricing
 
 # Compare the two output files
 ```
@@ -281,8 +292,8 @@ Choose your second model based on what question interests you most:
 
 | If you want to explore... | Try |
 |--------------------------|-----|
-| Premium vs. budget tradeoff | A frontier model (Claude Sonnet 4, GPT-4o) vs. an efficient model (Gemini Flash, Llama) |
-| Architecture differences | Two frontier models from different providers |
+| Premium vs. budget tradeoff | A premium model vs. a free-tier model (see `docs/models.md` for current options) |
+| Provider differences | Two models from different providers at a similar tier |
 | Size-performance scaling | Two models from the same family at different sizes |
 
 ### Assignment
@@ -372,7 +383,9 @@ Prepare a 10-minute presentation for the class:
 
 ### Going Deeper
 
-Run your scenario through Lab 02 (grounding) and Lab 03 (reliability). Does the LLM's classification of your custom scenario improve with grounding? Is it consistent across repetitions? If you designed a scenario that exploits a domain the LLM knows poorly, the reliability results will be revealing. Write a one-page appendix on what the grounding and reliability results tell you about the LLM's competence in your domain.
+Run your scenario through Lab 02 (grounding) and Lab 03 (reliability). Does the LLM's classification of your custom scenario improve with grounding? Is it consistent across repetitions?
+
+If you designed a scenario that exploits a domain the LLM knows poorly, the reliability results will be revealing. Write a one-page appendix on what the grounding and reliability results tell you about the LLM's competence in your domain.
 
 ---
 

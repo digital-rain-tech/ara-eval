@@ -11,12 +11,17 @@
 **Format:** 10 weeks, one 2-hour session per week + independent work
 
 **Description:**
-This course teaches students to evaluate whether AI agents should be trusted with autonomous decisions in regulated industries. Students use the ARA-Eval framework to produce 7-dimension risk fingerprints for real-world financial services scenarios, employing an LLM judge to classify risk across Decision Reversibility, Failure Blast Radius, Regulatory Exposure, Human Override Latency, Data Confidence, Accountability Chain, and Graceful Degradation. Each dimension is rated A (highest risk) through D (lowest risk), and deterministic gating rules translate fingerprints into deployment recommendations.
+This course teaches students to evaluate whether AI agents should be trusted with autonomous decisions in regulated industries. Students use the ARA-Eval framework to produce 7-dimension risk fingerprints for real-world financial services scenarios, employing an LLM judge to classify risk (see dimension table below). Each dimension is rated A (highest risk) through D (lowest risk), and deterministic gating rules translate fingerprints into deployment recommendations.
 
-The course embodies a recursive pedagogy: students use AI to evaluate AI autonomy, and in doing so they discover firsthand that LLM judges are inconsistent, framing-sensitive, and perspective-dependent. These are not bugs in the course design --- they are the lessons.
+The course embodies a recursive pedagogy: students use AI to evaluate AI autonomy. In doing so, they discover firsthand that LLM judges are inconsistent, framing-sensitive, and perspective-dependent. These are not bugs in the course design --- they are the lessons.
 
 **Pedagogical Philosophy:**
-Weeks 1--4 build foundational understanding of risk dimensions, fingerprinting, and stakeholder perspectives. Weeks 5--7 introduce experimental design, asking students to measure how regulatory grounding, repetition, and model choice affect classifications. Weeks 8--10 synthesize everything into independent analysis and a final portfolio with policy recommendations. Complexity is scaffolded deliberately --- each week builds on prior work, and no week requires skills that have not been practiced in a previous week.
+
+- **Weeks 1--4 (Foundation):** Risk dimensions, fingerprinting, and stakeholder perspectives
+- **Weeks 5--7 (Experimental Design):** Measure how regulatory grounding, repetition, and model choice affect classifications
+- **Weeks 8--10 (Synthesis):** Independent analysis, scenario design, and a final portfolio with policy recommendations
+
+Complexity is scaffolded deliberately --- each week builds on prior work, and no week requires skills not practiced in a previous week.
 
 ---
 
@@ -38,11 +43,13 @@ All three labs are pre-built Python pipelines. Students run them from the comman
 
 **Setup (completed before Week 2):**
 1. Install Python 3.10+ and `pip install -r requirements.txt`
-2. Obtain an OpenRouter API key (free tier available at `openrouter/free`; paid models recommended from Week 7)
+2. Obtain an OpenRouter API key (free-tier models available; paid models recommended from Week 7)
 3. Create `.env.local` with `OPENROUTER_API_KEY=<key>`
 4. Verify setup: `python labs/lab-01-risk-fingerprinting.py` (should produce `results/lab-01-output.json`)
 
-**Cost:** Using the default model (Qwen3 235B Instruct), a full Lab 01 run costs approximately $0.003. Even premium models cost under $1 per run. Students on a budget can use `openrouter/free` for all labs except the model comparison in Week 7.
+**Cost:** Using the default model (Qwen3 235B Instruct), a full Lab 01 run costs approximately $0.003. Even premium models cost under $1 per run. Students on a budget can use a free-tier model (e.g., `ARA_MODEL=arcee-ai/trinity-large-preview:free`) for all labs except the model comparison in Week 7.
+
+**Resilience:** All results are saved locally (JSON + SQLite). If the API is unavailable during a session, students can work with previously generated results or retry later --- no work is lost. For large classes, stagger lab runs across a window rather than having 100 students hit the API simultaneously.
 
 ---
 
@@ -277,7 +284,7 @@ Produce a statistical analysis of Lab 03 results.
 
 **Pre-Class Preparation:**
 - Read: `docs/models.md` (full document --- understand the model tiers, pricing, and selection criteria)
-- Decide: Choose one free-tier model and one paid model to compare. Recommended pairing: `openrouter/free` vs. the default `qwen/qwen3-235b-a22b-2507`, or any Tier 2 vs. Tier 1 model from the models document
+- Decide: Choose one free-tier model and one paid model to compare. Recommended pairing: a specific free model (e.g., `arcee-ai/trinity-large-preview:free`) vs. the default `qwen/qwen3-235b-a22b-2507`, or any Tier 2 vs. Tier 1 model from the models document. Avoid `openrouter/free` (it routes randomly across models, making results unreproducible)
 - Budget: Ensure you have sufficient API credit for at least 2 full Lab 01 runs. At Qwen3 prices this is under $0.01; premium models may cost up to $1
 
 **In-Class Activity (90 minutes):**
@@ -469,13 +476,13 @@ python labs/lab-01-risk-fingerprinting.py              # 6 core scenarios
 python labs/lab-01-risk-fingerprinting.py --all         # All 13 scenarios
 
 # Lab 02: Regulatory Grounding
-python labs/lab-02-regulatory-grounding.py              # 6 core scenarios
+python labs/lab-02-grounding-experiment.py              # 6 core scenarios
 
 # Lab 03: Intra-Rater Reliability
-python labs/lab-03-intra-rater-reliability.py           # 6 core, 5 repetitions
+python labs/lab-03-intra-rater-reliability.py --repetitions 5   # 6 core, 5 reps
 
 # Change model
-ARA_MODEL=openrouter/free python labs/lab-01-risk-fingerprinting.py
+ARA_MODEL=arcee-ai/trinity-large-preview:free python labs/lab-01-risk-fingerprinting.py
 ```
 
 ### Recommended Reading (Optional)
