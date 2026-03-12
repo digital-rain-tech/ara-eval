@@ -63,6 +63,12 @@ All labs share the same environment. Set this up once in Week 1.
 git clone <repository-url>
 cd ara-eval
 
+# Create and activate a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate   # macOS / Linux
+# .venv\Scripts\activate    # Windows (Command Prompt)
+# .venv\Scripts\Activate.ps1  # Windows (PowerShell)
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -71,7 +77,9 @@ pip install -r requirements.txt
 echo "OPENROUTER_API_KEY=your-key-here" > .env.local
 ```
 
-Get an API key at [openrouter.ai](https://openrouter.ai). The default model is `qwen/qwen3-235b-a22b-2507`. Students can override with `ARA_MODEL=model-name` for the Week 4 model comparison.
+> **Tip:** You need to activate the virtual environment (`source .venv/bin/activate`) each time you open a new terminal before running the labs.
+
+Get an API key at [openrouter.ai](https://openrouter.ai). The default model is `arcee-ai/trinity-large-preview:free`. Students can override with `ARA_MODEL=model-name` for the Week 4 model comparison.
 
 ### Scenario Library
 

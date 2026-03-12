@@ -13,6 +13,10 @@ The framework evaluates operational domains across 7 dimensions, producing a **r
 ## Quickstart
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate   # macOS / Linux
+# .venv\Scripts\activate    # Windows (Command Prompt)
+
 pip install -r requirements.txt
 ```
 
@@ -27,9 +31,9 @@ python3 labs/lab-01-risk-fingerprinting.py          # core scenarios (~$0.003 wi
 python3 labs/lab-01-risk-fingerprinting.py --all     # all 13 scenarios (~$0.005)
 ```
 
-Default model: **Qwen3 235B Instruct** (`qwen/qwen3-235b-a22b-2507`) via OpenRouter. Swap models without touching code:
+Default model: **Arcee Trinity Large** (`arcee-ai/trinity-large-preview:free`) via OpenRouter. Swap models without touching code:
 ```bash
-ARA_MODEL=openrouter/free python3 labs/lab-01-risk-fingerprinting.py  # free tier
+ARA_MODEL=qwen/qwen3-235b-a22b-2507 python3 labs/lab-01-risk-fingerprinting.py  # paid tier
 ```
 
 See [`docs/models.md`](docs/models.md) for alternatives and pricing.

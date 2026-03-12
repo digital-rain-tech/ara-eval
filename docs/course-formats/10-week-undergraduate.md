@@ -42,12 +42,21 @@ Complexity is scaffolded deliberately --- each week builds on prior work, and no
 All three labs are pre-built Python pipelines. Students run them from the command line --- no coding required unless they choose to modify scenarios. The pipeline calls an LLM judge via OpenRouter and logs all results to a SQLite database and JSON output files.
 
 **Setup (completed before Week 2):**
-1. Install Python 3.10+ and `pip install -r requirements.txt`
-2. Obtain an OpenRouter API key (free-tier models available; paid models recommended from Week 7)
-3. Create `.env.local` with `OPENROUTER_API_KEY=<key>`
-4. Verify setup: `python labs/lab-01-risk-fingerprinting.py` (should produce `results/lab-01-output.json`)
+1. Install Python 3.10+
+2. Create and activate a virtual environment:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate   # macOS / Linux
+   # .venv\Scripts\activate    # Windows (Command Prompt)
+   # .venv\Scripts\Activate.ps1  # Windows (PowerShell)
+   ```
+   > **Important:** You need to activate the virtual environment each time you open a new terminal before running the labs.
+3. Install dependencies: `pip install -r requirements.txt`
+4. Obtain an OpenRouter API key (free-tier models available; paid models recommended from Week 7)
+5. Create `.env.local` with `OPENROUTER_API_KEY=<key>`
+6. Verify setup: `python labs/lab-01-risk-fingerprinting.py` (should produce `results/lab-01-output.json`)
 
-**Cost:** Using the default model (Qwen3 235B Instruct), a full Lab 01 run costs approximately $0.003. Even premium models cost under $1 per run. Students on a budget can use a free-tier model (e.g., `ARA_MODEL=arcee-ai/trinity-large-preview:free`) for all labs except the model comparison in Week 7.
+**Cost:** The default model (`arcee-ai/trinity-large-preview:free`) is free. Even premium models cost under $1 per run. For the model comparison in Week 7, students should use a paid model (e.g., `ARA_MODEL=qwen/qwen3-235b-a22b-2507`) alongside the default.
 
 **Resilience:** All results are saved locally (JSON + SQLite). If the API is unavailable during a session, students can work with previously generated results or retry later --- no work is lost. For large classes, stagger lab runs across a window rather than having 100 students hit the API simultaneously.
 
@@ -284,7 +293,7 @@ Produce a statistical analysis of Lab 03 results.
 
 **Pre-Class Preparation:**
 - Read: `docs/models.md` (full document --- understand the model tiers, pricing, and selection criteria)
-- Decide: Choose one free-tier model and one paid model to compare. Recommended pairing: a specific free model (e.g., `arcee-ai/trinity-large-preview:free`) vs. the default `qwen/qwen3-235b-a22b-2507`, or any Tier 2 vs. Tier 1 model from the models document. Avoid `openrouter/free` (it routes randomly across models, making results unreproducible)
+- Decide: Choose one free-tier model and one paid model to compare. Recommended pairing: the default free model vs. a paid model (e.g., `ARA_MODEL=qwen/qwen3-235b-a22b-2507`), or any Tier 2 vs. Tier 1 model from the models document. Avoid `openrouter/free` (it routes randomly across models, making results unreproducible)
 - Budget: Ensure you have sufficient API credit for at least 2 full Lab 01 runs. At Qwen3 prices this is under $0.01; premium models may cost up to $1
 
 **In-Class Activity (90 minutes):**
