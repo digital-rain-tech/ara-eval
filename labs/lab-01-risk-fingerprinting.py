@@ -596,6 +596,14 @@ def evaluate_scenario(
 LEVEL_ORDER = {"A": 0, "B": 1, "C": 2, "D": 3}
 
 
+def get_run_dir(results_dir: Path) -> Path:
+    """Create and return a date-stamped subdirectory under results/."""
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    run_dir = results_dir / today
+    run_dir.mkdir(parents=True, exist_ok=True)
+    return run_dir
+
+
 def personality_delta(results: dict) -> dict:
     """
     Compute where personality variants disagree on classifications.
@@ -867,18 +875,19 @@ def main():
         "python_version": sys.version,
     }
 
-    # Save results — timestamped file per run, plus a latest symlink
+    # Save results — dated folder, timestamped file, plus a latest symlink
+    run_dir = get_run_dir(results_dir)
     model_slug = MODEL.replace("/", "_").replace(":", "_")
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     output_filename = f"lab-01-{model_slug}-{timestamp}.json"
-    output_path = results_dir / output_filename
+    output_path = run_dir / output_filename
     with open(output_path, "w") as f:
         json.dump(all_results, f, indent=2, default=str)
 
-    # Symlink latest for convenience
+    # Symlink latest at results/ level for convenience
     latest_path = results_dir / "lab-01-output.json"
     latest_path.unlink(missing_ok=True)
-    latest_path.symlink_to(output_filename)
+    latest_path.symlink_to(run_dir.name + "/" + output_filename)
 
     print_run_summary(run_stats)
     print(f"\n  Results: {output_path}")

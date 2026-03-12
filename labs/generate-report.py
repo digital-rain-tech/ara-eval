@@ -67,6 +67,14 @@ RESULTS_DIR = _root / "results"
 DB_PATH = RESULTS_DIR / "ara-eval.db"
 
 
+def _get_report_dir() -> Path:
+    """Create and return a date-stamped subdirectory under results/."""
+    today = datetime.utcnow().strftime("%Y-%m-%d")
+    report_dir = RESULTS_DIR / today
+    report_dir.mkdir(parents=True, exist_ok=True)
+    return report_dir
+
+
 # ---------------------------------------------------------------------------
 # Database helpers
 # ---------------------------------------------------------------------------
@@ -138,10 +146,12 @@ def find_json_for_run(run: dict) -> Optional[Path]:
     run_id = run["run_id"]
     lab_prefix = _lab_prefix_for_run(run)
 
-    # Collect candidate files: prefer lab-prefix + model-slug matches, fall back to all
+    # Collect candidate files: search both results/ and results/YYYY-MM-DD/ subdirs
     patterns = [
         str(RESULTS_DIR / f"{lab_prefix}-{model_slug}-*.json"),
         str(RESULTS_DIR / f"{lab_prefix}-*.json"),
+        str(RESULTS_DIR / f"*/{lab_prefix}-{model_slug}-*.json"),
+        str(RESULTS_DIR / f"*/{lab_prefix}-*.json"),
     ]
 
     candidates = []
@@ -1038,7 +1048,8 @@ def main():
 
         short_a = id1[:8]
         short_b = id2[:8]
-        output_path = RESULTS_DIR / f"report-compare-{short_a}-vs-{short_b}.md"
+        report_dir = _get_report_dir()
+        output_path = report_dir / f"report-compare-{short_a}-vs-{short_b}.md"
 
     else:
         # Single-run mode
@@ -1062,10 +1073,10 @@ def main():
         print(f"JSON: {json_path}")
 
         report = generate_single_report(run, data)
-        output_path = RESULTS_DIR / f"report-{run_id[:8]}.md"
+        report_dir = _get_report_dir()
+        output_path = report_dir / f"report-{run_id[:8]}.md"
 
     # Write report
-    RESULTS_DIR.mkdir(exist_ok=True)
     with open(output_path, "w") as f:
         f.write(report)
 

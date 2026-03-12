@@ -239,16 +239,17 @@ def main():
     }
 
     from datetime import datetime, timezone
+    run_dir = lab01.get_run_dir(results_dir)
     model_slug = lab01.MODEL.replace("/", "_").replace(":", "_")
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     output_filename = f"lab-02-{model_slug}-{timestamp}.json"
-    output_path = results_dir / output_filename
+    output_path = run_dir / output_filename
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
 
     latest_path = results_dir / "lab-02-grounding.json"
     latest_path.unlink(missing_ok=True)
-    latest_path.symlink_to(output_filename)
+    latest_path.symlink_to(run_dir.name + "/" + output_filename)
 
     print(f"\n  Results: {output_path}")
     print(f"  Latest:  {latest_path} → {output_filename}")
