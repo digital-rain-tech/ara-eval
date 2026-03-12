@@ -712,10 +712,16 @@ def main():
     import argparse
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 01: Risk Fingerprinting")
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
+    parser.add_argument("--jurisdiction", type=str, default="hk", help="Jurisdiction to use (default: hk)")
+    parser.add_argument("--rubric", type=str, default="rubric.md", help="Rubric file to use (default: rubric.md)")
     args = parser.parse_args()
+
+    jurisdiction = args.jurisdiction
+    rubric = args.rubric
 
     # Load scenarios
     scenarios = load_scenarios(use_all=args.all)
+    scenario_set = "all" if args.all else "core"
 
     # Init SQLite
     results_dir = _root / "results"
@@ -728,17 +734,26 @@ def main():
     run_started = datetime.now(timezone.utc).isoformat()
     total_expected = len(scenarios) * len(PERSONALITIES)
 
+    run_metadata = {
+        "lab": "01-risk-fingerprinting",
+        "jurisdiction": jurisdiction,
+        "rubric": rubric,
+        "scenario_set": scenario_set,
+    }
+
     db_conn.execute(
         """INSERT INTO eval_runs
            (run_id, started_at, model_requested, scenario_count,
-            personality_count, total_calls)
-           VALUES (?, ?, ?, ?, ?, ?)""",
-        (run_id, run_started, MODEL, len(scenarios), len(PERSONALITIES), total_expected),
+            personality_count, total_calls, metadata)
+           VALUES (?, ?, ?, ?, ?, ?, ?)""",
+        (run_id, run_started, MODEL, len(scenarios), len(PERSONALITIES), total_expected,
+         json.dumps(run_metadata)),
     )
     db_conn.commit()
 
     print(f"Run {run_id}")
     print(f"Model: {MODEL}")
+    print(f"Jurisdiction: {jurisdiction} | Rubric: {rubric} | Scenarios: {scenario_set}")
     print(f"Scenarios: {len(scenarios)} × {len(PERSONALITIES)} personalities = {total_expected} calls\n")
 
     # Init HTTP client with OpenRouter headers
@@ -771,7 +786,7 @@ def main():
             try:
                 result = evaluate_scenario(
                     http_client, db_conn, run_id, scenario, personality_id,
-                    jurisdiction="hk", rubric="rubric.md"
+                    jurisdiction=jurisdiction, rubric=rubric
                 )
 
                 personality_results[personality_id] = result
@@ -837,6 +852,9 @@ def main():
     all_results["_run"] = {
         "run_id": run_id,
         "model_requested": MODEL,
+        "jurisdiction": jurisdiction,
+        "rubric": rubric,
+        "scenario_set": scenario_set,
         "started_at": run_started,
         "finished_at": datetime.now(timezone.utc).isoformat(),
         "total_calls": total_expected,

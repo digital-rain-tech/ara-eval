@@ -43,7 +43,7 @@ def list_runs(conn: sqlite3.Connection):
                scenario_count, personality_count, total_calls,
                successful_calls, failed_calls,
                total_input_tokens, total_output_tokens,
-               total_cost_usd, total_duration_ms
+               total_cost_usd, total_duration_ms, metadata
         FROM eval_runs
         ORDER BY started_at DESC
     """).fetchall()
@@ -52,9 +52,9 @@ def list_runs(conn: sqlite3.Connection):
         print("No runs found.")
         return
 
-    print(f"\n{'='*90}")
+    print(f"\n{'='*110}")
     print(f"  {'RUN ID':<38} {'MODEL':<32} {'CALLS':>7} {'TOKENS':>10} {'COST':>10} {'TIME':>8}")
-    print(f"{'='*90}")
+    print(f"{'='*110}")
 
     for r in rows:
         ok = r["successful_calls"] or 0
@@ -66,7 +66,29 @@ def list_runs(conn: sqlite3.Connection):
         model = (r["model_requested"] or "")[:31]
 
         print(f"  {r['run_id']:<38} {model:<32} {calls:>7} {tokens:>10} {cost:>10} {duration:>8}")
-        print(f"    Started: {r['started_at'] or '?'}")
+
+        # Show metadata if present
+        meta = {}
+        if r["metadata"]:
+            try:
+                meta = json.loads(r["metadata"])
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        meta_parts = []
+        if meta.get("jurisdiction"):
+            meta_parts.append(f"jurisdiction={meta['jurisdiction']}")
+        if meta.get("rubric"):
+            meta_parts.append(f"rubric={meta['rubric']}")
+        if meta.get("scenario_set"):
+            meta_parts.append(f"scenarios={meta['scenario_set']}")
+        if meta.get("experiment"):
+            meta_parts.append(f"experiment={meta['experiment']}")
+        if meta.get("repetitions"):
+            meta_parts.append(f"reps={meta['repetitions']}")
+
+        meta_str = f"  [{', '.join(meta_parts)}]" if meta_parts else ""
+        print(f"    Started: {r['started_at'] or '?'}{meta_str}")
 
     print()
 
@@ -82,9 +104,24 @@ def show_run(conn: sqlite3.Connection, run_id: str):
         print(f"Run {run_id} not found.")
         return
 
+    # Parse metadata
+    meta = {}
+    if run["metadata"]:
+        try:
+            meta = json.loads(run["metadata"])
+        except (json.JSONDecodeError, TypeError):
+            pass
+
     print(f"\n{'='*100}")
     print(f"  RUN: {run_id}")
     print(f"  Model: {run['model_requested']}")
+    if meta:
+        meta_parts = []
+        for k in ("jurisdiction", "rubric", "scenario_set", "experiment", "repetitions"):
+            if k in meta:
+                meta_parts.append(f"{k}={meta[k]}")
+        if meta_parts:
+            print(f"  Config: {', '.join(meta_parts)}")
     print(f"  Started: {run['started_at']}  Finished: {run['finished_at'] or 'in progress'}")
     print(f"  Calls: {run['successful_calls']}/{run['total_calls']}  "
           f"Tokens: {(run['total_input_tokens'] or 0):,} in / {(run['total_output_tokens'] or 0):,} out  "
