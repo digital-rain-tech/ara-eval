@@ -168,10 +168,19 @@ def main():
                 print(f"  [{completed}/{total_calls}] {sid} x {personality_id} rep {rep+1}/{reps}...", end=" ", flush=True)
 
                 try:
-                    result = lab01.evaluate_scenario(
-                        http_client, db_conn, run_id, scenario,
-                        personality_id, jurisdiction=args.jurisdiction
-                    )
+                    max_retries = 2
+                    for attempt in range(1 + max_retries):
+                        try:
+                            result = lab01.evaluate_scenario(
+                                http_client, db_conn, run_id, scenario,
+                                personality_id, jurisdiction=args.jurisdiction
+                            )
+                            break
+                        except Exception as retry_err:
+                            if attempt < max_retries:
+                                print(f"attempt {attempt + 1} failed ({retry_err}), retrying...", end=" ", flush=True)
+                            else:
+                                raise
                     all_results[sid][personality_id].append(result)
                     fp = result["gating"]["fingerprint_string"]
                     cost = f"${result.get('cost', 0):.6f}" if result.get("cost") else ""

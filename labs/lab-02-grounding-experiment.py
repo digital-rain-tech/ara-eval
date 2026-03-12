@@ -140,10 +140,19 @@ def main():
                 print(f"  [{jurisdiction}] {sid} × {personality_id}...", end=" ", flush=True)
 
                 try:
-                    result = lab01.evaluate_scenario(
-                        http_client, db_conn, run_id, scenario,
-                        personality_id, jurisdiction=jurisdiction
-                    )
+                    max_retries = 2
+                    for attempt in range(1 + max_retries):
+                        try:
+                            result = lab01.evaluate_scenario(
+                                http_client, db_conn, run_id, scenario,
+                                personality_id, jurisdiction=jurisdiction
+                            )
+                            break
+                        except Exception as retry_err:
+                            if attempt < max_retries:
+                                print(f"attempt {attempt + 1} failed ({retry_err}), retrying...", end=" ", flush=True)
+                            else:
+                                raise
                     condition_results[jurisdiction][sid][personality_id] = result
                     fp = result["gating"]["fingerprint_string"]
                     cost = f"${result.get('cost', 0):.6f}" if result.get("cost") else ""
