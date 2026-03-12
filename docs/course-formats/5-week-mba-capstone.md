@@ -214,9 +214,31 @@ For the two scenarios that showed the largest grounding effect, write an analyti
 
 ### Going Deeper
 
+#### Option A: Extended Grounding Analysis
+
 Run Lab 02 with `--all` to include backup scenarios. The `cross-border-model-001` scenario involves PIPL Articles 38--43 and the GBA Standard Contract for cross-boundary data flows — highly technical regulatory content.
 
 Compare its grounding delta against simpler scenarios. Does the LLM benefit more from grounding when the regulation is more obscure? Write a one-page analysis.
+
+#### Option B: Structured Input Experiment
+
+The core scenarios include a `structured_context` field that decomposes the narrative into subject, object, action, regulatory triggers, and other structured metadata. Run Lab 01 with the `--structured` flag to inject this context into the prompt alongside the narrative:
+
+```bash
+# Narrative only (your Week 1 baseline)
+python labs/lab-01-risk-fingerprinting.py
+
+# Narrative + structured context
+python labs/lab-01-risk-fingerprinting.py --structured
+```
+
+Compare the two runs:
+
+1. Did structured context improve accuracy against reference fingerprints? Which dimensions benefited most?
+2. Did it reduce personality variance? (Structured inputs should anchor all three stakeholders on the same facts.)
+3. The structured context was authored by humans. In practice, you would use an LLM to extract it from the narrative. What happens if the structuring LLM misses the same regulatory trigger the judge LLM misses — have you automated your blind spot?
+
+This connects directly to the grounding experiment: regulatory citations (Lab 02) and structured context are both ways of telling the LLM what to pay attention to. Which is more effective, and why?
 
 ---
 
@@ -435,6 +457,7 @@ At approximately $0.01--0.03 per call (varies by model), total cost per student 
 # Lab 01 — Risk Fingerprinting
 python labs/lab-01-risk-fingerprinting.py              # Core scenarios (6)
 python labs/lab-01-risk-fingerprinting.py --all         # All scenarios (13)
+python labs/lab-01-risk-fingerprinting.py --structured  # Core scenarios with structured context
 
 # Lab 02 — Regulatory Grounding
 python labs/lab-02-grounding-experiment.py              # Core scenarios

@@ -117,8 +117,30 @@ def build_system_prompt(personality_id: str, jurisdiction: str = "hk", rubric: s
     return personality_rendered.strip() + "\n\n" + rubric_rendered.strip() + "\n\n" + output_format.strip()
 
 
-def build_user_prompt(scenario: dict) -> str:
-    """Render user prompt template with scenario data."""
+def build_user_prompt(scenario: dict, structured: bool = False) -> str:
+    """Render user prompt template with scenario data.
+
+    If structured=True and the scenario has structured_context, uses the
+    structured prompt template which includes subject/object/action decomposition.
+    """
+    sc = scenario.get("structured_context", {})
+    if structured and sc:
+        template = load_prompt("user_prompt_structured.md")
+        return chevron.render(template, {
+            "scenario": scenario.get("scenario", ""),
+            "domain": scenario.get("domain", ""),
+            "industry": scenario.get("industry", ""),
+            "jurisdiction_notes": scenario.get("jurisdiction_notes", "N/A"),
+            "subject": sc.get("subject", ""),
+            "object": sc.get("object", ""),
+            "action": sc.get("action", ""),
+            "regulatory_triggers": ", ".join(sc.get("regulatory_triggers", [])),
+            "time_pressure": sc.get("time_pressure", ""),
+            "confidence_signal": sc.get("confidence_signal", ""),
+            "reversibility": sc.get("reversibility", ""),
+            "blast_radius": sc.get("blast_radius", ""),
+        }).strip()
+
     template = load_prompt("user_prompt.md")
     return chevron.render(template, {
         "scenario": scenario.get("scenario", ""),
@@ -461,6 +483,7 @@ def evaluate_scenario(
     personality_id: str,
     jurisdiction: str = "hk",
     rubric: str = "rubric.md",
+    structured: bool = False,
 ) -> dict:
     """
     Submit a scenario to the LLM judge via OpenRouter.
@@ -468,7 +491,7 @@ def evaluate_scenario(
     Returns the parsed risk fingerprint.
     """
     system = build_system_prompt(personality_id, jurisdiction, rubric)
-    user_content = build_user_prompt(scenario)
+    user_content = build_user_prompt(scenario, structured=structured)
 
     request_body = {
         "model": MODEL,
@@ -722,10 +745,12 @@ def main():
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
     parser.add_argument("--jurisdiction", type=str, default="hk", help="Jurisdiction to use (default: hk)")
     parser.add_argument("--rubric", type=str, default="rubric.md", help="Rubric file to use (default: rubric.md)")
+    parser.add_argument("--structured", action="store_true", help="Include structured context (subject/object/action) in prompts")
     args = parser.parse_args()
 
     jurisdiction = args.jurisdiction
     rubric = args.rubric
+    structured = args.structured
 
     # Load scenarios
     scenarios = load_scenarios(use_all=args.all)
@@ -747,6 +772,7 @@ def main():
         "jurisdiction": jurisdiction,
         "rubric": rubric,
         "scenario_set": scenario_set,
+        "structured": structured,
     }
 
     db_conn.execute(
@@ -761,7 +787,8 @@ def main():
 
     print(f"Run {run_id}")
     print(f"Model: {MODEL}")
-    print(f"Jurisdiction: {jurisdiction} | Rubric: {rubric} | Scenarios: {scenario_set}")
+    structured_label = " | Structured: yes" if structured else ""
+    print(f"Jurisdiction: {jurisdiction} | Rubric: {rubric} | Scenarios: {scenario_set}{structured_label}")
     print(f"Scenarios: {len(scenarios)} × {len(PERSONALITIES)} personalities = {total_expected} calls\n")
 
     # Init HTTP client with OpenRouter headers
@@ -794,7 +821,7 @@ def main():
             try:
                 result = evaluate_scenario(
                     http_client, db_conn, run_id, scenario, personality_id,
-                    jurisdiction=jurisdiction, rubric=rubric
+                    jurisdiction=jurisdiction, rubric=rubric, structured=structured
                 )
 
                 personality_results[personality_id] = result

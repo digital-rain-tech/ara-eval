@@ -322,41 +322,63 @@ Produce a cost-accuracy analysis.
 
 ---
 
-### Week 8: Extended Scenarios
+### Week 8: Structured Inputs and Extended Scenarios
 
 **Learning Objectives:**
-- Run Lab 01 with the `--all` flag to evaluate all 13 scenarios (6 core + 7 backup)
-- Compare the difficulty and ambiguity of backup scenarios to core scenarios
-- Identify which scenario properties (risk tier, domain, dimension asymmetry) make classification harder
+- Measure the effect of structured input decomposition on LLM classification accuracy and consistency
+- Evaluate how structuring scenario data (subject/object/action/regulatory triggers) changes LLM behavior compared to narrative-only input
+- Reason about when to invest in data structuring for AI evaluation systems and the risks of using LLMs to do the structuring
 
 **Pre-Class Preparation:**
-- Read: The full scenario file (`scenarios/starter-scenarios.json`) --- study the 7 backup scenarios you have not yet evaluated
-- Review: ADR-003's explanation of why each backup scenario was selected and what "extra credit angle" it offers
-- Predict: Before running the lab, write down your predicted fingerprint for 3 of the 7 backup scenarios. Bring these predictions to class
+- Read: The `structured_context` fields in the core scenarios (`scenarios/starter-scenarios.json`) --- study how each narrative was decomposed into subject, object, action, regulatory triggers, time pressure, confidence signal, reversibility, and blast radius
+- Read: ADR-003 (Core vs Backup Scenario Split) --- understand why these 6 scenarios were chosen
+- Think: For 2 backup scenarios that lack `structured_context`, draft your own decomposition. Bring it to class
 
 **In-Class Activity (90 minutes):**
-1. **Backup scenario preview (15 min):** Briefly review the 7 backup scenarios. What makes them different from the core set? (Higher risk concentration, more domain overlap, real-incident basis for several.)
-2. **Full lab run (20 min):** Students run Lab 01 with `--all`. This produces 13 x 3 = 39 evaluations. While waiting, discuss: ADR-003 notes that 13 fingerprints per condition is "too much cognitive load." Do you agree? How do you manage information overload in analysis?
-3. **Core vs. backup comparison (35 min):** Students analyze:
-   - Do backup scenarios produce more A-level classifications than core scenarios?
-   - Are backup scenarios more likely to trigger hard gates?
-   - Do personality variants disagree more on backup scenarios than core scenarios?
-   - Which backup scenario was most surprising?
-4. **Prediction check (20 min):** Students compare their predictions to actual results. Discuss: Were the backup scenarios harder to predict? Why?
+1. **Why structure matters (15 min):** Discussion: In Week 5 (Lab 02), you saw that *telling* the LLM about specific regulations changed its classifications. Structured context goes further --- instead of just regulatory citations, you decompose the entire scenario into fields that map directly to the 7 dimensions. Why might this help? Why might it be dangerous?
+2. **Structured vs. narrative lab run (25 min):** Students run Lab 01 twice on core scenarios:
+   ```bash
+   python labs/lab-01-risk-fingerprinting.py              # narrative only (baseline)
+   python labs/lab-01-risk-fingerprinting.py --structured  # narrative + structured context
+   ```
+   Then run the full scenario set for comparison:
+   ```bash
+   python labs/lab-01-risk-fingerprinting.py --all         # all 13 scenarios (narrative only)
+   ```
+3. **Structured input analysis (30 min):** Students compare the structured vs. narrative runs:
+   - Which dimensions improved most against reference fingerprints?
+   - Did personality variance decrease? (Structured inputs should anchor stakeholders on the same facts.)
+   - Did any dimensions get *worse*? (Structured context can over-anchor the LLM on stated facts, causing it to ignore implications.)
+4. **The automation question (20 min):** Discussion: The structured context in the scenarios was authored by humans. In production, you would use an LLM to extract it. What happens when the structuring LLM and the judge LLM share the same blind spots? How is this different from the grounding experiment (Lab 02), where the regulatory citations were also human-authored?
 
 **Assignment:**
-1. Produce the full 13-scenario fingerprint matrix (all personalities).
+
+**Part A --- Structured Input Analysis:**
+1. Side-by-side fingerprint comparison for all 6 core scenarios: narrative-only vs. structured. Highlight every dimension that changed.
+2. Compute accuracy against reference fingerprints for both conditions. Did structuring improve reference accuracy? By how much?
+3. Identify the scenario where structuring had the largest effect. What specific structured field do you think drove the change, and why?
+
+**Part B --- Extended Scenario Analysis:**
+1. Produce the full 13-scenario fingerprint matrix (all personalities, narrative-only).
 2. Compute summary statistics comparing core vs. backup scenarios:
    - Average number of A-level dimensions per scenario
    - Percentage of scenarios triggering hard gates in each set
    - Average personality delta (number of dimensions where at least 2 personalities disagree) for each set
 3. Select the backup scenario you found most interesting. Write a 400-word analysis explaining:
    - Why this scenario is interesting (what makes it difficult, ambiguous, or surprising?)
-   - How it compares to the most similar core scenario (ADR-003 pairs several backup scenarios with core counterparts)
+   - How it compares to the most similar core scenario
    - Whether the LLM judge handled the complexity well, and what evidence supports your assessment
-4. If you were selecting a "core set" of 6 scenarios from the full 13, which 6 would you choose and why? Your selection criteria may differ from ADR-003's --- explain your reasoning.
 
-**Deliverable Format:** Full fingerprint matrix + summary statistics + 400-word scenario analysis + core set proposal with rationale.
+**Part C --- Structuring as a Tool (300 words):**
+Write a short essay: If you were building a production AI governance system, would you invest in structured input decomposition? Consider:
+- The cost of human structuring vs. LLM-assisted structuring
+- The risk of automated blind spots (structuring LLM misses the same things the judge LLM misses)
+- How structured inputs compare to regulatory grounding (Lab 02) as a way to improve classification accuracy
+- Whether structured inputs reduce the need for expensive judge models (can a cheap model with structured inputs match an expensive model with narrative-only?)
+
+**Deliverable Format:** Fingerprint comparison tables (Part A) + extended scenario matrix and analysis (Part B) + 300-word essay (Part C).
+
+**Extra Credit:** Draft `structured_context` for 2 backup scenarios that lack it. Run Lab 01 with `--structured` on those scenarios and compare against their narrative-only results. Did your structuring improve accuracy? Where did your decomposition differ from what the LLM inferred on its own?
 
 ---
 
@@ -483,6 +505,7 @@ Students should treat reference fingerprints as informed expert judgment, not gr
 # Lab 01: Risk Fingerprinting
 python labs/lab-01-risk-fingerprinting.py              # 6 core scenarios
 python labs/lab-01-risk-fingerprinting.py --all         # All 13 scenarios
+python labs/lab-01-risk-fingerprinting.py --structured  # Core scenarios with structured context
 
 # Lab 02: Regulatory Grounding
 python labs/lab-02-grounding-experiment.py              # 6 core scenarios
