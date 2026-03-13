@@ -123,4 +123,4 @@ See [`labs/README.md`](labs/README.md) for exercises and key questions. Course s
 
 ## License
 
-Framework and methodology: open.
+Apache 2.0 — see [LICENSE](LICENSE).
