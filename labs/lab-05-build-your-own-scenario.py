@@ -429,15 +429,129 @@ def compare_results(scenario_id: str):
     print()
 
 
+def show_example():
+    """Show a completed scenario as a model for students."""
+    # Use insurance-claims-001 as the example
+    with open(_root / "scenarios" / "starter-scenarios.json") as f:
+        scenarios = json.load(f)
+    example = next(s for s in scenarios if s["id"] == "insurance-claims-001")
+
+    print(f"\n{'='*70}")
+    print(f"  EXAMPLE: A COMPLETED SCENARIO")
+    print(f"  (insurance-claims-001 from the starter set)")
+    print(f"{'='*70}")
+    print()
+    print(json.dumps(example, indent=2))
+    print()
+    print(f"{'='*70}")
+    print(f"  WHAT MAKES THIS SCENARIO WORK")
+    print(f"{'='*70}")
+    print("""
+  1. GROUNDED IN REALITY
+     Based on real cross-border insurance claims in Hong Kong.
+     Names a real company (AIA), real amount (HK$180,000), real
+     jurisdictions (HK + Shenzhen).
+
+  2. SPECIFIC NUMBERS
+     "94% historical approval rate" — not "high confidence"
+     "HK$180,000" — not "a large claim"
+     These force the model to reason about magnitudes.
+
+  3. CLEAR ALTERNATIVES
+     "The agent can approve and pay autonomously" — states what
+     the agent WOULD do, so the judge can assess whether it SHOULD.
+
+  4. REGULATORY CONTEXT
+     Jurisdiction notes name specific frameworks (PIPL, PDPO, IA
+     requirements) — not just "regulatory concerns."
+
+  5. STRUCTURED CONTEXT
+     The structured_context fields decompose the scenario into
+     the building blocks the framework evaluates: who acts, on what,
+     with what authority, under what time pressure, with what data.
+
+  YOUR SCENARIO SHOULD HAVE ALL FIVE.
+  Start from a real case — a news story, a regulatory action, a process
+  you've seen at work. The best scenarios come from situations where
+  someone debated whether to automate.
+""")
+
+
+def show_research_guide():
+    """Show how to use AI tools to research and refine a scenario."""
+    print(f"\n{'='*70}")
+    print(f"  USING AI TOOLS TO RESEARCH YOUR SCENARIO")
+    print(f"{'='*70}")
+    print("""
+  After you've written a first draft manually, you can use an AI coding
+  assistant (Claude Code, OpenAI Codex, GitHub Copilot, Cursor, etc.) to
+  help research and refine it. Here's how:
+
+  STEP 1: FIND A CASE
+  Ask your AI assistant to search for real cases:
+
+    "Search for recent regulatory enforcement actions in Hong Kong
+     financial services involving AI or algorithmic decision-making.
+     I need a real case I can turn into an ARA-Eval scenario."
+
+    "Find news stories about AI systems that made autonomous decisions
+     in [insurance/banking/capital markets] with negative outcomes."
+
+  STEP 2: FILL IN REGULATORY CONTEXT
+  Once you have a case, ask for the specific regulations:
+
+    "What HKMA, SFC, PCPD, or IA regulations apply to [describe
+     your scenario]? List specific circular numbers and requirements."
+
+  STEP 3: REFINE THE STRUCTURED CONTEXT
+  Ask for help decomposing the scenario:
+
+    "Here's my scenario: [paste it]. Help me fill in the structured
+     context fields — subject, object, action, regulatory triggers,
+     time pressure, confidence signal, reversibility, blast radius."
+
+  IMPORTANT: The AI can help you RESEARCH and STRUCTURE the scenario.
+  But YOUR fingerprint prediction (--predict) must be YOUR judgment.
+  The whole point is to discover where your assessment differs from
+  the model's. If you let AI write your prediction, you learn nothing.
+
+  EXAMPLE WORKFLOW:
+
+    # 1. Create template
+    python labs/lab-05-build-your-own-scenario.py --init my-case-001
+
+    # 2. Write your first draft manually in the JSON file
+
+    # 3. Use AI to research regulations and refine
+    #    (in your AI coding assistant, NOT this script)
+
+    # 4. Predict your fingerprint — this must be YOU
+    python labs/lab-05-build-your-own-scenario.py --predict my-case-001
+
+    # 5. Run and compare
+    python labs/lab-05-build-your-own-scenario.py --run my-case-001
+    python labs/lab-05-build-your-own-scenario.py --compare my-case-001
+""")
+
+
 def main():
-    parser = argparse.ArgumentParser(description="ARA-Eval Lab 05: Build Your Own Scenario")
+    parser = argparse.ArgumentParser(
+        description="ARA-Eval Lab 05: Build Your Own Scenario",
+        epilog="Tip: run --example first to see what a good scenario looks like.",
+    )
     parser.add_argument("--init", metavar="ID", help="Create a new scenario template")
-    parser.add_argument("--predict", metavar="ID", help="Record your predicted fingerprint")
+    parser.add_argument("--example", action="store_true", help="Show a completed scenario as a model to follow")
+    parser.add_argument("--research", action="store_true", help="Show how to use AI tools to research your scenario")
+    parser.add_argument("--predict", metavar="ID", help="Record your predicted fingerprint (do this BEFORE --run)")
     parser.add_argument("--run", metavar="ID", help="Run the scenario through the LLM judge")
-    parser.add_argument("--compare", metavar="ID", help="Compare prediction vs model vs reference")
+    parser.add_argument("--compare", metavar="ID", help="Compare your prediction vs model output")
     args = parser.parse_args()
 
-    if args.init:
+    if args.example:
+        show_example()
+    elif args.research:
+        show_research_guide()
+    elif args.init:
         init_scenario(args.init)
     elif args.predict:
         predict_fingerprint(args.predict)
@@ -448,11 +562,13 @@ def main():
     else:
         parser.print_help()
         print("\nWorkflow:")
-        print("  1. --init <id>      Create scenario template")
-        print("  2. (edit the JSON)  Fill in the scenario")
-        print("  3. --predict <id>   Record your prediction BEFORE running the model")
-        print("  4. --run <id>       Run through LLM judge")
-        print("  5. --compare <id>   See where you and the model agree/disagree")
+        print("  1. --example        See what a good scenario looks like")
+        print("  2. --init <id>      Create your scenario template")
+        print("  3. (edit the JSON)  Write your scenario — start from a real case")
+        print("  4. --research       Tips for using AI tools to research regulations")
+        print("  5. --predict <id>   Record YOUR prediction BEFORE running the model")
+        print("  6. --run <id>       Run through LLM judge (3 personality variants)")
+        print("  7. --compare <id>   See where you and the model agree/disagree")
 
 
 if __name__ == "__main__":
