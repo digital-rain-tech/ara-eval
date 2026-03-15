@@ -1,5 +1,6 @@
 # Results (generated per-run, not committed)
 results/
+!results/reference/
 
 # Python
 __pycache__/

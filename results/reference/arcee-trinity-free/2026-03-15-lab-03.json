@@ -1,0 +1,1578 @@
+{
+  "_experiment": {
+    "name": "intra_rater_reliability",
+    "model": "arcee-ai/trinity-large-preview:free",
+    "jurisdiction": "hk",
+    "repetitions": 5,
+    "scenarios": 6,
+    "personalities": 3,
+    "total_calls": 90,
+    "structured": false,
+    "wall_time_ms": 919100
+  },
+  "dimension_stability": {
+    "Decision Reversibility": {
+      "mean_agreement": 0.744,
+      "min_agreement": 0.6,
+      "perfect_cells": 2,
+      "total_cells": 18,
+      "perfect_rate": 0.111
+    },
+    "Failure Blast Radius": {
+      "mean_agreement": 0.878,
+      "min_agreement": 0.6,
+      "perfect_cells": 10,
+      "total_cells": 18,
+      "perfect_rate": 0.556
+    },
+    "Regulatory Exposure": {
+      "mean_agreement": 0.789,
+      "min_agreement": 0.6,
+      "perfect_cells": 7,
+      "total_cells": 18,
+      "perfect_rate": 0.389
+    },
+    "Human Override Latency": {
+      "mean_agreement": 0.811,
+      "min_agreement": 0.6,
+      "perfect_cells": 7,
+      "total_cells": 18,
+      "perfect_rate": 0.389
+    },
+    "Data Confidence": {
+      "mean_agreement": 0.856,
+      "min_agreement": 0.6,
+      "perfect_cells": 9,
+      "total_cells": 18,
+      "perfect_rate": 0.5
+    },
+    "Accountability Chain": {
+      "mean_agreement": 0.856,
+      "min_agreement": 0.6,
+      "perfect_cells": 7,
+      "total_cells": 18,
+      "perfect_rate": 0.389
+    },
+    "Graceful Degradation": {
+      "mean_agreement": 0.789,
+      "min_agreement": 0.6,
+      "perfect_cells": 7,
+      "total_cells": 18,
+      "perfect_rate": 0.389
+    }
+  },
+  "cell_reports": {
+    "insurance-claims-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 2,
+            "B": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "A": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "D": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "D",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "D": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 2,
+            "C": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "A": 2,
+            "B": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 2,
+            "C": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        }
+      }
+    },
+    "banking-customer-service-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "D": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 1,
+            "C": 4
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "D": 1,
+            "C": 4
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "D",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "D": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "D",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 2,
+            "D": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "D": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "D": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 2,
+            "B": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "D": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 1,
+            "C": 4
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        }
+      }
+    },
+    "algo-trading-deployment-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "A": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "A": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "A": 3,
+            "B": 1,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.25000000000000017
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 1,
+            "A": 4
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "A": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 2,
+            "B": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        }
+      }
+    },
+    "genai-data-leakage-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 1,
+            "C": 4
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "A": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 2,
+            "C": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 2,
+            "C": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "D": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "A": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 2,
+            "C": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "A": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        }
+      }
+    },
+    "claims-denial-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "A": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 2,
+            "B": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 2,
+            "B": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 2,
+            "C": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "A": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "A": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      }
+    },
+    "cross-border-model-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "A": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "D": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 4,
+            "B": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "A": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "C": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "C": 1,
+            "B": 4
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 4,
+          "agreement_rate": 0.8,
+          "distribution": {
+            "B": 4,
+            "C": 1
+          },
+          "unanimous": false,
+          "kappa": -0.2500000000000007
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 2,
+            "C": 3
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "B": 3,
+            "C": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Failure Blast Radius": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Regulatory Exposure": {
+          "n": 5,
+          "mode": "A",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "A": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Human Override Latency": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        },
+        "Data Confidence": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Accountability Chain": {
+          "n": 5,
+          "mode": "B",
+          "mode_count": 5,
+          "agreement_rate": 1.0,
+          "distribution": {
+            "B": 5
+          },
+          "unanimous": true,
+          "kappa": 1.0
+        },
+        "Graceful Degradation": {
+          "n": 5,
+          "mode": "C",
+          "mode_count": 3,
+          "agreement_rate": 0.6,
+          "distribution": {
+            "C": 3,
+            "B": 2
+          },
+          "unanimous": false,
+          "kappa": -0.25
+        }
+      }
+    }
+  }
+}

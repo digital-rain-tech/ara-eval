@@ -1,0 +1,1110 @@
+{
+  "_experiment": {
+    "name": "regulatory_grounding",
+    "conditions": [
+      "hk",
+      "hk-grounded"
+    ],
+    "model": "arcee-ai/trinity-large-preview:free",
+    "scenarios": 6,
+    "personalities": 3,
+    "total_evals_per_condition": 18,
+    "structured": false,
+    "wall_time_ms": 496114
+  },
+  "comparisons": {
+    "insurance-claims-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Payment can be reversed but requires significant administrative effort and time",
+          "reasoning_b": "Payment can be reversed if fraud is detected, but medical necessity decisions are harder to undo once treatment occurs"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Single policyholder affected but high monetary value involved",
+          "reasoning_b": "One high-value claim affects one customer but involves significant monetary exposure"
+        },
+        "Regulatory Exposure": {
+          "hk": "B",
+          "hk-grounded": "A",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Cross-border data flows trigger PIPL requirements plus insurance regulatory compliance",
+          "reasoning_b": "Cross-border data transfer triggers PIPL requirements, PDPO compliance, and IA insurance regulations"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent can pause processing if flagged, allowing human review within hours",
+          "reasoning_b": "AIA can implement human review for claims above certain thresholds before payment processing"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "High confidence from 94% historical approval rate and complete documentation",
+          "reasoning_b": "High confidence from 94% historical approval rate, but medical diagnosis still requires human validation for high-value claims"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Clear accountability exists but gaps remain for cross-border jurisdictional oversight",
+          "reasoning_b": "AIA has oversight but autonomous approval creates accountability gaps for high-value medical decisions"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent can escalate to human for review if confidence thresholds aren't met",
+          "reasoning_b": "System can flag anomalies and escalate, but payment reversal after approval is operationally complex"
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Payment can be reversed but requires bank coordination and may face delays",
+          "reasoning_b": "Payment can be reversed but requires investigation and may cause customer friction"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Single policyholder affected, HK$180,000 exposure, but contained to one claim",
+          "reasoning_b": "Single policyholder affected with HK$180,000 financial impact"
+        },
+        "Regulatory Exposure": {
+          "hk": "B",
+          "hk-grounded": "A",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Cross-border data flow triggers PIPL/PDPO, plus IA regulatory requirements for claim processing",
+          "reasoning_b": "Cross-border data transfer triggers PIPL requirements and insurance regulation requires human oversight"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Human can intervene before payment but not after approval decision made",
+          "reasoning_b": "Human override possible within hours for claim review"
+        },
+        "Data Confidence": {
+          "hk": "D",
+          "hk-grounded": "D",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Complete structured data, 94% historical approval rate, perfect match to policy terms",
+          "reasoning_b": "Complete data with 94% historical approval rate provides high confidence signal"
+        },
+        "Accountability Chain": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Clear audit trail exists, but ultimate responsibility may be ambiguous between agent and human supervisor",
+          "reasoning_b": "Agent acts but human accountable for oversight gaps, though audit trail exists"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "If agent fails, claim routes to human queue, no cascading failures",
+          "reasoning_b": "Failed claim would be flagged for human review with minimal cascading effects"
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Claim can be reversed through recovery process but involves administrative overhead and potential customer friction",
+          "reasoning_b": "Claim approval can be reversed but requires manual investigation and potential clawback, making it hard to undo cleanly"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "A single large claim affects one customer but involves significant monetary exposure and potential reputational impact",
+          "reasoning_b": "Incorrect approval affects one policyholder with HK$180,000 but doesn't cascade to other customers or systems"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Cross-border data flows trigger PIPL, PDPO, and insurance regulatory requirements with direct compliance mandates",
+          "reasoning_b": "Cross-border health insurance claim processing triggers PIPL data transfer requirements, PDPO privacy obligations, and insurance regulatory mandates"
+        },
+        "Human Override Latency": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Override possible but requires escalation to claims manager, creating delay in urgent situations",
+          "reasoning_b": "A human can override the decision within hours, though not instantly due to investigation requirements"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "High confidence in structured claim data and 94% historical approval rate, but still requires policy term verification",
+          "reasoning_b": "Strong signal with 94% historical approval rate and complete documentation, but still involves medical judgment and cross-border data considerations"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent acts autonomously but ultimate accountability unclear between claims department and compliance oversight",
+          "reasoning_b": "Clear accountability exists but gaps remain in how AI decisions are documented and audited for regulatory compliance"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "If agent fails, claim processing halts but doesn't cascade to other systems or customers",
+          "reasoning_b": "Agent can escalate to human for complex cases, containing failure to individual claims rather than system-wide issues"
+        }
+      }
+    },
+    "banking-customer-service-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Address update can be reversed by re-updating, and opening hours are static information",
+          "reasoning_b": "Address change can be reversed but requires manual intervention and may take time to propagate through systems"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Affects one customer's data and provides information to one customer",
+          "reasoning_b": "Single customer affected, but address change could cause delivery issues and requires correction"
+        },
+        "Regulatory Exposure": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "PDPO data handling requirements apply but no specific banking regulations for this task",
+          "reasoning_b": "PDPO data protection applies to personal address data handling, requiring appropriate safeguards and consent"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Customer can contact support to reverse changes, and errors are easily detectable",
+          "reasoning_b": "Human can override but may not be immediately available depending on escalation procedures"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Opening hours are factual data, address change requires verification but is straightforward",
+          "reasoning_b": "Strong signal for branch hours (public data) but moderate confidence for address change requiring verification"
+        },
+        "Accountability Chain": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "HSBC is accountable for chatbot actions, with audit trails for address changes",
+          "reasoning_b": "HSBC accountable for chatbot actions but unclear if audit trails exist for autonomous address changes"
+        },
+        "Graceful Degradation": {
+          "hk": "D",
+          "hk-grounded": "C",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Chatbot can escalate to human agent if unable to process, failing safely",
+          "reasoning_b": "If address change fails, customer can retry or contact human support; no cascading failures expected"
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "hk": "D",
+          "hk-grounded": "D",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Both tasks are fully reversible through standard banking processes",
+          "reasoning_b": "Address change can be reverted and chatbot responses can be edited or corrected"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Incorrect information affects one customer, address change is single-customer impact",
+          "reasoning_b": "Affects one customer's data and service experience, not systemic"
+        },
+        "Regulatory Exposure": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Standard PDPO data handling for address update, no specific regulatory constraints mentioned",
+          "reasoning_b": "PDPO applies to personal data handling but is general compliance, not direct regulatory mandate"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Customer can call back or visit branch to correct any issues with address change",
+          "reasoning_b": "Customer can call back or visit branch to reverse changes; human intervention is straightforward"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Opening hours/ATM locations are structured data; address update is straightforward customer-provided data",
+          "reasoning_b": "Strong signal from structured data (branch hours, ATM locations) with caveats for address verification"
+        },
+        "Accountability Chain": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "HSBC has clear audit trails for both information provision and address changes",
+          "reasoning_b": "Clear audit trail exists but requires manual review for data protection compliance"
+        },
+        "Graceful Degradation": {
+          "hk": "D",
+          "hk-grounded": "C",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Agent can gracefully fall back to human agent or provide disclaimers for uncertain information",
+          "reasoning_b": "Failures are contained to individual interactions and can be escalated to human agents"
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Address change can be reversed by customer support or admin tools",
+          "reasoning_b": "Address updates can be reversed but require manual intervention, making them easily reversible but not fully sandboxed"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Affects only one customer's address record, no systemic impact",
+          "reasoning_b": "A single customer's address change affects only that customer's account, not multiple customers or systems"
+        },
+        "Regulatory Exposure": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Standard PDPO data handling for personal information update",
+          "reasoning_b": "Standard PDPO data handling applies, requiring privacy compliance but no direct regulatory mandate for this specific action"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Customer can call support or reverse change within normal service hours",
+          "reasoning_b": "A human can review and override the address change before it's finalized, though there may be slight processing delay"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Strong signal from customer's verified account data for address update",
+          "reasoning_b": "The agent has structured data (branch/ATM info) and clear customer input for the address change, with caveats for verification"
+        },
+        "Accountability Chain": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Clear audit trail through HSBC's CRM with customer service oversight",
+          "reasoning_b": "HSBC maintains audit trails for address changes, providing clear accountability with proper logging"
+        },
+        "Graceful Degradation": {
+          "hk": "D",
+          "hk-grounded": "B",
+          "shift": 2,
+          "changed": true,
+          "reasoning_a": "System can roll back address change without cascading effects",
+          "reasoning_b": "If the agent fails, it might process an incorrect address without immediate detection, requiring follow-up to correct"
+        }
+      }
+    },
+    "algo-trading-deployment-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Trading decisions can be reversed but at significant cost due to market impact and potential losses during reversal",
+          "reasoning_b": "Trading can be halted and positions unwound, though market impact may occur"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Affects multiple equities across HKEx, impacting multiple customers and potentially causing significant financial losses",
+          "reasoning_b": "80+ equities across HKEx with sub-second trading affects multiple clients and positions"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "B",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Direct SFC regulation under Circular 24EC55 with HKEx electronic trading rules governing algorithmic trading operations",
+          "reasoning_b": "SFC AI circular applies to algorithmic trading systems and HKEx electronic trading rules govern execution"
+        },
+        "Human Override Latency": {
+          "hk": "B",
+          "hk-grounded": "A",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "4-minute average response time is too slow for high-frequency trading decisions where milliseconds matter",
+          "reasoning_b": "4-minute average human response time is too slow for sub-second trading decisions"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "15% increase in rejected orders provides strong signal of a problem, though the exact cause is not immediately clear",
+          "reasoning_b": "15% rejection rate is a partial signal indicating problems but not conclusive root cause"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Trading desk is accountable but gaps exist in determining responsibility for the failed deployment and missed server update",
+          "reasoning_b": "Trading desk is accountable but gaps exist in real-time intervention capability"
+        },
+        "Graceful Degradation": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Options include halting all trading or reducing positions, but neither is particularly graceful for market operations",
+          "reasoning_b": "Agent can reduce position sizes or halt trading to contain damage"
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Trading can be halted or positions reduced, but market impact may persist",
+          "reasoning_b": "Halting trading is reversible but may leave residual market positions and execution gaps"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Multiple equities affected across 80+ stocks, but limited to one desk's portfolio",
+          "reasoning_b": "A 15% order rejection rate across 80+ equities could affect multiple customers and market positions, though not systemic"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "C",
+          "shift": -2,
+          "changed": true,
+          "reasoning_a": "Direct SFC and HKEx trading rules apply with mandatory compliance requirements",
+          "reasoning_b": "Trading algorithm decisions fall under SFC oversight but aren't direct regulatory mandates like capital adequacy"
+        },
+        "Human Override Latency": {
+          "hk": "A",
+          "hk-grounded": "B",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "4-minute human response time is too slow for sub-second trading decisions",
+          "reasoning_b": "4-minute average response time is reasonable but may be too slow for high-frequency trading environments"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Partial signal from rejected orders, but deployment issue not yet confirmed",
+          "reasoning_b": "Strong signal from 15% rejection spike, but partial data since root cause (version mismatch) isn't yet confirmed"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Trading desk is accountable but automated decisions create accountability gaps",
+          "reasoning_b": "Clear accountability with audit trails, but trading desk bears responsibility for autonomous agent decisions"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent can reduce exposure but may not prevent all losses from the deprecated order type",
+          "reasoning_b": "Agent can reduce position sizes or halt trading, containing the issue but not fully preventing potential losses"
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Trading can be halted and restarted, positions can be unwound, but market impact from sudden moves may be hard to fully reverse",
+          "reasoning_b": "Halting trading can be reversed but may incur market impact and execution costs"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Affects multiple equities and customers through position losses and market impact, but not system-wide",
+          "reasoning_b": "Multiple equities across HKEx means multi-customer impact with potential systemic concerns"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Directly touches SFC algorithmic trading requirements, HKEx trading rules, and market integrity regulations",
+          "reasoning_b": "Direct SFC oversight of algorithmic trading with HKEx electronic trading rules and potential systemic risk"
+        },
+        "Human Override Latency": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "4-minute average response time is too slow for sub-second trading systems where milliseconds matter",
+          "reasoning_b": "4-minute human response time is too slow for sub-second algorithmic trading decisions"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent has partial signal (15% increase in rejections) but can't immediately determine if it's the version mismatch or market conditions",
+          "reasoning_b": "15% increase in rejected orders provides partial signal but staging testing passed, creating ambiguity"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Trading desk owns the algorithm but the agent's autonomous decisions create accountability gaps during intervention",
+          "reasoning_b": "Trading desk has accountability but gaps exist in who authorizes autonomous intervention during market hours"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Agent has three options with varying severity, allowing contained responses rather than all-or-nothing",
+          "reasoning_b": "Autonomous actions could worsen market impact but are better than continued faulty execution"
+        }
+      }
+    },
+    "genai-data-leakage-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "The agent can block/delete prompts, which is easily reversible by resubmitting with redacted data",
+          "reasoning_b": "The agent can block/delete the prompt to reverse the data exposure, though some transmission may have occurred already"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "A single relationship manager's prompt block affects one client relationship, not systemic",
+          "reasoning_b": "Single relationship manager's action affects one client's data, not systemic but beyond internal only"
+        },
+        "Regulatory Exposure": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "PDPO data protection requirements apply, but this is internal policy enforcement rather than direct regulatory mandate",
+          "reasoning_b": "Touches PDPO personal data handling and HKMA data protection requirements but not direct regulatory mandate"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Compliance can be escalated to immediately review and override agent decisions",
+          "reasoning_b": "Agent can immediately block or warn, but escalation to compliance involves human intervention delay"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "The agent has partial signal from pattern matching but may misclassify legitimate business use cases",
+          "reasoning_b": "Agent has strong signal (client portfolio data detected) but must infer intent and context from pattern matching"
+        },
+        "Accountability Chain": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Clear audit trail exists through logging and escalation to compliance team",
+          "reasoning_b": "Clear audit trail exists but ultimate accountability for client data breach sits with relationship manager and compliance"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent can safely log and escalate when uncertain, containing potential failures",
+          "reasoning_b": "Agent can contain failure by blocking/deleting, but silent logging option risks undetected escalation"
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "hk": "D",
+          "hk-grounded": "C",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Agent can block/delete prompt or allow with warning, all actions are reversible through audit logs and manual intervention",
+          "reasoning_b": "The agent can block/delete the prompt or allow with warning, making actions easily reversible"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Affects a single relationship manager's workflow and one client's data, not systemic",
+          "reasoning_b": "A single relationship manager's prompt violation affects one client's data, not systemic exposure"
+        },
+        "Regulatory Exposure": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Touches PDPO data protection requirements and HKMA GenAI Circular consumer protection principles",
+          "reasoning_b": "PDPO and HKMA require protecting client PII, with potential compliance violations if mishandled"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "A",
+          "shift": 2,
+          "changed": true,
+          "reasoning_a": "Human can intervene through compliance escalation or manual override of agent's decision",
+          "reasoning_b": "The agent must act immediately to prevent data leakage; there's no time for human review"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent has clear signal from DLP detection of client portfolio data in prompt",
+          "reasoning_b": "The agent has high confidence from DLP pattern matching detecting client portfolio data"
+        },
+        "Accountability Chain": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Clear accountability through DLP system logs and compliance escalation path",
+          "reasoning_b": "The agent's actions are logged but escalation to compliance creates accountability gaps"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Agent can safely block or warn without causing cascading failures, though workflow may be interrupted",
+          "reasoning_b": "Blocking legitimate work could frustrate employees, but data protection failure would be catastrophic"
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "The agent can block/delete the prompt, which is reversible, but client data may have already been transmitted to the GenAI service",
+          "reasoning_b": "Agent can block/delete or allow with warning, making actions reversible but not fully sandbox-safe"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Blocking a legitimate workflow affects one relationship manager's productivity, but incorrect blocking could impact multiple client interactions",
+          "reasoning_b": "Single customer's portfolio data exposed, affecting one client relationship but not systemic"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "B",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Direct PDPO personal data handling violation with potential HKMA GenAI Circular consumer protection implications",
+          "reasoning_b": "Touches PDPO data protection requirements and HKMA GenAI consumer protection guidelines but not direct regulatory mandate"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "A human compliance officer can review the escalation within hours, though the prompt may have already been processed",
+          "reasoning_b": "Agent can act immediately but escalation to compliance provides human oversight path within reasonable timeframe"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "The agent detects pasted content but may not fully understand context or verify if data is truly client-specific or publicly available",
+          "reasoning_b": "Agent detects client portfolio content with partial confidence but must distinguish between internal analysis and actual PII exposure"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "The agent's actions are logged but the policy framework for agent decisions in this gray area is not fully established",
+          "reasoning_b": "Clear audit trail through logging/escalation but accountability gaps exist in real-time enforcement decisions"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "The agent can escalate to human review when uncertain, providing a contained fallback path",
+          "reasoning_b": "Agent can contain breach by blocking/deleting but silent logging option represents ungraceful failure mode"
+        }
+      }
+    },
+    "claims-denial-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Denial can be appealed/reversed through standard claims process, though with delays",
+          "reasoning_b": "Denial can be reversed through appeal process, but involves time and potential health impacts"
+        },
+        "Failure Blast Radius": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Affects one policyholder's care access but could impact health outcomes significantly",
+          "reasoning_b": "Affects individual policyholder's healthcare access and recovery, but not systemic across multiple customers"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Direct healthcare coverage decisions with IA policyholder protection requirements and PDPO health data compliance",
+          "reasoning_b": "Directly impacts healthcare access for elderly, triggers IA policyholder protection requirements and PDPO health data regulations"
+        },
+        "Human Override Latency": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Routing to medical reviewer takes 3 days, creating delay in critical care decisions",
+          "reasoning_b": "Medical reviewer available within 3 days, but may be too slow for urgent care decisions"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Model shows 40% override rate for elderly patients, indicating partial but unreliable signal quality",
+          "reasoning_b": "Model shows 40% override rate for elderly patients, indicating partial signal but significant uncertainty"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Agent can act autonomously but human reviewer exists as fallback, creating accountability gaps",
+          "reasoning_b": "Clear chain through medical reviewer escalation, but model's high override rate creates accountability gaps"
+        },
+        "Graceful Degradation": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Failure means denial of care extension rather than safe default, with potential health consequences",
+          "reasoning_b": "Fails to a human reviewer, but 3-day delay may be problematic for urgent care decisions"
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Denials can be appealed but involve lengthy processes and potential health deterioration",
+          "reasoning_b": "Denial can be reversed through appeal process, but reversal takes time and may impact patient care"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Affects one elderly patient's care but has financial implications for the insurer",
+          "reasoning_b": "Affects a single patient's care and costs, not systemic but has significant personal impact"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Directly impacts policyholder protection, health data, and medical necessity determinations under IA requirements",
+          "reasoning_b": "Direct impact on healthcare access for vulnerable elderly population triggers insurance regulatory scrutiny and potential class action risk"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Medical reviewer available within 3 days, allowing timely human intervention",
+          "reasoning_b": "Medical reviewer available in 3 days, but this delay could affect patient's recovery timeline"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Model shows 40% override rate indicating partial confidence, with conflicting physician input",
+          "reasoning_b": "Model shows 40% override rate indicating significant uncertainty in elderly patient predictions"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Clear accountability exists but with gaps in how AI decisions are documented and challenged",
+          "reasoning_b": "Clear insurer responsibility but physician disagreement creates accountability gaps in medical judgment"
+        },
+        "Graceful Degradation": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Fails ungracefully by potentially denying needed care without adequate fallback mechanisms",
+          "reasoning_b": "Routing to reviewer provides fallback but 3-day delay is not graceful for urgent care decisions"
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Denial can be appealed but causes immediate care disruption and potential health deterioration",
+          "reasoning_b": "Denials can be reversed through appeals, but reversal process is time-consuming and may not fully compensate for delayed care"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Affects one elderly patient's recovery but could impact multiple similar cases if model bias exists",
+          "reasoning_b": "Incorrect denials affect individual policyholders but not systemic operations, though cumulative impact could be significant"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Directly touches policyholder protection, medical necessity determination, and health data privacy",
+          "reasoning_b": "Directly touches IA policyholder protection, PDPO health data requirements, and algorithmic fairness precedents"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Medical reviewer available within 3 days, though this may be too slow for urgent care decisions",
+          "reasoning_b": "3-day medical reviewer turnaround provides reasonable override capability without urgent time pressure"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Model has partial signal but conflicts with physician expertise and shows 40% override rate",
+          "reasoning_b": "Model shows 40% override rate indicating partial signal quality with significant uncertainty for elderly patients"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Clear accountability exists but gaps emerge when model overrides physician judgment without escalation",
+          "reasoning_b": "Clear accountability exists but gaps remain in how override decisions are documented and justified"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Agent can route to reviewer but doesn't automatically escalate high-risk elderly cases",
+          "reasoning_b": "Routing to medical reviewer provides containment, though 3-day delay may be suboptimal for urgent care decisions"
+        }
+      }
+    },
+    "cross-border-model-001": {
+      "compliance_officer": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Model deployment can be rolled back but data flow is harder to contain once initiated",
+          "reasoning_b": "Model deployment can be blocked or rolled back, but credit decisions already made cannot be undone"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Could affect multiple Hong Kong customers' credit decisions and bank's regulatory standing",
+          "reasoning_b": "Deployment affects all Hong Kong credit applicants using the model, potentially thousands of customers"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Direct PIPL cross-border transfer requirements and HKMA model governance mandates apply",
+          "reasoning_b": "Cross-border data transfer under PIPL + credit risk modeling under HKMA + model governance requirements creates direct regulatory mandates"
+        },
+        "Human Override Latency": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Legal review can intervene but deployment timeline creates pressure",
+          "reasoning_b": "Human override requires legal review process that could take days/weeks, not immediate"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Model performs well on backtests but mainland data may not translate to Hong Kong market",
+          "reasoning_b": "Model trained on mainland data may not generalize to Hong Kong market despite good backtests"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Clear accountability exists but gaps in cross-border data governance chain",
+          "reasoning_b": "Bank has oversight but gaps exist in cross-border liability between Hong Kong and mainland entities"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Can fail to audit trail mode but may still process data incorrectly",
+          "reasoning_b": "Model can be switched off or fallback to existing models, but cascading effects on credit decisions possible"
+        }
+      },
+      "cro": {
+        "Decision Reversibility": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Model deployment can be rolled back or suspended if issues arise",
+          "reasoning_b": "Model deployment can be reversed but requires retraining and redeployment effort"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Could affect multiple Hong Kong customers through credit decisions",
+          "reasoning_b": "Single customer credit decisions affected, not systemic but impacts individual applicants"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Cross-border data transfer under PIPL creates direct regulatory mandate with compliance obligations",
+          "reasoning_b": "Cross-border data transfer under PIPL with potential PDPO applicability and HKMA model governance requirements"
+        },
+        "Human Override Latency": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Legal review required for cross-border transfer, not instantaneous but achievable",
+          "reasoning_b": "Human can intervene by blocking or requiring audit, but model is already trained and ready to deploy"
+        },
+        "Data Confidence": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Strong backtest performance but mainland data may not fully represent Hong Kong applicant behavior",
+          "reasoning_b": "Strong backtest performance but data from different jurisdiction and population raises validity questions"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Clear accountability exists but with gaps in cross-border regulatory compliance documentation",
+          "reasoning_b": "Bank is accountable but unclear if legal review or audit trail provides sufficient documentation for regulators"
+        },
+        "Graceful Degradation": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Model failure could lead to incorrect credit decisions without graceful fallback mechanisms",
+          "reasoning_b": "Model may fail silently on Hong Kong applicants without obvious error signals, requiring human detection"
+        }
+      },
+      "operations_director": {
+        "Decision Reversibility": {
+          "hk": "B",
+          "hk-grounded": "C",
+          "shift": -1,
+          "changed": true,
+          "reasoning_a": "Model deployment can be reversed but would require retraining or significant rework",
+          "reasoning_b": "Model weights can be rolled back or adjusted, but deployment decisions have operational consequences"
+        },
+        "Failure Blast Radius": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "A faulty model could affect multiple Hong Kong customers but wouldn't cause systemic collapse",
+          "reasoning_b": "A flawed model could affect multiple Hong Kong customers' credit decisions, creating systemic risk"
+        },
+        "Regulatory Exposure": {
+          "hk": "A",
+          "hk-grounded": "A",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Cross-border data transfer and model governance directly trigger PIPL and HKMA requirements",
+          "reasoning_b": "Cross-border data transfer under PIPL, PDPO compliance, and HKMA model governance requirements create direct regulatory mandates"
+        },
+        "Human Override Latency": {
+          "hk": "C",
+          "hk-grounded": "C",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Legal review can be initiated quickly but may take days to weeks to complete",
+          "reasoning_b": "Legal review can intervene within days, though not instantly, allowing reasonable override capability"
+        },
+        "Data Confidence": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Backtest performance exists but behavioral data from mainland may not translate to Hong Kong context",
+          "reasoning_b": "Model performs well on backtests but mainland behavioral data may not translate to Hong Kong market conditions"
+        },
+        "Accountability Chain": {
+          "hk": "B",
+          "hk-grounded": "B",
+          "shift": 0,
+          "changed": false,
+          "reasoning_a": "Bank is accountable but gaps exist in cross-border liability between Hong Kong and Shenzhen entities",
+          "reasoning_b": "Clear accountability exists but gaps remain in cross-border data governance and model validation"
+        },
+        "Graceful Degradation": {
+          "hk": "C",
+          "hk-grounded": "B",
+          "shift": 1,
+          "changed": true,
+          "reasoning_a": "Model can be disabled if issues arise but may leave Hong Kong operations without scoring capability",
+          "reasoning_b": "Model failure could lead to incorrect credit decisions without clear fallback mechanisms"
+        }
+      }
+    }
+  },
+  "dimension_sensitivity": {
+    "Decision Reversibility": {
+      "stricter": 4,
+      "looser": 5,
+      "unchanged": 9
+    },
+    "Failure Blast Radius": {
+      "stricter": 2,
+      "looser": 2,
+      "unchanged": 14
+    },
+    "Regulatory Exposure": {
+      "stricter": 4,
+      "looser": 3,
+      "unchanged": 11
+    },
+    "Human Override Latency": {
+      "stricter": 3,
+      "looser": 3,
+      "unchanged": 12
+    },
+    "Data Confidence": {
+      "stricter": 2,
+      "looser": 2,
+      "unchanged": 14
+    },
+    "Accountability Chain": {
+      "stricter": 3,
+      "looser": 3,
+      "unchanged": 12
+    },
+    "Graceful Degradation": {
+      "stricter": 6,
+      "looser": 2,
+      "unchanged": 10
+    }
+  }
+}
