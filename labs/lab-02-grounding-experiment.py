@@ -5,7 +5,7 @@ ARA-Eval Lab 02: Regulatory Grounding Experiment
 Does providing actual regulatory requirements (vs. just framework names)
 change how the LLM judge classifies risk dimensions?
 
-This experiment runs the same scenarios × personalities twice:
+This experiment runs the same scenarios x personalities twice:
   - Condition A: "hk" jurisdiction (names only)
   - Condition B: "hk-grounded" jurisdiction (full regulatory requirements)
 
@@ -26,26 +26,33 @@ Output:
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 import time
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
-# Import everything from lab-01
-sys.path.insert(0, str(Path(__file__).parent))
-from importlib.util import spec_from_file_location, module_from_spec
+import httpx
 
-_lab01_path = Path(__file__).parent / "lab-01-risk-fingerprinting.py"
-_spec = spec_from_file_location("lab01", _lab01_path)
-lab01 = module_from_spec(_spec)
-_spec.loader.exec_module(lab01)
+from ara_eval.core import (
+    DIMENSIONS,
+    DIMENSION_LABELS,
+    LEVEL_ORDER,
+    MODEL,
+    OPENROUTER_API_KEY,
+    OPENROUTER_HEADERS,
+    PERSONALITIES,
+    evaluate_scenario,
+    get_run_dir,
+    init_db,
+    load_scenarios,
+    update_run,
+)
 
 _root = Path(__file__).parent.parent
-
 JURISDICTIONS = ["hk", "hk-grounded"]
-LEVEL_ORDER = lab01.LEVEL_ORDER
-DIMENSIONS = lab01.DIMENSIONS
-DIMENSION_LABELS = lab01.DIMENSION_LABELS
 
 
 def compare_fingerprints(result_a: dict, result_b: dict, label_a: str, label_b: str) -> dict:
@@ -67,7 +74,7 @@ def compare_fingerprints(result_a: dict, result_b: dict, label_a: str, label_b: 
 
 
 def print_comparison(scenario_id: str, personality: str, shifts: dict):
-    """Print a side-by-side comparison for one scenario × personality."""
+    """Print a side-by-side comparison for one scenario x personality."""
     changed = {k: v for k, v in shifts.items() if v["changed"]}
     if not changed:
         print(f"  {personality:<22} No changes")
@@ -79,25 +86,24 @@ def print_comparison(scenario_id: str, personality: str, shifts: dict):
 
 
 def main():
-    import argparse
+    if not OPENROUTER_API_KEY:
+        raise SystemExit("OPENROUTER_API_KEY not set. Add it to .env.local or export it.")
+
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 02: Grounding Experiment")
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
+    parser.add_argument("--structured", action="store_true", help="Include structured context in prompts")
     args = parser.parse_args()
 
     # Load scenarios
-    scenarios = lab01.load_scenarios(use_all=args.all)
+    scenarios = load_scenarios(use_all=args.all)
 
     # Init DB and HTTP
     results_dir = _root / "results"
     results_dir.mkdir(exist_ok=True)
     db_path = results_dir / "ara-eval.db"
-    db_conn = lab01.init_db(db_path)
+    db_conn = init_db(db_path)
 
-    import httpx
-    http_client = httpx.Client(headers=lab01.OPENROUTER_HEADERS, timeout=120.0)
-
-    import uuid
-    from datetime import datetime, timezone
+    http_client = httpx.Client(headers=OPENROUTER_HEADERS, timeout=120.0)
 
     all_comparisons = {}
     total_shifts = {dim: {"stricter": 0, "looser": 0, "unchanged": 0} for dim in DIMENSION_LABELS.values()}
@@ -108,23 +114,23 @@ def main():
     for jurisdiction in JURISDICTIONS:
         run_id = str(uuid.uuid4())
         run_started = datetime.now(timezone.utc).isoformat()
-        total_expected = len(scenarios) * len(lab01.PERSONALITIES)
+        total_expected = len(scenarios) * len(PERSONALITIES)
 
         db_conn.execute(
             """INSERT INTO eval_runs
                (run_id, started_at, model_requested, scenario_count,
                 personality_count, total_calls, metadata)
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (run_id, run_started, lab01.MODEL, len(scenarios),
-             len(lab01.PERSONALITIES), total_expected,
-             json.dumps({"experiment": "grounding", "jurisdiction": jurisdiction})),
+            (run_id, run_started, MODEL, len(scenarios),
+             len(PERSONALITIES), total_expected,
+             json.dumps({"experiment": "grounding", "jurisdiction": jurisdiction, "structured": args.structured})),
         )
         db_conn.commit()
 
         print(f"\n{'='*70}")
         print(f"  CONDITION: {jurisdiction}")
         print(f"  Run: {run_id}")
-        print(f"  Model: {lab01.MODEL}")
+        print(f"  Model: {MODEL}")
         print(f"{'='*70}")
 
         condition_results[jurisdiction] = {}
@@ -136,16 +142,17 @@ def main():
             sid = scenario["id"]
             condition_results[jurisdiction][sid] = {}
 
-            for personality_id, personality_meta in lab01.PERSONALITIES.items():
+            for personality_id, personality_meta in PERSONALITIES.items():
                 print(f"  [{jurisdiction}] {sid} × {personality_id}...", end=" ", flush=True)
 
                 try:
                     max_retries = 2
                     for attempt in range(1 + max_retries):
                         try:
-                            result = lab01.evaluate_scenario(
+                            result = evaluate_scenario(
                                 http_client, db_conn, run_id, scenario,
-                                personality_id, jurisdiction=jurisdiction
+                                personality_id, jurisdiction=jurisdiction,
+                                structured=args.structured,
                             )
                             break
                         except Exception as retry_err:
@@ -170,7 +177,7 @@ def main():
                     run_stats["failed"] += 1
 
         # Finalize run record
-        lab01.update_run(
+        update_run(
             db_conn, run_id,
             finished_at=datetime.now(timezone.utc).isoformat(),
             successful_calls=run_stats["successful"],
@@ -195,7 +202,7 @@ def main():
         print(f"\n  {sid}:")
         print(f"  {'-'*65}")
 
-        for personality_id, personality_meta in lab01.PERSONALITIES.items():
+        for personality_id, personality_meta in PERSONALITIES.items():
             result_a = condition_results["hk"].get(sid, {}).get(personality_id)
             result_b = condition_results["hk-grounded"].get(sid, {}).get(personality_id)
 
@@ -217,7 +224,7 @@ def main():
                     total_shifts[dim_label]["unchanged"] += 1
 
     # Summary
-    total_evals = len(scenarios) * len(lab01.PERSONALITIES)
+    total_evals = len(scenarios) * len(PERSONALITIES)
     print(f"\n{'='*70}")
     print(f"  DIMENSION SENSITIVITY TO GROUNDING")
     print(f"  (across {total_evals} evaluations)")
@@ -237,19 +244,19 @@ def main():
         "_experiment": {
             "name": "regulatory_grounding",
             "conditions": JURISDICTIONS,
-            "model": lab01.MODEL,
+            "model": MODEL,
             "scenarios": len(scenarios),
-            "personalities": len(lab01.PERSONALITIES),
+            "personalities": len(PERSONALITIES),
             "total_evals_per_condition": total_evals,
+            "structured": args.structured,
             "wall_time_ms": elapsed,
         },
         "comparisons": all_comparisons,
         "dimension_sensitivity": total_shifts,
     }
 
-    from datetime import datetime, timezone
-    run_dir = lab01.get_run_dir(results_dir)
-    model_slug = lab01.MODEL.replace("/", "_").replace(":", "_")
+    run_dir = get_run_dir(results_dir)
+    model_slug = MODEL.replace("/", "_").replace(":", "_")
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     output_filename = f"lab-02-{model_slug}-{timestamp}.json"
     output_path = run_dir / output_filename

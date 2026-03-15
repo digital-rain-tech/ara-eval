@@ -17,18 +17,20 @@ from pathlib import Path
 
 import pytest
 
-# Import lab01 without triggering API key validation
-# We patch the env var before importing
 import os
 os.environ.setdefault("OPENROUTER_API_KEY", "test-key-for-testing")
 
-sys.path.insert(0, str(Path(__file__).parent.parent / "labs"))
-from importlib.util import spec_from_file_location, module_from_spec
+from ara_eval.core import (
+    DIMENSIONS,
+    apply_gating_rules,
+    init_db,
+    load_prompt,
+    parse_llm_json,
+)
 
-_lab01_path = Path(__file__).parent.parent / "labs" / "lab-01-risk-fingerprinting.py"
-_spec = spec_from_file_location("lab01", _lab01_path)
-lab01 = module_from_spec(_spec)
-_spec.loader.exec_module(lab01)
+# Lab 03 still needs direct import for compute_agreement / compute_cohens_kappa_self
+# These are Lab 03-specific functions, not shared core
+from importlib.util import spec_from_file_location, module_from_spec
 
 _lab03_path = Path(__file__).parent.parent / "labs" / "lab-03-intra-rater-reliability.py"
 _spec3 = spec_from_file_location("lab03", _lab03_path)
@@ -42,45 +44,45 @@ _spec3.loader.exec_module(lab03)
 
 class TestParseLlmJson:
     def test_plain_json(self):
-        result = lab01.parse_llm_json('{"dimensions": {"a": 1}}')
+        result = parse_llm_json('{"dimensions": {"a": 1}}')
         assert result == {"dimensions": {"a": 1}}
 
     def test_markdown_fenced_json(self):
         text = '```json\n{"key": "value"}\n```'
-        assert lab01.parse_llm_json(text) == {"key": "value"}
+        assert parse_llm_json(text) == {"key": "value"}
 
     def test_thinking_tags_stripped(self):
         text = '<think>some reasoning here</think>\n{"key": "value"}'
-        assert lab01.parse_llm_json(text) == {"key": "value"}
+        assert parse_llm_json(text) == {"key": "value"}
 
     def test_thinking_tags_multiline(self):
         text = '<think>\nline 1\nline 2\n</think>\n{"key": "value"}'
-        assert lab01.parse_llm_json(text) == {"key": "value"}
+        assert parse_llm_json(text) == {"key": "value"}
 
     def test_truncated_json_repaired(self):
         # Simulate truncated LLM output (missing closing braces)
         text = '{"dimensions": {"decision_reversibility": {"level": "B", "reasoning": "hard to reverse"}'
-        result = lab01.parse_llm_json(text)
+        result = parse_llm_json(text)
         assert result["dimensions"]["decision_reversibility"]["level"] == "B"
 
     def test_trailing_comma_fixed(self):
         text = '{"key": "value", "key2": "value2",}'
-        result = lab01.parse_llm_json(text)
+        result = parse_llm_json(text)
         assert result["key"] == "value"
 
     def test_preamble_text_extracted(self):
         text = 'Here is my analysis:\n\n{"key": "value"}\n\nI hope this helps!'
-        result = lab01.parse_llm_json(text)
+        result = parse_llm_json(text)
         assert result["key"] == "value"
 
     def test_double_commas_fixed(self):
         text = '{"key": "value",, "key2": "value2"}'
-        result = lab01.parse_llm_json(text)
+        result = parse_llm_json(text)
         assert result["key"] == "value"
 
     def test_invalid_json_raises(self):
         with pytest.raises(json.JSONDecodeError):
-            lab01.parse_llm_json("not json at all")
+            parse_llm_json("not json at all")
 
 
 # ---------------------------------------------------------------------------
@@ -92,44 +94,44 @@ class TestGatingRules:
         """Helper: 'A-B-C-D-C-B-A' -> fingerprint dict."""
         parts = levels.split("-")
         assert len(parts) == 7
-        return {dim: {"level": level} for dim, level in zip(lab01.DIMENSIONS, parts)}
+        return {dim: {"level": level} for dim, level in zip(DIMENSIONS, parts)}
 
     def test_all_d_is_ready_now(self):
         fp = self._make_fingerprint("D-D-D-D-D-D-D")
-        result = lab01.apply_gating_rules(fp)
+        result = apply_gating_rules(fp)
         assert result["classification"] == "ready_now"
         assert result["triggered_rules"] == []
 
     def test_regulatory_a_triggers_hard_gate(self):
         fp = self._make_fingerprint("D-D-A-D-D-D-D")
-        result = lab01.apply_gating_rules(fp)
+        result = apply_gating_rules(fp)
         assert result["classification"] == "human_in_loop_required"
         assert any("HARD GATE" in r for r in result["triggered_rules"])
 
     def test_blast_radius_a_triggers_hard_gate(self):
         fp = self._make_fingerprint("D-A-D-D-D-D-D")
-        result = lab01.apply_gating_rules(fp)
+        result = apply_gating_rules(fp)
         assert result["classification"] == "human_in_loop_required"
 
     def test_other_a_triggers_soft_gate(self):
         fp = self._make_fingerprint("A-D-D-D-D-D-D")
-        result = lab01.apply_gating_rules(fp)
+        result = apply_gating_rules(fp)
         assert result["classification"] == "ready_with_prerequisites"
         assert any("SOFT GATE" in r for r in result["triggered_rules"])
 
     def test_mixed_bc_is_ready_with_prerequisites(self):
         fp = self._make_fingerprint("B-C-B-C-C-B-C")
-        result = lab01.apply_gating_rules(fp)
+        result = apply_gating_rules(fp)
         assert result["classification"] == "ready_with_prerequisites"
 
     def test_all_c_is_ready_now(self):
         fp = self._make_fingerprint("C-C-C-C-C-C-C")
-        result = lab01.apply_gating_rules(fp)
+        result = apply_gating_rules(fp)
         assert result["classification"] == "ready_now"
 
     def test_fingerprint_string_format(self):
         fp = self._make_fingerprint("A-B-C-D-C-B-A")
-        result = lab01.apply_gating_rules(fp)
+        result = apply_gating_rules(fp)
         assert result["fingerprint_string"] == "A-B-C-D-C-B-A"
 
 
@@ -139,16 +141,16 @@ class TestGatingRules:
 
 class TestLoadPrompt:
     def test_valid_path_works(self):
-        content = lab01.load_prompt("rubric.md")
+        content = load_prompt("rubric.md")
         assert "evaluation judge" in content
 
     def test_traversal_rejected(self):
         with pytest.raises(ValueError, match="escapes prompts directory"):
-            lab01.load_prompt("../labs/lab-01-risk-fingerprinting.py")
+            load_prompt("../labs/lab-01-risk-fingerprinting.py")
 
     def test_absolute_traversal_rejected(self):
         with pytest.raises((ValueError, OSError)):
-            lab01.load_prompt("../../etc/passwd")
+            load_prompt("../../etc/passwd")
 
 
 # ---------------------------------------------------------------------------
@@ -158,7 +160,7 @@ class TestLoadPrompt:
 class TestDatabase:
     def test_init_creates_tables(self):
         with tempfile.NamedTemporaryFile(suffix=".db") as f:
-            conn = lab01.init_db(Path(f.name))
+            conn = init_db(Path(f.name))
             # Check tables exist
             tables = conn.execute(
                 "SELECT name FROM sqlite_master WHERE type='table'"
@@ -170,15 +172,15 @@ class TestDatabase:
 
     def test_init_idempotent(self):
         with tempfile.NamedTemporaryFile(suffix=".db") as f:
-            conn1 = lab01.init_db(Path(f.name))
+            conn1 = init_db(Path(f.name))
             conn1.close()
             # Second init should not fail
-            conn2 = lab01.init_db(Path(f.name))
+            conn2 = init_db(Path(f.name))
             conn2.close()
 
     def test_jurisdiction_rubric_columns_exist(self):
         with tempfile.NamedTemporaryFile(suffix=".db") as f:
-            conn = lab01.init_db(Path(f.name))
+            conn = init_db(Path(f.name))
             # Check columns exist via pragma
             cols = conn.execute("PRAGMA table_info(ai_provider_requests)").fetchall()
             col_names = {c[1] for c in cols}

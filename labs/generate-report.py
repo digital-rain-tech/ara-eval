@@ -27,31 +27,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-# ---------------------------------------------------------------------------
-# Constants (standalone — no imports from lab-01)
-# ---------------------------------------------------------------------------
-
-DIMENSIONS = [
-    "decision_reversibility",
-    "failure_blast_radius",
-    "regulatory_exposure",
-    "human_override_latency",
-    "data_confidence",
-    "accountability_chain",
-    "graceful_degradation",
-]
-
-DIMENSION_LABELS = {
-    "decision_reversibility": "Decision Reversibility",
-    "failure_blast_radius": "Failure Blast Radius",
-    "regulatory_exposure": "Regulatory Exposure",
-    "human_override_latency": "Human Override Latency",
-    "data_confidence": "Data Confidence",
-    "accountability_chain": "Accountability Chain",
-    "graceful_degradation": "Graceful Degradation",
-}
-
-LEVEL_ORDER = {"A": 0, "B": 1, "C": 2, "D": 3}
+from ara_eval.core import DIMENSIONS, DIMENSION_LABELS, LEVEL_ORDER
 LEVEL_FROM_ORD = {0: "A", 1: "B", 2: "C", 3: "D"}
 
 PERSONALITY_IDS = ["compliance_officer", "cro", "operations_director"]

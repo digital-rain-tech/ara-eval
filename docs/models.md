@@ -33,7 +33,7 @@ Solid judge quality at significantly lower cost. Good for iterating on scenarios
 
 | Model | OpenRouter ID | Input/1M | Output/1M | Context | Notes |
 |-------|---------------|----------|-----------|---------|-------|
-| **Qwen3 235B Instruct** | `qwen/qwen3-235b-a22b-2507` | **$0.07** | **$0.10** | 262K | **Current default** — 235B MoE (22B active), extremely cheap for its capability |
+| **Qwen3 235B Instruct** | `qwen/qwen3-235b-a22b-2507` | **$0.07** | **$0.10** | 262K | **Recommended paid tier** — 235B MoE (22B active), extremely cheap for its capability |
 | DeepSeek V3.2 | `deepseek/deepseek-v3.2` | $0.26 | $0.38 | 164K | Top-4 on OpenRouter by weekly usage |
 | MiniMax M2.5 | `minimax/minimax-m2.5` | $0.27 | $0.95 | 197K | #1 on OpenRouter by weekly usage (2T tokens/week) |
 | Gemini 2.5 Flash | `google/gemini-2.5-flash` | $0.30 | $2.50 | 1M | Fast; top-8 by usage; good for batch runs |
@@ -75,7 +75,7 @@ Each ARA-Eval run evaluates 6 core scenarios x 3 personalities = 18 LLM calls.
 | Model | Est. Cost per Run | Notes |
 |-------|-------------------|-------|
 | Free tier models | **$0.00** | Rate-limited; lower judge quality |
-| **Qwen3 235B Instruct** | **~$0.003** | Current default — best cost/quality ratio |
+| **Qwen3 235B Instruct** | **~$0.003** | Recommended paid tier — best cost/quality ratio |
 | DeepSeek V3.2 / MiniMax M2.5 | ~$0.005 | Good alternatives at similar price |
 | Gemini 2.5 Flash | ~$0.03 | Good if Qwen output is inconsistent |
 | Claude Sonnet 4.6 | ~$0.50 | Premium quality baseline |
@@ -93,7 +93,7 @@ ARA_MODEL=deepseek/deepseek-v3.2
 ARA_MODEL=google/gemini-2.5-flash python3 labs/lab-01-risk-fingerprinting.py
 ```
 
-Default (if unset): `arcee-ai/trinity-large-preview:free`
+Default (if unset): `arcee-ai/trinity-large-preview:free` (defined in `ara_eval/core.py::DEFAULT_MODEL`)
 
 ## Multi-Model Comparison
 

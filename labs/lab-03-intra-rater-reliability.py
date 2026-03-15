@@ -2,7 +2,7 @@
 ARA-Eval Lab 03: Intra-Rater Reliability
 =========================================
 
-Does the LLM judge agree with itself? Run each scenario × personality
+Does the LLM judge agree with itself? Run each scenario x personality
 multiple times and measure classification stability per dimension.
 
 If the instrument isn't reliable, nothing else we test matters.
@@ -27,23 +27,29 @@ import argparse
 import json
 import sys
 import time
+import uuid
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
-# Import lab-01
-sys.path.insert(0, str(Path(__file__).parent))
-from importlib.util import spec_from_file_location, module_from_spec
+import httpx
 
-_lab01_path = Path(__file__).parent / "lab-01-risk-fingerprinting.py"
-_spec = spec_from_file_location("lab01", _lab01_path)
-lab01 = module_from_spec(_spec)
-_spec.loader.exec_module(lab01)
+from ara_eval.core import (
+    DIMENSIONS,
+    DIMENSION_LABELS,
+    LEVEL_ORDER,
+    MODEL,
+    OPENROUTER_API_KEY,
+    OPENROUTER_HEADERS,
+    PERSONALITIES,
+    evaluate_scenario,
+    get_run_dir,
+    init_db,
+    load_scenarios,
+    update_run,
+)
 
 _root = Path(__file__).parent.parent
-
-DIMENSIONS = lab01.DIMENSIONS
-DIMENSION_LABELS = lab01.DIMENSION_LABELS
-LEVEL_ORDER = lab01.LEVEL_ORDER
 
 
 def compute_agreement(classifications: list[str]) -> dict:
@@ -94,38 +100,38 @@ def compute_cohens_kappa_self(classifications: list[str]) -> float:
 
 
 def main():
+    if not OPENROUTER_API_KEY:
+        raise SystemExit("OPENROUTER_API_KEY not set. Add it to .env.local or export it.")
+
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 03: Intra-Rater Reliability")
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
     parser.add_argument("--repetitions", type=int, default=5, help="Number of repetitions per cell (default: 5)")
     parser.add_argument("--scenarios", type=str, default=None, help="Comma-separated scenario IDs to test (overrides --all)")
-    parser.add_argument("--jurisdiction", type=str, default="hk", help="Jurisdiction to use (default: hk)")
+    parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "generic"], help="Jurisdiction to use (default: hk)")
+    parser.add_argument("--structured", action="store_true", help="Include structured context in prompts")
     args = parser.parse_args()
 
     # Load scenarios
     if args.scenarios:
-        all_scenarios = lab01.load_scenarios(use_all=True)
+        all_scenarios = load_scenarios(use_all=True)
         selected_ids = set(args.scenarios.split(","))
         scenarios = [s for s in all_scenarios if s["id"] in selected_ids]
         if not scenarios:
             print(f"No matching scenarios found. Available: {[s['id'] for s in all_scenarios]}")
             sys.exit(1)
     else:
-        scenarios = lab01.load_scenarios(use_all=args.all)
+        scenarios = load_scenarios(use_all=args.all)
 
     reps = args.repetitions
-    total_calls = len(scenarios) * len(lab01.PERSONALITIES) * reps
+    total_calls = len(scenarios) * len(PERSONALITIES) * reps
 
     # Init
     results_dir = _root / "results"
     results_dir.mkdir(exist_ok=True)
     db_path = results_dir / "ara-eval.db"
-    db_conn = lab01.init_db(db_path)
+    db_conn = init_db(db_path)
 
-    import httpx
-    import uuid
-    from datetime import datetime, timezone
-
-    http_client = httpx.Client(headers=lab01.OPENROUTER_HEADERS, timeout=120.0)
+    http_client = httpx.Client(headers=OPENROUTER_HEADERS, timeout=120.0)
 
     run_id = str(uuid.uuid4())
     run_started = datetime.now(timezone.utc).isoformat()
@@ -135,18 +141,18 @@ def main():
            (run_id, started_at, model_requested, scenario_count,
             personality_count, total_calls, metadata)
            VALUES (?, ?, ?, ?, ?, ?, ?)""",
-        (run_id, run_started, lab01.MODEL, len(scenarios),
-         len(lab01.PERSONALITIES), total_calls,
+        (run_id, run_started, MODEL, len(scenarios),
+         len(PERSONALITIES), total_calls,
          json.dumps({"experiment": "intra_rater_reliability", "repetitions": reps,
-                      "jurisdiction": args.jurisdiction})),
+                      "jurisdiction": args.jurisdiction, "structured": args.structured})),
     )
     db_conn.commit()
 
     print(f"\n{'='*70}")
     print(f"  LAB 03: INTRA-RATER RELIABILITY")
     print(f"  Run: {run_id}")
-    print(f"  Model: {lab01.MODEL}")
-    print(f"  {len(scenarios)} scenarios x {len(lab01.PERSONALITIES)} personalities x {reps} reps = {total_calls} calls")
+    print(f"  Model: {MODEL}")
+    print(f"  {len(scenarios)} scenarios x {len(PERSONALITIES)} personalities x {reps} reps = {total_calls} calls")
     print(f"{'='*70}")
 
     # Collect all results: {scenario_id: {personality: [list of results]}}
@@ -160,7 +166,7 @@ def main():
         sid = scenario["id"]
         all_results[sid] = {}
 
-        for personality_id in lab01.PERSONALITIES:
+        for personality_id in PERSONALITIES:
             all_results[sid][personality_id] = []
 
             for rep in range(reps):
@@ -171,9 +177,10 @@ def main():
                     max_retries = 2
                     for attempt in range(1 + max_retries):
                         try:
-                            result = lab01.evaluate_scenario(
+                            result = evaluate_scenario(
                                 http_client, db_conn, run_id, scenario,
-                                personality_id, jurisdiction=args.jurisdiction
+                                personality_id, jurisdiction=args.jurisdiction,
+                                structured=args.structured,
                             )
                             break
                         except Exception as retry_err:
@@ -214,7 +221,7 @@ def main():
         print(f"\n  {sid}:")
         print(f"  {'-'*65}")
 
-        for personality_id in lab01.PERSONALITIES:
+        for personality_id in PERSONALITIES:
             results = [r for r in all_results[sid][personality_id] if r is not None]
             if len(results) < 2:
                 print(f"    {personality_id:<22} INSUFFICIENT DATA ({len(results)} runs)")
@@ -232,7 +239,7 @@ def main():
                 dim_all_agreements[dim].append(agreement["agreement_rate"])
 
                 if not agreement["unanimous"]:
-                    unstable_dims.append(f"{DIMENSION_LABELS[dim]}({agreement['mode']}×{agreement['mode_count']}/{agreement['n']})")
+                    unstable_dims.append(f"{DIMENSION_LABELS[dim]}({agreement['mode']}x{agreement['mode_count']}/{agreement['n']})")
 
             cell_reports[sid][personality_id] = cell_report
 
@@ -284,7 +291,7 @@ def main():
     elapsed = int((time.monotonic() - run_start) * 1000)
 
     # Finalize run
-    lab01.update_run(
+    update_run(
         db_conn, run_id,
         finished_at=datetime.now(timezone.utc).isoformat(),
         successful_calls=run_stats["successful"],
@@ -299,20 +306,21 @@ def main():
     output = {
         "_experiment": {
             "name": "intra_rater_reliability",
-            "model": lab01.MODEL,
+            "model": MODEL,
             "jurisdiction": args.jurisdiction,
             "repetitions": reps,
             "scenarios": len(scenarios),
-            "personalities": len(lab01.PERSONALITIES),
+            "personalities": len(PERSONALITIES),
             "total_calls": total_calls,
+            "structured": args.structured,
             "wall_time_ms": elapsed,
         },
         "dimension_stability": overall_stability,
         "cell_reports": cell_reports,
     }
 
-    run_dir = lab01.get_run_dir(results_dir)
-    model_slug = lab01.MODEL.replace("/", "_").replace(":", "_")
+    run_dir = get_run_dir(results_dir)
+    model_slug = MODEL.replace("/", "_").replace(":", "_")
     timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
     output_filename = f"lab-03-{model_slug}-{timestamp}.json"
     output_path = run_dir / output_filename

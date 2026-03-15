@@ -20,6 +20,7 @@ source .venv/bin/activate   # macOS / Linux
 # .venv\Scripts\activate    # Windows (Command Prompt)
 
 pip install -r requirements.txt
+pip install -e .   # install ara_eval package
 ```
 
 Add your OpenRouter API key to `.env.local`:

@@ -1,0 +1,18 @@
+[project]
+name = "ara-eval"
+version = "0.1.0"
+description = "Agentic Readiness Assessment evaluation framework"
+requires-python = ">=3.11"
+dependencies = [
+    "chevron>=0.14",
+    "httpx>=0.27",
+    "json-repair>=0.30",
+    "python-dotenv>=1.0",
+]
+
+[tool.setuptools.packages.find]
+include = ["ara_eval*"]
+
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
