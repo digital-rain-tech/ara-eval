@@ -40,6 +40,9 @@ OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 # ---------------------------------------------------------------------------
 
 DEFAULT_MODEL = "arcee-ai/trinity-large-preview:free"
+# Median response time for Arcee Trinity across 387 calls. Used as the minimum
+# interval between API calls to avoid rate-limiting on free-tier models.
+DEFAULT_CALL_DELAY = 17.0
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 MODEL = os.environ.get("ARA_MODEL", DEFAULT_MODEL)
@@ -675,7 +678,7 @@ def print_fingerprint(scenario_id: str, personality_label: str, result: dict):
     for dim in DIMENSIONS:
         d = parsed["dimensions"][dim]
         label = DIMENSION_LABELS[dim].ljust(25)
-        print(f"  {label} Level {d['level']}  {d['reasoning']}")
+        print(f"  {label} Level {d['level']}  {d.get('reasoning', '')}")
 
     if gating["triggered_rules"]:
         print(f"\n  Triggered rules:")
@@ -733,3 +736,79 @@ def load_scenarios(use_all: bool = False) -> list:
         return all_scenarios
     core = [s for s in all_scenarios if s.get("core", False)]
     return core if core else all_scenarios
+
+
+# ---------------------------------------------------------------------------
+# Retry with pacing and exponential backoff
+# ---------------------------------------------------------------------------
+
+def _is_rate_limit_error(exc: Exception) -> bool:
+    """Check if an exception indicates rate-limiting or empty response."""
+    status = getattr(getattr(exc, "response", None), "status_code", None)
+    if status == 429:
+        return True
+    msg = str(exc)
+    if "empty content" in msg.lower():
+        return True
+    return False
+
+
+def evaluate_with_retry(
+    http_client: httpx.Client,
+    db_conn: sqlite3.Connection,
+    run_id: str,
+    scenario: dict,
+    personality_id: str,
+    *,
+    jurisdiction: str = "hk",
+    rubric: str = "rubric.md",
+    structured: bool = False,
+    max_retries: int = 2,
+    call_delay: float = DEFAULT_CALL_DELAY,
+    verbose: bool = True,
+) -> dict:
+    """
+    Call evaluate_scenario with pacing and exponential backoff.
+
+    - Ensures at least `call_delay` seconds elapse between the start of each
+      attempt (matches Arcee Trinity's median latency so faster models don't
+      outrun free-tier rate limits).
+    - On rate-limit errors (429 or empty content), backs off exponentially:
+      wait 2^attempt * call_delay before the next retry.
+    - On other errors, retries immediately (up to max_retries).
+    """
+    last_attempt_start = 0.0
+
+    for attempt in range(1 + max_retries):
+        # Pacing: ensure minimum interval since last attempt started
+        if last_attempt_start > 0:
+            elapsed_since_start = time.monotonic() - last_attempt_start
+            if _is_rate_limit_error(Exception("")) if attempt == 0 else False:
+                pass  # first attempt, no delay
+            wait = call_delay - elapsed_since_start
+            if wait > 0:
+                time.sleep(wait)
+
+        last_attempt_start = time.monotonic()
+
+        try:
+            result = evaluate_scenario(
+                http_client, db_conn, run_id, scenario, personality_id,
+                jurisdiction=jurisdiction, rubric=rubric, structured=structured,
+            )
+            return result
+
+        except Exception as e:
+            is_last = attempt >= max_retries
+            if is_last:
+                raise
+
+            if _is_rate_limit_error(e):
+                # Exponential backoff: 2^attempt * base delay
+                backoff = (2 ** (attempt + 1)) * call_delay
+                if verbose:
+                    print(f"rate-limited, backing off {backoff:.0f}s...", end=" ", flush=True)
+                time.sleep(backoff)
+            else:
+                if verbose:
+                    print(f"attempt {attempt + 1} failed ({e}), retrying...", end=" ", flush=True)

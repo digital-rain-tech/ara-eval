@@ -37,7 +37,7 @@ from ara_eval.core import (
     OPENROUTER_API_KEY,
     OPENROUTER_HEADERS,
     PERSONALITIES,
-    evaluate_scenario,
+    evaluate_with_retry,
     get_run_dir,
     init_db,
     load_scenarios,
@@ -133,20 +133,10 @@ def main():
             print(f"\nEvaluating {sid} as {personality_meta['label']}...")
 
             try:
-                max_retries = 2
-                result = None
-                for attempt in range(1 + max_retries):
-                    try:
-                        result = evaluate_scenario(
-                            http_client, db_conn, run_id, scenario, personality_id,
-                            jurisdiction=jurisdiction, rubric=rubric, structured=structured
-                        )
-                        break  # success
-                    except Exception as retry_err:
-                        if attempt < max_retries:
-                            print(f"  Attempt {attempt + 1} failed ({retry_err}), retrying...")
-                        else:
-                            raise  # final attempt — let outer except handle it
+                result = evaluate_with_retry(
+                    http_client, db_conn, run_id, scenario, personality_id,
+                    jurisdiction=jurisdiction, rubric=rubric, structured=structured,
+                )
 
                 personality_results[personality_id] = result
                 all_results[sid]["evaluations"][personality_id] = {

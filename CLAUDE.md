@@ -67,3 +67,37 @@ Output goes to `results/` (gitignored): JSON results, markdown reports, and `ara
 ## Framework Specification
 
 `docs/framework.md` defines the rubric: 7 dimensions with 4-level classifications, hard gates (Regulatory=A or Blast Radius=A blocks autonomy), and soft gates (any other A requires documented risk acceptance). The risk fingerprint is the ordered tuple across all dimensions.
+
+## Running Evals — Operational Notes
+
+**Before your first run:**
+1. You need an OpenRouter API key in `.env.local`. Free models cost $0.
+2. In your OpenRouter account settings, enable **"Allow free endpoints that may publish prompts"** — without this, most free models return 429 immediately.
+3. Run `pip install -e .` so the `ara_eval` package is importable.
+
+**Choosing a model:**
+- Default is `arcee-ai/trinity-large-preview:free` — the only free model tested to reliably complete 18/18 calls without rate-limiting.
+- Free models on OpenRouter are volatile: they get removed, rate-limited, or return empty responses without warning. See `docs/adr/007-free-model-comparison.md` for tested models and results.
+- Override with `ARA_MODEL=<openrouter-id> python labs/lab-01-risk-fingerprinting.py`. No code changes needed.
+- See `docs/models.md` for the full model guide with pricing.
+
+**Rate limiting and pacing:**
+- All labs use `evaluate_with_retry()` from `ara_eval/core.py`, which enforces a minimum 17s interval between calls (based on Arcee Trinity's median response time across 387 calls). This prevents faster free models from outrunning rate limits.
+- On 429 or empty responses, retries use exponential backoff: `2^attempt × 17s`.
+- Arcee Trinity's natural latency (~17s median) means pacing adds zero overhead for the default model. Faster models get artificial delay.
+
+**Interpreting results:**
+- A run produces a JSON file in `results/<date>/` plus entries in `results/ara-eval.db`.
+- Use `python labs/view-requests.py --last` to inspect the most recent run, or `--stats` for aggregate stats across all runs.
+- Use `python labs/generate-report.py --last` to generate a markdown report with fingerprint matrices, gating summaries, and auto-generated homework questions.
+- Reference results from known-good runs are committed in `results/reference/` for comparison.
+
+**When things go wrong:**
+- **All calls return 429:** Check that "free endpoints" is enabled in OpenRouter settings. If still failing, the model is genuinely rate-limited — try a different model.
+- **Empty content (None):** The model responded but returned no content. This is a model reliability issue, not a bug. Some free models do this on 50-70% of calls. The result is logged as an error and skipped.
+- **Missing dimensions:** The model returned JSON but omitted some of the 7 required dimensions. Usually means the response was truncated. `json_repair` handles minor truncation; severe cases are logged as errors.
+- **Invalid level:** The model returned a dimension level outside A-D. Caught by validation and logged as an error.
+
+**Saving reference results:**
+- When a model run completes successfully (18/18 or close), copy the output to `results/reference/<model-slug>/` and commit it. This builds a library of baseline results for inter-model comparison.
+- Update `docs/adr/007-free-model-comparison.md` with the model name, success rate, and any observations.

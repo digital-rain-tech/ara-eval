@@ -44,7 +44,7 @@ from ara_eval.core import (
     OPENROUTER_API_KEY,
     OPENROUTER_HEADERS,
     PERSONALITIES,
-    evaluate_scenario,
+    evaluate_with_retry,
     get_run_dir,
     init_db,
     load_scenarios,
@@ -67,8 +67,8 @@ def compare_fingerprints(result_a: dict, result_b: dict, label_a: str, label_b: 
             label_b: level_b,
             "shift": shift,  # positive = grounded is stricter (higher risk), negative = grounded is looser
             "changed": level_a != level_b,
-            "reasoning_a": result_a["parsed"]["dimensions"][dim]["reasoning"],
-            "reasoning_b": result_b["parsed"]["dimensions"][dim]["reasoning"],
+            "reasoning_a": result_a["parsed"]["dimensions"][dim].get("reasoning", ""),
+            "reasoning_b": result_b["parsed"]["dimensions"][dim].get("reasoning", ""),
         }
     return shifts
 
@@ -146,20 +146,11 @@ def main():
                 print(f"  [{jurisdiction}] {sid} × {personality_id}...", end=" ", flush=True)
 
                 try:
-                    max_retries = 2
-                    for attempt in range(1 + max_retries):
-                        try:
-                            result = evaluate_scenario(
-                                http_client, db_conn, run_id, scenario,
-                                personality_id, jurisdiction=jurisdiction,
-                                structured=args.structured,
-                            )
-                            break
-                        except Exception as retry_err:
-                            if attempt < max_retries:
-                                print(f"attempt {attempt + 1} failed ({retry_err}), retrying...", end=" ", flush=True)
-                            else:
-                                raise
+                    result = evaluate_with_retry(
+                        http_client, db_conn, run_id, scenario,
+                        personality_id, jurisdiction=jurisdiction,
+                        structured=args.structured,
+                    )
                     condition_results[jurisdiction][sid][personality_id] = result
                     fp = result["gating"]["fingerprint_string"]
                     cost = f"${result.get('cost', 0):.6f}" if result.get("cost") else ""

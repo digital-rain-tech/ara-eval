@@ -42,7 +42,7 @@ from ara_eval.core import (
     OPENROUTER_API_KEY,
     OPENROUTER_HEADERS,
     PERSONALITIES,
-    evaluate_scenario,
+    evaluate_with_retry,
     get_run_dir,
     init_db,
     load_scenarios,
@@ -174,20 +174,11 @@ def main():
                 print(f"  [{completed}/{total_calls}] {sid} x {personality_id} rep {rep+1}/{reps}...", end=" ", flush=True)
 
                 try:
-                    max_retries = 2
-                    for attempt in range(1 + max_retries):
-                        try:
-                            result = evaluate_scenario(
-                                http_client, db_conn, run_id, scenario,
-                                personality_id, jurisdiction=args.jurisdiction,
-                                structured=args.structured,
-                            )
-                            break
-                        except Exception as retry_err:
-                            if attempt < max_retries:
-                                print(f"attempt {attempt + 1} failed ({retry_err}), retrying...", end=" ", flush=True)
-                            else:
-                                raise
+                    result = evaluate_with_retry(
+                        http_client, db_conn, run_id, scenario,
+                        personality_id, jurisdiction=args.jurisdiction,
+                        structured=args.structured,
+                    )
                     all_results[sid][personality_id].append(result)
                     fp = result["gating"]["fingerprint_string"]
                     cost = f"${result.get('cost', 0):.6f}" if result.get("cost") else ""
