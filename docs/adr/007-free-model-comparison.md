@@ -12,12 +12,32 @@ We want inter-model comparison data (Lab 04 candidate) using free-tier models on
 | Model | OpenRouter ID | Result | Notes |
 |-------|---------------|--------|-------|
 | **Arcee Trinity Large** | `arcee-ai/trinity-large-preview:free` | **18/18** | Default model. All labs pass. Reliable. |
+| **Hunter Alpha** | `openrouter/hunter-alpha` | **18/18** | OpenRouter's own model. Most aggressive rater — hits more hard gates but also over-classifies. ~17min for 18 calls. |
+| **Healer Alpha** | `openrouter/healer-alpha` | **18/18** | OpenRouter's own model. Catches Reg=A on genai-data-leakage (over-classifies vs reference B). ~6.5min for 18 calls. |
 | Step 3.5 Flash | `stepfun/step-3.5-flash:free` | **5/18** | 13/18 returned empty content (None). No pattern by scenario complexity. When it responds, rates much more aggressively (4 Level A's on claims-denial vs Arcee's 1). |
 | Nemotron 3 Super 120B | `nvidia/nemotron-3-super-120b-a12b:free` | **2/18** (with pacing), **8/18** (without) | Truncates responses — consistently drops last 4-5 dimensions. Output length too short for 7-dimension JSON. Also rate-limited. Not a pacing problem. |
 | Llama 3.3 70B | `meta-llama/llama-3.3-70b-instruct:free` | **0/18** | 429 on every call, even with exponential backoff up to 68s. |
 | Qwen3 Next 80B | `qwen/qwen3-next-80b-a3b-instruct:free` | **0/18** | 429 rate-limited on every call, even after enabling "free endpoints" setting. |
 | GPT-OSS 120B | `openai/gpt-oss-120b:free` | **0/18** | 429 (was 404 before enabling free endpoints — model exists but rate-limited). |
 | Mistral Small 3.1 24B | `mistralai/mistral-small-3.1-24b-instruct:free` | Not yet tried | Last untested free option. |
+
+## Inter-Model Hard Gate Comparison (Lab 01)
+
+The safety-critical question: do different models trigger the same hard gates?
+
+| Scenario | Reference | Arcee Trinity | Healer Alpha | Hunter Alpha |
+|---|---|---|---|---|
+| insurance-claims (Reg=A?) | Reg=A | CO hits | CO hits | CO+CRO hit |
+| algo-trading (Reg=A, Blast=A?) | Reg=A, Blast=A | 3/3 Reg, 0/3 Blast | 3/3 Reg, 1/3 Blast | 3/3 Reg, 2/3 Blast |
+| genai-data-leakage (Reg=B) | Reg=B | 1/3 over-flag A | **3/3 over-flag A** | **3/3 over-flag A** |
+| claims-denial (Reg=A?) | Reg=A | 2/3 hit | 1/3 hit | 1/3 hit (CO=A) |
+| cross-border (Reg=A?) | Reg=A | 3/3 hit | 3/3 hit | 3/3 hit |
+
+**Key findings:**
+- All 3 models agree on cross-border (Reg=A) and algo-trading (Reg=A) — these hard gates are robust across models.
+- Hunter Alpha and Healer Alpha both over-classify genai-data-leakage as Reg=A (reference is B). This is a false positive hard gate — conservative but wrong.
+- claims-denial Reg=A is the hardest to detect — no model catches it consistently. The CRO personality misses it across all 3 models.
+- Hunter Alpha is the most aggressive overall — more Level A's, more hard gates, but also more false positives.
 
 ## JSON Repair Audit
 
