@@ -73,7 +73,7 @@ results/            # Output (gitignored) — date-stamped JSON + SQLite log
 | 01 | Decision Reversibility | Can the action be undone? |
 | 02 | Failure Blast Radius | If the agent is wrong, how many people or dollars are affected? |
 | 03 | Regulatory Exposure | Does this decision touch safety, privacy, or compliance? |
-| 04 | Human Override Latency | How fast can a human intervene? Is that fast enough? |
+| 04 | Decision Time Pressure | How much time does the situation allow before a decision must be made? |
 | 05 | Data Confidence | Does the agent have enough signal to act? |
 | 06 | Accountability Chain | When the agent acts, who is responsible? Can you audit the decision? |
 | 07 | Graceful Degradation | When the agent fails, does it fail safely — or cascade? |

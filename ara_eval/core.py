@@ -74,7 +74,7 @@ DIMENSION_LABELS = {
     "decision_reversibility": "Decision Reversibility",
     "failure_blast_radius": "Failure Blast Radius",
     "regulatory_exposure": "Regulatory Exposure",
-    "human_override_latency": "Human Override Latency",
+    "human_override_latency": "Decision Time Pressure",
     "data_confidence": "Data Confidence",
     "accountability_chain": "Accountability Chain",
     "graceful_degradation": "Graceful Degradation",

@@ -31,14 +31,14 @@ Each dimension uses a four-level classification with narrative anchors — not n
 | C | General compliance | Standard business regulations apply | Customer communications |
 | D | Unregulated domain | No specific regulatory framework applies | Internal tooling |
 
-### Human Override Latency
+### Decision Time Pressure
 
 | Level | Label | Description | Example |
 |-------|-------|-------------|---------|
-| A | Override impossible in time | Decision window is shorter than human response time | Real-time trading decisions |
-| B | Override difficult | Human available but response time creates risk | Overnight fraud detection |
-| C | Override straightforward | Human can intervene within normal workflows | Claims processing queue |
-| D | No time pressure | Decision can wait indefinitely for human review | Policy document drafting |
+| A | No time to decide | Situation demands immediate action — seconds or less. Human involvement is physically impossible. | Real-time trading decisions |
+| B | Hours, not days | Decision should be made within hours. Delay creates material risk but doesn't foreclose options. | Overnight fraud detection |
+| C | Days are acceptable | Decision can wait days. Normal review workflows apply. Delay has minor operational cost. | Claims processing queue |
+| D | No deadline | Decision can wait weeks or indefinitely. Time is not a factor in the autonomy question. | Policy document drafting |
 
 ### Data Confidence
 
@@ -91,7 +91,7 @@ Fraud Detection: A-B-A-A-C-B-C
                  │ │ │ │ │ │ └─ Graceful Degradation
                  │ │ │ │ │ └─── Accountability Chain
                  │ │ │ │ └───── Data Confidence
-                 │ │ │ └─────── Human Override Latency
+                 │ │ │ └─────── Decision Time Pressure
                  │ │ └───────── Regulatory Exposure
                  │ └─────────── Failure Blast Radius
                  └───────────── Decision Reversibility

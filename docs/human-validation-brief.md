@@ -48,10 +48,10 @@ The per-dimension accuracy varies significantly:
 |---|---|---|---|
 | Accountability Chain | 67% | 50% | Relatively well-calibrated |
 | Failure Blast Radius | 61% | 39% | Wide model variance |
-| Human Override Latency | 50% | 11% | **Models struggle here** |
+| Decision Time Pressure | 50% | 11% | **Models struggle here** |
 | Data Confidence | 50% | 39% | Moderate |
 
-**Human Override Latency** is the most problematic — models score 11-50%. Is our rubric definition clear enough, or does the temporal reasoning required make this inherently hard for LLMs?
+**Decision Time Pressure** is the most problematic — models score 11-50%. Is our rubric definition clear enough, or does the temporal reasoning required make this inherently hard for LLMs?
 
 ### Priority 3: Scenario Gaps
 

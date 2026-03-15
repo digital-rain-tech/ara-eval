@@ -5,7 +5,7 @@ Classify the scenario's risk on a 4-level scale (A = highest risk, D = lowest ri
 1. Decision Reversibility
 2. Failure Blast Radius
 3. Regulatory Exposure
-4. Human Override Latency
+4. Decision Time Pressure
 5. Data Confidence
 6. Accountability Chain
 7. Graceful Degradation

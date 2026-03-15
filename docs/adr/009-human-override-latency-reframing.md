@@ -1,7 +1,7 @@
 # ADR 009: Human Override Latency — Reframing as Decision Window
 
 **Date:** 2026-03-15
-**Status:** Proposed
+**Status:** Accepted — rubric updated 2026-03-15. JSON key remains `human_override_latency` for backward compatibility with existing results.
 
 ## Context
 
