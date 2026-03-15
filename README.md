@@ -123,12 +123,9 @@ See [`labs/README.md`](labs/README.md) for exercises and key questions. Course s
 
 ## Contributing
 
-We're actively seeking two types of contributions:
+Have a business situation where AI autonomy gets interesting? [**Open an issue**](../../issues/new?template=scenario.yml) and tell us what happened — a workflow that went sideways, a decision that's harder than it looks, a news story where an algorithm caused real harm. You don't need to know our framework. We'll structure it, run it through the pipeline, and credit you. Takes 2 minutes.
 
-- **Business scenarios** — anonymized real-world situations where autonomous AI decisions create risk, organized by industry vertical (banking, insurance, capital markets, healthcare, logistics, legal, technology)
-- **Model evaluation results** — run ARA-Eval through different LLMs and submit the results to build a cross-model comparison dataset (instruction following, judgement quality, reliability)
-
-Scenario submissions must be anonymized but should include industry vertical, company size band, and jurisdiction. See [CONTRIBUTING.md](CONTRIBUTING.md) for the scenario format, anonymization checklist, and submission process.
+Also accepting [model evaluation results](CONTRIBUTING.md#model-evaluation-results-pr) — run ARA-Eval through a different LLM and submit the output.
 
 ## License
 

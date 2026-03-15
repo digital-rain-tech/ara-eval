@@ -1,0 +1,77 @@
+name: Share a business scenario
+description: Tell us about a business situation where AI autonomy gets interesting
+title: "[Scenario]: "
+labels: ["scenario"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **You don't need to know anything about our framework.** Just tell us about a real business situation — something that happened at work, something you read in the news, or a workflow where you've wondered "could an AI just handle this?"
+
+        We'll do the rest: structure it, run it through the evaluation pipeline, and credit you.
+
+  - type: textarea
+    id: story
+    attributes:
+      label: What happened?
+      description: Describe the situation in your own words. What was the decision? What were the stakes? What made it tricky?
+      placeholder: |
+        Example: "We had an AI screening job applications and it was auto-rejecting candidates who had employment gaps. Worked fine 90% of the time, but it was filtering out people who'd taken parental leave or had medical issues. By the time anyone noticed, we'd already rejected 200+ candidates over 3 months."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: industry
+    attributes:
+      label: What industry?
+      options:
+        - Banking
+        - Insurance
+        - Capital Markets
+        - Wealth Management
+        - Healthcare
+        - Logistics & Supply Chain
+        - Legal
+        - Technology
+        - Real Estate
+        - Retail & E-commerce
+        - Energy & Utilities
+        - Government & Public Sector
+        - Education
+        - Manufacturing
+        - Telecommunications
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: company_size
+    attributes:
+      label: Rough company size?
+      options:
+        - Small (under 500 people)
+        - Mid-size (500-5,000)
+        - Large (5,000+)
+        - Not applicable / public news story
+    validations:
+      required: true
+
+  - type: dropdown
+    id: public
+    attributes:
+      label: Is this from public reporting?
+      description: If yes, include a link in your story above. Public stories don't need anonymization.
+      options:
+        - "No — this is from my own experience (I've kept it anonymized)"
+        - "Yes — this was reported publicly (link included above)"
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Optional — jurisdiction, regulatory context, what you think the right call was, whatever you want to add.
+      placeholder: This is optional.
+    validations:
+      required: false
