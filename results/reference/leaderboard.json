@@ -28,7 +28,7 @@
           "total": 18,
           "rate": 0.5
         },
-        "Human Override Latency": {
+        "Decision Time Pressure": {
           "matches": 2,
           "total": 18,
           "rate": 0.1111111111111111
@@ -80,7 +80,7 @@
           "total": 18,
           "rate": 0.5
         },
-        "Human Override Latency": {
+        "Decision Time Pressure": {
           "matches": 4,
           "total": 18,
           "rate": 0.2222222222222222
@@ -132,7 +132,7 @@
           "total": 18,
           "rate": 0.5
         },
-        "Human Override Latency": {
+        "Decision Time Pressure": {
           "matches": 9,
           "total": 18,
           "rate": 0.5

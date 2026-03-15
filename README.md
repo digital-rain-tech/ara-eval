@@ -122,6 +122,24 @@ All requests, responses, token usage, cost, and provider metadata are logged to 
 
 See [`labs/README.md`](labs/README.md) for exercises and key questions. Course syllabi: [`5-week MBA`](docs/course-formats/5-week-mba-capstone.md) | [`10-week undergraduate`](docs/course-formats/10-week-undergraduate.md).
 
+## Model Leaderboard
+
+How well do different judge models reproduce human-authored reference fingerprints? Run `python labs/lab-04-inter-model-comparison.py` to regenerate.
+
+| Model | Completion | Gate Accuracy | False Neg | False Pos | Dim Match | Differentiation |
+|-------|-----------|---------------|-----------|-----------|-----------|-----------------|
+| Hunter Alpha (1T, stealth) | 18/18 | **81%** | 4 | 3 | 43% | 64% |
+| Healer Alpha (omni, stealth) | 18/18 | 75% | 6 | 3 | **49%** | 60% |
+| Arcee Trinity (free) | 18/18 | 75% | 7 | 2 | 48% | **69%** |
+
+- **Gate Accuracy** = correct hard gate detection (Regulatory=A, Blast Radius=A). The safety-critical metric.
+- **False Neg** = missed a gate that should fire. Dangerous.
+- **False Pos** = fired a gate that shouldn't. Conservative but wrong.
+- **Dim Match** = exact level match vs reference across all 7 dimensions.
+- **Differentiation** = % of dimensions where the 3 personality variants disagree. Higher = more stakeholder perspective sensitivity.
+
+*Last updated: 2026-03-15. See [`docs/adr/007-free-model-comparison.md`](docs/adr/007-free-model-comparison.md) for full testing notes.*
+
 ## Contributing
 
 Have a messy business workflow, a process you've debated automating, or a news story that stuck with you? [**Open an issue**](../../issues/new?template=scenario.yml) and tell us about it. You don't need to know our framework — we'll structure it, run it through the pipeline, and credit you. Takes 2 minutes.
