@@ -1,0 +1,332 @@
+"""
+ARA-Eval Lab 04: Inter-Model Comparison
+========================================
+
+Compare risk fingerprints across multiple judge models to measure
+framework robustness. Reads from results/reference/ — no API calls.
+
+Do different judges produce the same governance decisions?
+
+Usage:
+    python labs/lab-04-inter-model-comparison.py
+
+Output:
+    Model scorecard with completion rate, hard gate accuracy, reference
+    alignment, and personality differentiation metrics.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from ara_eval.core import DIMENSIONS, DIMENSION_LABELS, LEVEL_ORDER
+
+_root = Path(__file__).parent.parent
+REFERENCE_DIR = _root / "results" / "reference"
+SCENARIOS_PATH = _root / "scenarios" / "starter-scenarios.json"
+
+PERSONALITIES = ["compliance_officer", "cro", "operations_director"]
+
+# Hard gate dimensions and their trigger level
+HARD_GATE_DIMS = {"regulatory_exposure": "A", "failure_blast_radius": "A"}
+
+
+def load_gold_references() -> dict:
+    """Load human-authored reference fingerprints from scenarios."""
+    with open(SCENARIOS_PATH) as f:
+        scenarios = json.load(f)
+    refs = {}
+    for s in scenarios:
+        if s.get("core") and "reference_fingerprint" in s:
+            refs[s["id"]] = s["reference_fingerprint"]
+    return refs
+
+
+def load_model_results(model_dir: Path) -> dict | None:
+    """Load Lab 01 results for a model from its reference directory."""
+    lab01_files = sorted(model_dir.glob("*lab-01*.json"))
+    if not lab01_files:
+        return None
+    # Use most recent
+    with open(lab01_files[-1]) as f:
+        return json.load(f)
+
+
+def get_eval_fingerprint(data: dict, scenario_id: str, personality: str) -> dict | None:
+    """Extract a fingerprint dict from lab results."""
+    scenario_data = data.get(scenario_id, {})
+    evals = scenario_data.get("evaluations", {})
+    ev = evals.get(personality, {})
+    if "error" in ev or "fingerprint" not in ev:
+        return None
+    return ev["fingerprint"]
+
+
+def score_model(model_name: str, data: dict, gold: dict) -> dict:
+    """Score a model's results against gold references."""
+    total_evals = 0
+    successful_evals = 0
+
+    # Hard gate tracking
+    hard_gate_correct = 0  # true positives + true negatives
+    hard_gate_total = 0
+    hard_gate_false_neg = 0  # missed a gate that should fire
+    hard_gate_false_pos = 0  # fired a gate that shouldn't
+
+    # Dimension-level match
+    dim_matches = 0
+    dim_total = 0
+
+    # Per-dimension accuracy
+    per_dim_matches = {d: 0 for d in DIMENSIONS}
+    per_dim_total = {d: 0 for d in DIMENSIONS}
+
+    # Personality differentiation
+    personality_spreads = []
+
+    for sid, ref_fp in gold.items():
+        personality_fps = {}
+
+        for pid in PERSONALITIES:
+            total_evals += 1
+            fp = get_eval_fingerprint(data, sid, pid)
+            if fp is None:
+                continue
+            successful_evals += 1
+            personality_fps[pid] = fp
+
+            # Hard gate comparison
+            for gate_dim, gate_level in HARD_GATE_DIMS.items():
+                hard_gate_total += 1
+                ref_fires = ref_fp.get(gate_dim) == gate_level
+                eval_level = fp.get(gate_dim, {})
+                if isinstance(eval_level, dict):
+                    eval_level = eval_level.get("level", "")
+                eval_fires = eval_level == gate_level
+
+                if ref_fires == eval_fires:
+                    hard_gate_correct += 1
+                elif ref_fires and not eval_fires:
+                    hard_gate_false_neg += 1
+                elif not ref_fires and eval_fires:
+                    hard_gate_false_pos += 1
+
+            # Per-dimension match
+            for dim in DIMENSIONS:
+                ref_level = ref_fp.get(dim)
+                eval_dim = fp.get(dim, {})
+                if isinstance(eval_dim, dict):
+                    eval_level = eval_dim.get("level")
+                else:
+                    eval_level = eval_dim
+
+                if ref_level and eval_level:
+                    dim_total += 1
+                    per_dim_total[dim] += 1
+                    if ref_level == eval_level:
+                        dim_matches += 1
+                        per_dim_matches[dim] += 1
+
+        # Personality differentiation: measure spread across personalities per scenario
+        if len(personality_fps) >= 2:
+            for dim in DIMENSIONS:
+                levels = []
+                for pid, fp in personality_fps.items():
+                    dim_data = fp.get(dim, {})
+                    if isinstance(dim_data, dict):
+                        lvl = dim_data.get("level")
+                    else:
+                        lvl = dim_data
+                    if lvl and lvl in LEVEL_ORDER:
+                        levels.append(LEVEL_ORDER[lvl])
+                if len(levels) >= 2:
+                    personality_spreads.append(max(levels) - min(levels))
+
+    completion_rate = successful_evals / total_evals if total_evals else 0
+    hard_gate_accuracy = hard_gate_correct / hard_gate_total if hard_gate_total else 0
+    dim_match_rate = dim_matches / dim_total if dim_total else 0
+    avg_personality_spread = sum(personality_spreads) / len(personality_spreads) if personality_spreads else 0
+    nonzero_spreads = sum(1 for s in personality_spreads if s > 0)
+    differentiation_rate = nonzero_spreads / len(personality_spreads) if personality_spreads else 0
+
+    per_dim_accuracy = {}
+    for dim in DIMENSIONS:
+        if per_dim_total[dim] > 0:
+            per_dim_accuracy[DIMENSION_LABELS[dim]] = {
+                "matches": per_dim_matches[dim],
+                "total": per_dim_total[dim],
+                "rate": per_dim_matches[dim] / per_dim_total[dim],
+            }
+
+    return {
+        "model": model_name,
+        "completion_rate": completion_rate,
+        "successful": successful_evals,
+        "total": total_evals,
+        "hard_gate_accuracy": hard_gate_accuracy,
+        "hard_gate_false_negatives": hard_gate_false_neg,
+        "hard_gate_false_positives": hard_gate_false_pos,
+        "hard_gate_total": hard_gate_total,
+        "dimension_match_rate": dim_match_rate,
+        "dimension_matches": dim_matches,
+        "dimension_total": dim_total,
+        "per_dimension_accuracy": per_dim_accuracy,
+        "avg_personality_spread": avg_personality_spread,
+        "personality_differentiation_rate": differentiation_rate,
+    }
+
+
+def print_leaderboard(scores: list[dict]):
+    """Print the model comparison leaderboard."""
+    print(f"\n{'='*90}")
+    print(f"  ARA-EVAL MODEL LEADERBOARD")
+    print(f"  Gold standard: human-authored reference fingerprints (6 core scenarios)")
+    print(f"{'='*90}")
+
+    # Sort by hard gate accuracy (safety-critical), then dimension match rate
+    scores.sort(key=lambda s: (s["hard_gate_accuracy"], s["dimension_match_rate"]), reverse=True)
+
+    print(f"\n  {'MODEL':<30} {'COMPLETE':>8} {'GATE ACC':>9} {'FN':>4} {'FP':>4} {'DIM MATCH':>10} {'DIFF':>6}")
+    print(f"  {'-'*30} {'-'*8} {'-'*9} {'-'*4} {'-'*4} {'-'*10} {'-'*6}")
+
+    for s in scores:
+        complete = f"{s['successful']}/{s['total']}"
+        gate_acc = f"{s['hard_gate_accuracy']:.0%}"
+        fn = str(s["hard_gate_false_negatives"])
+        fp = str(s["hard_gate_false_positives"])
+        dim_match = f"{s['dimension_match_rate']:.0%}"
+        diff = f"{s['personality_differentiation_rate']:.0%}"
+        print(f"  {s['model']:<30} {complete:>8} {gate_acc:>9} {fn:>4} {fp:>4} {dim_match:>10} {diff:>6}")
+
+    print(f"\n  GATE ACC = hard gate accuracy (Reg=A, Blast=A correct detection)")
+    print(f"  FN = false negatives (missed gates — dangerous)")
+    print(f"  FP = false positives (over-fired gates — conservative)")
+    print(f"  DIM MATCH = exact dimension-level match vs reference")
+    print(f"  DIFF = personality differentiation rate (% of dims where CO/CRO/Ops disagree)")
+
+    # Per-dimension breakdown
+    print(f"\n{'='*90}")
+    print(f"  PER-DIMENSION ACCURACY")
+    print(f"{'='*90}")
+
+    header = f"\n  {'DIMENSION':<28}"
+    for s in scores:
+        header += f" {s['model'][:12]:>12}"
+    print(header)
+    print(f"  {'-'*28}" + "".join(f" {'-'*12}" for _ in scores))
+
+    for dim in DIMENSIONS:
+        label = DIMENSION_LABELS[dim]
+        row = f"  {label:<28}"
+        for s in scores:
+            pda = s["per_dimension_accuracy"].get(label, {})
+            if pda:
+                row += f" {pda['rate']:>11.0%}"
+            else:
+                row += f" {'N/A':>12}"
+        print(row)
+
+    # Hard gate detail
+    print(f"\n{'='*90}")
+    print(f"  HARD GATE DETAIL")
+    print(f"  (Correct = matches reference; FN = missed gate; FP = false alarm)")
+    print(f"{'='*90}")
+
+    gold = load_gold_references()
+    print(f"\n  {'SCENARIO':<35} {'REF GATES':<20}", end="")
+    for s in scores:
+        print(f" {s['model'][:12]:>12}", end="")
+    print()
+    print(f"  {'-'*35} {'-'*20}" + "".join(f" {'-'*12}" for _ in scores))
+
+    for sid, ref_fp in sorted(gold.items()):
+        ref_gates = []
+        for gate_dim, gate_level in HARD_GATE_DIMS.items():
+            if ref_fp.get(gate_dim) == gate_level:
+                short = "Reg=A" if gate_dim == "regulatory_exposure" else "Blast=A"
+                ref_gates.append(short)
+        ref_str = ", ".join(ref_gates) if ref_gates else "none"
+        print(f"  {sid:<35} {ref_str:<20}", end="")
+
+        for s in scores:
+            # Check if this model fires the same gates
+            model_dir = REFERENCE_DIR / s["model"].replace(" ", "-").lower()
+            data = load_model_results(model_dir)
+            if not data:
+                print(f" {'N/A':>12}", end="")
+                continue
+
+            # Check across personalities — report fraction that hit each gate
+            gate_hits = {gd: 0 for gd in HARD_GATE_DIMS}
+            gate_counts = {gd: 0 for gd in HARD_GATE_DIMS}
+            for pid in PERSONALITIES:
+                fp = get_eval_fingerprint(data, sid, pid)
+                if fp is None:
+                    continue
+                for gd in HARD_GATE_DIMS:
+                    gate_counts[gd] += 1
+                    dim_data = fp.get(gd, {})
+                    lvl = dim_data.get("level", "") if isinstance(dim_data, dict) else dim_data
+                    if lvl == HARD_GATE_DIMS[gd]:
+                        gate_hits[gd] += 1
+
+            parts = []
+            for gd, gl in HARD_GATE_DIMS.items():
+                if gate_counts[gd] > 0:
+                    hits = gate_hits[gd]
+                    total = gate_counts[gd]
+                    short = "R" if gd == "regulatory_exposure" else "B"
+                    if hits > 0:
+                        parts.append(f"{short}:{hits}/{total}")
+            result = " ".join(parts) if parts else "none"
+            print(f" {result:>12}", end="")
+
+        print()
+
+    print()
+
+
+def main():
+    gold = load_gold_references()
+    if not gold:
+        print("No core scenarios with reference fingerprints found.")
+        return
+
+    print(f"Loaded {len(gold)} gold reference fingerprints")
+
+    # Find all model directories in results/reference/
+    if not REFERENCE_DIR.exists():
+        print(f"No reference directory found: {REFERENCE_DIR}")
+        return
+
+    scores = []
+    for model_dir in sorted(REFERENCE_DIR.iterdir()):
+        if not model_dir.is_dir():
+            continue
+        data = load_model_results(model_dir)
+        if data is None:
+            print(f"  {model_dir.name}: no Lab 01 results found, skipping")
+            continue
+
+        score = score_model(model_dir.name, data, gold)
+        scores.append(score)
+        print(f"  {model_dir.name}: {score['successful']}/{score['total']} evals, "
+              f"gate accuracy {score['hard_gate_accuracy']:.0%}, "
+              f"dim match {score['dimension_match_rate']:.0%}")
+
+    if not scores:
+        print("No model results found in results/reference/")
+        return
+
+    print_leaderboard(scores)
+
+    # Save as JSON
+    output_path = REFERENCE_DIR / "leaderboard.json"
+    with open(output_path, "w") as f:
+        json.dump({"scores": scores, "gold_scenarios": list(gold.keys())}, f, indent=2)
+    print(f"  Leaderboard saved to: {output_path}")
+
+
+if __name__ == "__main__":
+    main()

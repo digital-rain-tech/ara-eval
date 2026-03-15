@@ -1,0 +1,168 @@
+{
+  "scores": [
+    {
+      "model": "openrouter-hunter-alpha",
+      "completion_rate": 1.0,
+      "successful": 18,
+      "total": 18,
+      "hard_gate_accuracy": 0.8055555555555556,
+      "hard_gate_false_negatives": 4,
+      "hard_gate_false_positives": 3,
+      "hard_gate_total": 36,
+      "dimension_match_rate": 0.42857142857142855,
+      "dimension_matches": 54,
+      "dimension_total": 126,
+      "per_dimension_accuracy": {
+        "Decision Reversibility": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        },
+        "Failure Blast Radius": {
+          "matches": 11,
+          "total": 18,
+          "rate": 0.6111111111111112
+        },
+        "Regulatory Exposure": {
+          "matches": 9,
+          "total": 18,
+          "rate": 0.5
+        },
+        "Human Override Latency": {
+          "matches": 2,
+          "total": 18,
+          "rate": 0.1111111111111111
+        },
+        "Data Confidence": {
+          "matches": 7,
+          "total": 18,
+          "rate": 0.3888888888888889
+        },
+        "Accountability Chain": {
+          "matches": 9,
+          "total": 18,
+          "rate": 0.5
+        },
+        "Graceful Degradation": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        }
+      },
+      "avg_personality_spread": 0.7142857142857143,
+      "personality_differentiation_rate": 0.6428571428571429
+    },
+    {
+      "model": "openrouter-healer-alpha",
+      "completion_rate": 1.0,
+      "successful": 18,
+      "total": 18,
+      "hard_gate_accuracy": 0.75,
+      "hard_gate_false_negatives": 6,
+      "hard_gate_false_positives": 3,
+      "hard_gate_total": 36,
+      "dimension_match_rate": 0.49206349206349204,
+      "dimension_matches": 62,
+      "dimension_total": 126,
+      "per_dimension_accuracy": {
+        "Decision Reversibility": {
+          "matches": 11,
+          "total": 18,
+          "rate": 0.6111111111111112
+        },
+        "Failure Blast Radius": {
+          "matches": 11,
+          "total": 18,
+          "rate": 0.6111111111111112
+        },
+        "Regulatory Exposure": {
+          "matches": 9,
+          "total": 18,
+          "rate": 0.5
+        },
+        "Human Override Latency": {
+          "matches": 4,
+          "total": 18,
+          "rate": 0.2222222222222222
+        },
+        "Data Confidence": {
+          "matches": 7,
+          "total": 18,
+          "rate": 0.3888888888888889
+        },
+        "Accountability Chain": {
+          "matches": 12,
+          "total": 18,
+          "rate": 0.6666666666666666
+        },
+        "Graceful Degradation": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        }
+      },
+      "avg_personality_spread": 0.6904761904761905,
+      "personality_differentiation_rate": 0.5952380952380952
+    },
+    {
+      "model": "arcee-trinity-free",
+      "completion_rate": 1.0,
+      "successful": 18,
+      "total": 18,
+      "hard_gate_accuracy": 0.75,
+      "hard_gate_false_negatives": 7,
+      "hard_gate_false_positives": 2,
+      "hard_gate_total": 36,
+      "dimension_match_rate": 0.48412698412698413,
+      "dimension_matches": 61,
+      "dimension_total": 126,
+      "per_dimension_accuracy": {
+        "Decision Reversibility": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        },
+        "Failure Blast Radius": {
+          "matches": 7,
+          "total": 18,
+          "rate": 0.3888888888888889
+        },
+        "Regulatory Exposure": {
+          "matches": 9,
+          "total": 18,
+          "rate": 0.5
+        },
+        "Human Override Latency": {
+          "matches": 9,
+          "total": 18,
+          "rate": 0.5
+        },
+        "Data Confidence": {
+          "matches": 9,
+          "total": 18,
+          "rate": 0.5
+        },
+        "Accountability Chain": {
+          "matches": 11,
+          "total": 18,
+          "rate": 0.6111111111111112
+        },
+        "Graceful Degradation": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        }
+      },
+      "avg_personality_spread": 0.7142857142857143,
+      "personality_differentiation_rate": 0.6904761904761905
+    }
+  ],
+  "gold_scenarios": [
+    "insurance-claims-001",
+    "banking-customer-service-001",
+    "algo-trading-deployment-001",
+    "genai-data-leakage-001",
+    "claims-denial-001",
+    "cross-border-model-001"
+  ]
+}
