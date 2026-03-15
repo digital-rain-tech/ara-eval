@@ -11,6 +11,9 @@ __pycache__/
 venv/
 env/
 
+# Custom scenarios (student work-in-progress)
+scenarios/custom/
+
 # Environment
 .env
 .env.local

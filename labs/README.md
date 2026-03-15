@@ -85,6 +85,56 @@ Runs each scenario × personality N times (default 5) and reports:
 
 ---
 
+## Lab 04: Inter-Model Comparison
+
+Compare risk fingerprints across multiple judge models. Reads from `results/reference/` — no API calls needed.
+
+### Run
+
+```bash
+python labs/lab-04-inter-model-comparison.py
+```
+
+Scores each model on gate accuracy, dimension match rate, and personality differentiation against human-authored reference fingerprints.
+
+### Key Questions
+
+- Do different models fire the same hard gates? If not, is the model choice a policy decision?
+- Which model is most calibrated to the reference? Which is most aggressive?
+- Which dimensions show the most inter-model variance? Are those the same dimensions that are noisy in Lab 03?
+
+---
+
+## Lab 05: Build Your Own Scenario
+
+Write a scenario from a real-world case, predict its fingerprint, run it through the pipeline, and compare your prediction against the LLM judge.
+
+### Workflow
+
+```bash
+# 1. Create a scenario template
+python labs/lab-05-build-your-own-scenario.py --init my-scenario-001
+
+# 2. Edit scenarios/custom/my-scenario-001.json (fill in the blanks)
+
+# 3. Predict your fingerprint BEFORE running the model
+python labs/lab-05-build-your-own-scenario.py --predict my-scenario-001
+
+# 4. Run the model
+python labs/lab-05-build-your-own-scenario.py --run my-scenario-001
+
+# 5. Compare your prediction vs the model
+python labs/lab-05-build-your-own-scenario.py --compare my-scenario-001
+```
+
+### Key Questions
+
+- Where did you and the model disagree? What information were you weighing differently?
+- Would you change your prediction after seeing the model's output? Why or why not?
+- If you were writing the reference fingerprint for other students, what would you set?
+
+---
+
 ## Rubric Variants
 
 Three rubric detail levels are available for ablation experiments:
