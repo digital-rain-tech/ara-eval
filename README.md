@@ -121,6 +121,15 @@ All requests, responses, token usage, cost, and provider metadata are logged to 
 
 See [`labs/README.md`](labs/README.md) for exercises and key questions. Course syllabi: [`5-week MBA`](docs/course-formats/5-week-mba-capstone.md) | [`10-week undergraduate`](docs/course-formats/10-week-undergraduate.md).
 
+## Contributing
+
+We're actively seeking two types of contributions:
+
+- **Business scenarios** — anonymized real-world situations where autonomous AI decisions create risk, organized by industry vertical (banking, insurance, capital markets, healthcare, logistics, legal, technology)
+- **Model evaluation results** — run ARA-Eval through different LLMs and submit the results to build a cross-model comparison dataset (instruction following, judgement quality, reliability)
+
+Scenario submissions must be anonymized but should include industry vertical, company size band, and jurisdiction. See [CONTRIBUTING.md](CONTRIBUTING.md) for the scenario format, anonymization checklist, and submission process.
+
 ## License
 
 Apache 2.0 — see [LICENSE](LICENSE).
