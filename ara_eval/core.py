@@ -386,15 +386,14 @@ def extract_provider_info(data: dict) -> Dict[str, Optional[str]]:
 
 
 def extract_cost(data: dict) -> Optional[float]:
-    """Extract cost if OpenRouter includes it, otherwise estimate."""
+    """Extract cost from OpenRouter response. Returns 0.0 for free models."""
     usage = data.get("usage", {})
     if "total_cost" in usage:
         return usage["total_cost"]
-    prompt = usage.get("prompt_tokens", 0)
-    completion = usage.get("completion_tokens", 0)
-    if prompt or completion:
-        # Rough estimate — actual cost depends on model
-        return (prompt * 0.071 / 1_000_000) + (completion * 0.10 / 1_000_000)
+    # Free models don't report cost — check the model ID
+    model_id = data.get("model", "") or MODEL
+    if model_id.endswith(":free"):
+        return 0.0
     return None
 
 
