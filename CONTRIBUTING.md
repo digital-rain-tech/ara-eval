@@ -6,7 +6,7 @@ The most valuable thing you can contribute is a **story** — a business situati
 
 [**Open an issue**](../../issues/new?template=scenario.yml) and answer four questions:
 
-1. **What happened?** — Describe the situation. A workflow where AI made a call (or should have). Something that went wrong. A decision that's harder than it looks.
+1. **What happened?** — Describe the situation. A messy workflow, a process you've debated automating, something that went wrong, a news story that stuck with you.
 2. **What industry?** — Pick from the dropdown.
 3. **Rough company size?** — Small / mid / large.
 4. **Is this from public reporting?** — If it's a news story or enforcement action, just include the link. If it's from your own experience, keep it anonymized (no company names, no individual names, no exact figures that could identify a specific transaction).
@@ -15,15 +15,15 @@ That's it. We'll convert your story into a structured scenario, run it through t
 
 ### What makes a good submission
 
-The best scenarios have **tension** — situations where the right answer isn't obvious:
+The best stories have **tension** — situations where the right answer isn't obvious:
 
-- An AI auto-approved something it shouldn't have (or blocked something it shouldn't have)
-- A workflow where speed matters but so does accuracy
-- A decision that's routine 95% of the time but catastrophic in the other 5%
-- A case where different stakeholders (compliance, operations, legal) would disagree on the right call
-- A news story where an algorithm caused real harm — or prevented it
+- A business process where you've debated whether AI could handle it — and people disagree
+- A workflow that's routine 95% of the time but catastrophic in the other 5%
+- A case where speed matters but so does getting it right
+- Something that went wrong — an algorithm caused harm, or a manual process was too slow
+- A situation where compliance, operations, and legal would each give a different answer
 
-The less interesting scenarios are the ones where the answer is obviously "let the AI do it" or obviously "never let the AI do it." The valuable ones live in the middle.
+You don't need to have AI in place already. "Here's a messy workflow we're thinking about automating" is just as valuable as "here's what happened when we tried."
 
 ### What we do with your submission
 

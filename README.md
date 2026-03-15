@@ -123,7 +123,7 @@ See [`labs/README.md`](labs/README.md) for exercises and key questions. Course s
 
 ## Contributing
 
-Have a business situation where AI autonomy gets interesting? [**Open an issue**](../../issues/new?template=scenario.yml) and tell us what happened — a workflow that went sideways, a decision that's harder than it looks, a news story where an algorithm caused real harm. You don't need to know our framework. We'll structure it, run it through the pipeline, and credit you. Takes 2 minutes.
+Have a messy business workflow, a process you've debated automating, or a news story that stuck with you? [**Open an issue**](../../issues/new?template=scenario.yml) and tell us about it. You don't need to know our framework — we'll structure it, run it through the pipeline, and credit you. Takes 2 minutes.
 
 Also accepting [model evaluation results](CONTRIBUTING.md#model-evaluation-results-pr) — run ARA-Eval through a different LLM and submit the output.
 

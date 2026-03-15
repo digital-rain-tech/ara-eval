@@ -1,6 +1,6 @@
 name: Share a business scenario
 description: Tell us about a business situation where AI autonomy gets interesting
-title: "[Scenario]: "
+title: ""
 labels: ["scenario"]
 body:
   - type: markdown
@@ -14,9 +14,13 @@ body:
     id: story
     attributes:
       label: What happened?
-      description: Describe the situation in your own words. What was the decision? What were the stakes? What made it tricky?
+      description: Describe the situation in your own words. What was going on? What made it tricky? No need to structure it — just tell it like you'd tell a colleague.
       placeholder: |
-        Example: "We had an AI screening job applications and it was auto-rejecting candidates who had employment gaps. Worked fine 90% of the time, but it was filtering out people who'd taken parental leave or had medical issues. By the time anyone noticed, we'd already rejected 200+ candidates over 3 months."
+        Examples:
+
+        "Our claims team processes 500+ small claims a day. Most are straightforward but about 5% involve cross-border coverage where the rules are different. We've been talking about automating the straightforward ones but nobody can agree on where to draw the line."
+
+        "A bank got fined because their screening system was missing certain names that were transliterated differently from Mandarin. The system had been auto-clearing alerts below a threshold for over a year." (include link if public)
     validations:
       required: true
 
