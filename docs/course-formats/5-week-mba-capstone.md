@@ -26,7 +26,7 @@ Every scenario is classified across seven risk dimensions, each rated A (highest
 | 1 | **Decision Reversibility** | Can the action be undone? At what cost? |
 | 2 | **Failure Blast Radius** | How many people, systems, or markets are affected if this goes wrong? |
 | 3 | **Regulatory Exposure** | Is there a specific regulatory mandate governing this decision? |
-| 4 | **Human Override Latency** | Can a human intervene before damage occurs? |
+| 4 | **Decision Time Pressure** | How much time does the situation allow before a decision must be made? |
 | 5 | **Data Confidence** | Is the data complete, structured, and unambiguous? |
 | 6 | **Accountability Chain** | Can we trace who is responsible and how the decision was made? |
 | 7 | **Graceful Degradation** | What happens when the agent fails? Cascade or safe state? |
@@ -158,6 +158,18 @@ Write a 500--750 word executive memo on a single scenario, addressed to a Chief 
 ### Going Deeper
 
 Run the full scenario set with `--all` and identify which backup scenario has the most personality disagreement. Draft a one-paragraph hypothesis for why that scenario produces divergence — what is ambiguous about it that different stakeholders would read differently?
+
+**Bonus Exercise — Whose Clock Are You On?**
+
+Decision Time Pressure (Dimension 4) depends on whose perspective you adopt. For the **claims-denial** and **genai-data-leakage** scenarios, rate Decision Time Pressure (A-D) from three perspectives:
+
+1. **The system operator** (the company running the AI agent)
+2. **The affected party** (the patient, customer, or data subject)
+3. **The regulator** (the relevant supervisory authority)
+
+Then argue in one paragraph: which perspective should the framework adopt, and why? Does the answer change by industry? Consider: in the UnitedHealth nH Predict case, the insurer's process ran on a 3-day reviewer turnaround (Level C), but the patient's health deteriorated during the wait — Gene Lokken's family paid $150,000 out-of-pocket before he died (Level B). The Samsung ChatGPT leak had no one harmed during the delay — the employee just waited a few seconds (Level C from all perspectives).
+
+The point of this exercise is that every risk framework embeds a value judgment about whose interests to center. There is no "objective" rating.
 
 ---
 

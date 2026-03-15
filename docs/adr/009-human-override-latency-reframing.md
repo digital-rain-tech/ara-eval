@@ -92,6 +92,37 @@ Reran Arcee Trinity Lab 01 with updated rubric (2026-03-15). Compared dimension 
 
 **Open question:** The B/C boundary remains blurry. "Hours not days" vs "days are acceptable" is quantitative, but real scenarios have ambiguous time constraints (e.g., claims-denial: 3-day reviewer turnaround, but patient care continues during the wait — is the risk from delay about the patient or the process?). This may need domain expert input to resolve.
 
+## Whose Clock Are You On?
+
+The B/C boundary depends on **whose perspective** you measure delay from. Real cases illustrate this:
+
+| Case | System operator's view | Affected party's view | Regulator's view |
+|---|---|---|---|
+| **UnitedHealth nH Predict** (claims-denial) | C — 3-day reviewer turnaround works fine | **B — patient health deteriorates during delay** (Gene Lokken's family paid $150K before he died) | B — delayed care creates liability |
+| **Samsung ChatGPT leak** (DLP) | C — agent can block before submission | C — employee waits a few seconds | C — data hasn't left yet |
+| **AIA AML screening** (insurance) | D — no deadline on screening | D — no immediate harm | D — failures went undetected 6 years |
+| **Knight Capital** (algo-trading) | A — $10M/minute damage | A — market participants affected immediately | A — systemic risk |
+
+For scenarios where **human life or wellbeing is at risk during the delay**, the affected party's perspective dominates. For scenarios where delay causes only operational inconvenience, the system operator's perspective is sufficient.
+
+**Proposed principle:** When the affected party faces health, safety, or irreversible financial harm during the delay, rate Decision Time Pressure from their perspective. Otherwise, rate from the system operator's perspective.
+
+This is intentionally opinionated — the framework serves risk governance, not process efficiency. The perspective choice may vary by vertical (healthcare vs banking vs insurance), which makes it a productive classroom discussion topic.
+
+## Classroom Exercise: Perspective-Dependent Risk Classification
+
+**Suggested assignment** (works for both MBA and undergraduate):
+
+> For each of the following scenarios, rate Decision Time Pressure (A-D) from three perspectives:
+>
+> 1. **The system operator** (the company running the AI agent)
+> 2. **The affected party** (the customer, patient, or market participant)
+> 3. **The regulator** (the relevant supervisory authority)
+>
+> Then argue: which perspective should the framework adopt, and why? Does the answer change by industry?
+
+This exercise surfaces the value judgment embedded in every risk framework — there is no "objective" rating, only a choice of whose interests to center. Students who discover this through the exercise understand governance frameworks more deeply than those who are told.
+
 ## Decision
 
-Rubric updated 2026-03-15. JSON key remains `human_override_latency` for backward compatibility. B/C boundary definition needs further refinement with domain expert input — the current quantitative framing ("hours" vs "days") doesn't capture the nuance of what's at risk during the delay.
+Rubric updated 2026-03-15. JSON key remains `human_override_latency` for backward compatibility. The B/C boundary is perspective-dependent by design — the framework adopts a harm-weighted perspective where the affected party's experience dominates when health, safety, or irreversible harm is at risk during delay.

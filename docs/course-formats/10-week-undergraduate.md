@@ -71,7 +71,7 @@ For reference throughout the course. Each dimension is classified A--D, where A 
 | **Decision Reversibility** | Irreversible | Fully reversible / sandboxed |
 | **Failure Blast Radius** | Systemic (many users/markets) | Internal / test domain |
 | **Regulatory Exposure** | Direct regulatory mandate | Unregulated domain |
-| **Human Override Latency** | Override impossible in time | No time pressure |
+| **Decision Time Pressure** | No time to decide (seconds or less) | No deadline (can wait indefinitely) |
 | **Data Confidence** | Ambiguous / conflicting signals | High-confidence structured data |
 | **Accountability Chain** | No clear accountability | Full transparency |
 | **Graceful Degradation** | Cascading failure | Safe failure to known state |
