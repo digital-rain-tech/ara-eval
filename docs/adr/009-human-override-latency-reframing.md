@@ -75,6 +75,23 @@ This makes the dimension about the **physics of the domain** rather than the **o
 - Expect improved LLM accuracy on this dimension with clearer framing.
 - Should be validated with domain expert review before implementation.
 
+## Results After Reframing
+
+Reran Arcee Trinity Lab 01 with updated rubric (2026-03-15). Compared dimension 4 old ("Human Override Latency") vs new ("Decision Time Pressure"):
+
+| Scenario | Ref | Old rubric | New rubric | Verdict |
+|---|---|---|---|---|
+| algo-trading | A | C,A,A | **A,A,A** | Fixed — CO now correctly identifies sub-second window |
+| banking-customer-service | D | C,D,C | C,**D,D** | Improved — two D's vs one |
+| cross-border-model | D | C,C,B | C,C,**C** | Slight improvement |
+| insurance-claims | D | C,C,C | C,B,B | Regression — CRO/Ops went stricter, still not D |
+| claims-denial | C | C,C,C | B,B,C | Regression — CO/CRO went stricter |
+| genai-data-leakage | C | C,C,C | C,C,B | Slight regression |
+
+**The big win:** algo-trading went from 1/3 to 3/3 on Level A. The most safety-critical scenario is now correctly classified by all personalities.
+
+**Open question:** The B/C boundary remains blurry. "Hours not days" vs "days are acceptable" is quantitative, but real scenarios have ambiguous time constraints (e.g., claims-denial: 3-day reviewer turnaround, but patient care continues during the wait — is the risk from delay about the patient or the process?). This may need domain expert input to resolve.
+
 ## Decision
 
-Pending domain expert review. Present this reframing in the validation session and incorporate feedback before updating the rubric.
+Rubric updated 2026-03-15. JSON key remains `human_override_latency` for backward compatibility. B/C boundary definition needs further refinement with domain expert input — the current quantitative framing ("hours" vs "days") doesn't capture the nuance of what's at risk during the delay.
