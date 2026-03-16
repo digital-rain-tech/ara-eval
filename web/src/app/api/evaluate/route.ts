@@ -3,6 +3,7 @@ import { randomUUID } from "crypto";
 import { getPersonalities } from "@/lib/prompts";
 import { evaluateScenario, getCurrentModel } from "@/lib/openrouter";
 import { createRun, updateRun, logRequest } from "@/lib/db";
+import { validateModel, validateJurisdiction, validateRubric } from "@/lib/validate";
 import type { Scenario, EvaluationResult } from "@/lib/constants";
 
 export async function POST(request: NextRequest) {
@@ -28,12 +29,22 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Validate parameters
+  const model = modelOverride || getCurrentModel();
+  for (const [err] of [
+    [validateModel(model)],
+    [validateJurisdiction(jurisdiction)],
+    [validateRubric(rubric)],
+  ]) {
+    if (err) {
+      return NextResponse.json({ error: err }, { status: 400 });
+    }
+  }
+
   // Ensure scenario has an id
   if (!scenario.id) {
     scenario.id = `custom-${Date.now()}`;
   }
-
-  const model = modelOverride || getCurrentModel();
   const personalities = getPersonalities();
   const personalityIds = Object.keys(personalities);
   const totalCalls = personalityIds.length;
@@ -61,6 +72,7 @@ export async function POST(request: NextRequest) {
   let totalInputTokens = 0;
   let totalOutputTokens = 0;
   let totalCost = 0;
+  let totalDurationMs = 0;
 
   // Evaluate each personality sequentially (to respect rate limits)
   for (const pid of personalityIds) {
@@ -100,6 +112,7 @@ export async function POST(request: NextRequest) {
       totalInputTokens += result.usage.input_tokens ?? 0;
       totalOutputTokens += result.usage.output_tokens ?? 0;
       totalCost += result.cost ?? 0;
+      totalDurationMs += result.response_time_ms;
     } catch (e) {
       const errorMsg = e instanceof Error ? e.message : String(e);
 
@@ -135,6 +148,7 @@ export async function POST(request: NextRequest) {
     total_input_tokens: totalInputTokens,
     total_output_tokens: totalOutputTokens,
     total_cost_usd: totalCost,
+    total_duration_ms: totalDurationMs,
   });
 
   return NextResponse.json({

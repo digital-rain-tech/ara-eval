@@ -7,6 +7,12 @@ import {
   addChatMessage,
   updateSessionContextChanges,
 } from "@/lib/db";
+import {
+  validateModel,
+  validatePersonality,
+  validateJurisdiction,
+  validateRubric,
+} from "@/lib/validate";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
@@ -47,6 +53,18 @@ export async function POST(request: NextRequest) {
       { error: "Missing sessionId or message" },
       { status: 400 },
     );
+  }
+
+  // Validate parameters
+  for (const [err] of [
+    [validateModel(model)],
+    [validatePersonality(personality)],
+    [validateJurisdiction(jurisdiction)],
+    [validateRubric(rubric)],
+  ]) {
+    if (err) {
+      return NextResponse.json({ error: err }, { status: 400 });
+    }
   }
 
   const apiKey = getApiKey();

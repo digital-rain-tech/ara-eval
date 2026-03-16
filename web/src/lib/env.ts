@@ -13,3 +13,10 @@ const projectRoot = path.resolve(process.cwd(), "..");
 // Load in order: .env.local takes precedence over .env
 config({ path: path.join(projectRoot, ".env.local") });
 config({ path: path.join(projectRoot, ".env") });
+
+// Fail fast if required env vars are missing
+if (!process.env.OPENROUTER_API_KEY) {
+  console.error(
+    "OPENROUTER_API_KEY not found. Add it to .env.local in the project root.",
+  );
+}

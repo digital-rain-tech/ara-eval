@@ -5,6 +5,11 @@ import {
   getPersonalities,
   getPromptSections,
 } from "@/lib/prompts";
+import {
+  validatePersonality,
+  validateJurisdiction,
+  validateRubric,
+} from "@/lib/validate";
 
 /**
  * GET /api/prompt?personality=compliance_officer&jurisdiction=hk&rubric=rubric.md
@@ -16,6 +21,17 @@ export async function GET(request: NextRequest) {
   const personality = searchParams.get("personality") || "compliance_officer";
   const jurisdiction = searchParams.get("jurisdiction") || "hk";
   const rubric = searchParams.get("rubric") || "rubric.md";
+
+  // Validate parameters
+  for (const [err] of [
+    [validatePersonality(personality)],
+    [validateJurisdiction(jurisdiction)],
+    [validateRubric(rubric)],
+  ]) {
+    if (err) {
+      return NextResponse.json({ error: err }, { status: 400 });
+    }
+  }
 
   const personalities = getPersonalities();
   const personalityLabel =
