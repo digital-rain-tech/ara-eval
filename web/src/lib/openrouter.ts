@@ -2,8 +2,7 @@
  * OpenRouter API interaction — mirrors ara_eval/core.py evaluate_scenario().
  */
 
-import { config } from "dotenv";
-import path from "path";
+import "./env";
 import {
   DIMENSIONS,
   LEVEL_ORDER,
@@ -16,10 +15,6 @@ import {
 import { applyGatingRules } from "./gating";
 import { parseLlmJson } from "./parse";
 import { buildSystemPrompt, buildUserPrompt } from "./prompts";
-
-// Load .env.local from project root
-config({ path: path.resolve(process.cwd(), "..", ".env.local") });
-config({ path: path.resolve(process.cwd(), "..", ".env") });
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = "arcee-ai/trinity-large-preview:free";
