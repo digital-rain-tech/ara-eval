@@ -126,3 +126,64 @@ export function getFullSystemPrompt(
 ): string {
   return buildSystemPrompt(personalityId, jurisdiction, rubric);
 }
+
+/**
+ * Return prompt sections separately for the inspector's segmented display.
+ */
+export function getPromptSections(
+  personalityId: string,
+  jurisdiction: string,
+  rubric: string = "rubric.md",
+): {
+  personality: { text: string; label: string };
+  rubric: { text: string; variant: string };
+  jurisdiction: { text: string; label: string };
+  outputFormat: { text: string };
+} {
+  const jurisdictions = getJurisdictions();
+  const personalities = getPersonalities();
+
+  const jurisdictionLabel = jurisdictions[jurisdiction]?.label || jurisdiction;
+  const jurisdictionContent = loadPrompt(
+    `jurisdictions/${jurisdictions[jurisdiction].file}`,
+  );
+
+  const personalityTemplate = loadPrompt(
+    `personalities/${personalities[personalityId].file}`,
+  );
+  const personalityRendered = Mustache.render(personalityTemplate, {
+    jurisdiction_label: jurisdictionLabel,
+  });
+
+  const rubricTemplate = loadPrompt(rubric);
+  const rubricRendered = Mustache.render(rubricTemplate, {}, {
+    jurisdiction: jurisdictionContent,
+  });
+
+  const rubricVariantLabel =
+    rubric === "rubric.md"
+      ? "Full"
+      : rubric === "rubric-compact.md"
+        ? "Compact"
+        : "Bare";
+
+  const outputFormat = loadPrompt("output_format.md");
+
+  return {
+    personality: {
+      text: personalityRendered.trim(),
+      label: personalities[personalityId]?.label || personalityId,
+    },
+    rubric: {
+      text: rubricRendered.trim(),
+      variant: rubricVariantLabel,
+    },
+    jurisdiction: {
+      text: jurisdictionContent.trim(),
+      label: `${jurisdictionLabel} (${jurisdiction})`,
+    },
+    outputFormat: {
+      text: outputFormat.trim(),
+    },
+  };
+}

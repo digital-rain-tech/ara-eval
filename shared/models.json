@@ -1,0 +1,23 @@
+[
+  {
+    "id": "arcee-ai/trinity-large-preview:free",
+    "label": "Arcee Trinity",
+    "note": "default, 100% reliable",
+    "success_rate": "18/18",
+    "is_default": true
+  },
+  {
+    "id": "openrouter/hunter-alpha",
+    "label": "Hunter Alpha",
+    "note": "most aggressive rater",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "openrouter/healer-alpha",
+    "label": "Healer Alpha",
+    "note": "fastest, over-classifies",
+    "success_rate": "18/18",
+    "is_default": false
+  }
+]

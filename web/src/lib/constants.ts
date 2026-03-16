@@ -1,38 +1,34 @@
 /**
- * Shared constants — mirrors ara_eval/core.py DIMENSIONS, LEVEL_ORDER, etc.
+ * Shared constants — loaded from shared/dimensions.json (single source of truth).
+ *
+ * Both Python (ara_eval/core.py) and TypeScript read from the same JSON files
+ * in the shared/ directory. UI-only constants (colors) are defined here.
  */
 
-export const DIMENSIONS = [
-  "decision_reversibility",
-  "failure_blast_radius",
-  "regulatory_exposure",
-  "human_override_latency",
-  "data_confidence",
-  "accountability_chain",
-  "graceful_degradation",
-] as const;
+import dimensionsConfig from "../../../shared/dimensions.json";
+import modelsConfig from "../../../shared/models.json";
 
-export type Dimension = (typeof DIMENSIONS)[number];
+export const DIMENSIONS = dimensionsConfig.dimensions as readonly string[] as readonly Dimension[];
 
-export const DIMENSION_LABELS: Record<Dimension, string> = {
-  decision_reversibility: "Decision Reversibility",
-  failure_blast_radius: "Failure Blast Radius",
-  regulatory_exposure: "Regulatory Exposure",
-  human_override_latency: "Decision Time Pressure",
-  data_confidence: "Data Confidence",
-  accountability_chain: "Accountability Chain",
-  graceful_degradation: "Graceful Degradation",
-};
+export type Dimension =
+  | "decision_reversibility"
+  | "failure_blast_radius"
+  | "regulatory_exposure"
+  | "human_override_latency"
+  | "data_confidence"
+  | "accountability_chain"
+  | "graceful_degradation";
+
+export const DIMENSION_LABELS = dimensionsConfig.dimension_labels as Record<
+  Dimension,
+  string
+>;
 
 export type Level = "A" | "B" | "C" | "D";
 
-export const LEVEL_ORDER: Record<Level, number> = {
-  A: 0,
-  B: 1,
-  C: 2,
-  D: 3,
-};
+export const LEVEL_ORDER = dimensionsConfig.level_order as Record<Level, number>;
 
+// UI-only constants (not shared with Python)
 export const LEVEL_COLORS: Record<Level, string> = {
   A: "bg-red-600",
   B: "bg-orange-500",
@@ -46,6 +42,19 @@ export const LEVEL_TEXT_COLORS: Record<Level, string> = {
   C: "text-yellow-400",
   D: "text-green-400",
 };
+
+// Model list from shared/models.json
+export interface ModelInfo {
+  id: string;
+  label: string;
+  note: string;
+  success_rate: string;
+  is_default: boolean;
+}
+
+export const TESTED_MODELS: ModelInfo[] = modelsConfig as ModelInfo[];
+export const DEFAULT_MODEL =
+  TESTED_MODELS.find((m) => m.is_default)?.id || TESTED_MODELS[0]?.id || "";
 
 export type GatingClassification =
   | "ready_now"

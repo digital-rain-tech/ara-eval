@@ -3,12 +3,13 @@ import {
   getFullSystemPrompt,
   getJurisdictionPromptText,
   getPersonalities,
+  getPromptSections,
 } from "@/lib/prompts";
 
 /**
  * GET /api/prompt?personality=compliance_officer&jurisdiction=hk&rubric=rubric.md
  *
- * Returns the full assembled system prompt for display in the prompt inspector.
+ * Returns the full assembled system prompt and individual sections for the inspector.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest) {
 
   const fullPrompt = getFullSystemPrompt(personality, jurisdiction, rubric);
   const jurisdictionText = getJurisdictionPromptText(jurisdiction);
+  const sections = getPromptSections(personality, jurisdiction, rubric);
 
   return NextResponse.json({
     personality,
@@ -30,5 +32,6 @@ export async function GET(request: NextRequest) {
     rubric,
     full_prompt: fullPrompt,
     jurisdiction_text: jurisdictionText,
+    sections,
   });
 }

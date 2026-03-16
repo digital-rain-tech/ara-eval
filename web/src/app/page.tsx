@@ -8,6 +8,7 @@ import GatingVerdict from "@/components/GatingVerdict";
 import PersonalityDelta from "@/components/PersonalityDelta";
 import DimensionReasoning from "@/components/DimensionReasoning";
 import PromptInspector from "@/components/PromptInspector";
+import ModelSelector from "@/components/ModelSelector";
 import type {
   Scenario,
   EvaluationResult,
@@ -139,25 +140,11 @@ export default function EvaluatePage() {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-500">
-            <label htmlFor="model-input">Model:</label>
-            <input
-              id="model-input"
-              value={model}
-              onChange={(e) => setModel(e.target.value)}
-              className="w-72 rounded border border-gray-700 bg-gray-800 px-2 py-0.5 font-mono text-xs text-gray-300 placeholder-gray-600"
-              placeholder="e.g., arcee-ai/trinity-large-preview:free"
-            />
-            {model !== defaultModel && (
-              <button
-                onClick={() => setModel(defaultModel)}
-                className="text-gray-600 hover:text-gray-400"
-                title="Reset to default"
-              >
-                reset
-              </button>
-            )}
-          </div>
+          <ModelSelector
+            value={model}
+            defaultModel={defaultModel}
+            onChange={setModel}
+          />
         </div>
       </div>
 

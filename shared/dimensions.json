@@ -1,0 +1,26 @@
+{
+  "dimensions": [
+    "decision_reversibility",
+    "failure_blast_radius",
+    "regulatory_exposure",
+    "human_override_latency",
+    "data_confidence",
+    "accountability_chain",
+    "graceful_degradation"
+  ],
+  "dimension_labels": {
+    "decision_reversibility": "Decision Reversibility",
+    "failure_blast_radius": "Failure Blast Radius",
+    "regulatory_exposure": "Regulatory Exposure",
+    "human_override_latency": "Decision Time Pressure",
+    "data_confidence": "Data Confidence",
+    "accountability_chain": "Accountability Chain",
+    "graceful_degradation": "Graceful Degradation"
+  },
+  "level_order": {
+    "A": 0,
+    "B": 1,
+    "C": 2,
+    "D": 3
+  }
+}

@@ -6,6 +6,7 @@ import "./env";
 import {
   DIMENSIONS,
   LEVEL_ORDER,
+  DEFAULT_MODEL,
   type Dimension,
   type DimensionResult,
   type EvaluationResult,
@@ -17,7 +18,6 @@ import { parseLlmJson } from "./parse";
 import { buildSystemPrompt, buildUserPrompt } from "./prompts";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const DEFAULT_MODEL = "arcee-ai/trinity-large-preview:free";
 
 function getModel(): string {
   return process.env.ARA_MODEL || DEFAULT_MODEL;

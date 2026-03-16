@@ -107,6 +107,43 @@ function initDb(db: Database.Database): void {
   db.exec(
     "CREATE INDEX IF NOT EXISTS idx_scenario_personality ON ai_provider_requests(scenario_id, personality)",
   );
+
+  // Chat tables
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS chat_sessions (
+      session_id TEXT PRIMARY KEY,
+      started_at TEXT NOT NULL,
+      model TEXT NOT NULL,
+      initial_personality TEXT NOT NULL,
+      initial_jurisdiction TEXT NOT NULL,
+      initial_rubric TEXT NOT NULL,
+      message_count INTEGER NOT NULL DEFAULT 0,
+      context_changes INTEGER NOT NULL DEFAULT 0,
+      metadata TEXT
+    )
+  `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS chat_messages (
+      id TEXT PRIMARY KEY,
+      session_id TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      role TEXT NOT NULL,
+      content TEXT NOT NULL,
+      personality TEXT NOT NULL,
+      jurisdiction TEXT NOT NULL,
+      rubric TEXT NOT NULL,
+      model TEXT NOT NULL,
+      input_tokens INTEGER,
+      output_tokens INTEGER,
+      response_time_ms INTEGER,
+      FOREIGN KEY (session_id) REFERENCES chat_sessions(session_id)
+    )
+  `);
+
+  db.exec(
+    "CREATE INDEX IF NOT EXISTS idx_chat_session ON chat_messages(session_id)",
+  );
 }
 
 export function createRun(
@@ -326,4 +363,131 @@ export function getRunRequests(runId: string): RequestRow[] {
       "SELECT * FROM ai_provider_requests WHERE run_id = ? ORDER BY created_at ASC",
     )
     .all(runId) as RequestRow[];
+}
+
+// --- Chat session/message helpers ---
+
+export interface ChatSession {
+  session_id: string;
+  started_at: string;
+  model: string;
+  initial_personality: string;
+  initial_jurisdiction: string;
+  initial_rubric: string;
+  message_count: number;
+  context_changes: number;
+  metadata: string | null;
+}
+
+export interface ChatMessage {
+  id: string;
+  session_id: string;
+  created_at: string;
+  role: string;
+  content: string;
+  personality: string;
+  jurisdiction: string;
+  rubric: string;
+  model: string;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  response_time_ms: number | null;
+}
+
+export function createChatSession(params: {
+  sessionId: string;
+  model: string;
+  personality: string;
+  jurisdiction: string;
+  rubric: string;
+}): void {
+  const db = getDb();
+  db.prepare(
+    `INSERT INTO chat_sessions
+     (session_id, started_at, model, initial_personality, initial_jurisdiction, initial_rubric)
+     VALUES (?, ?, ?, ?, ?, ?)`,
+  ).run(
+    params.sessionId,
+    new Date().toISOString(),
+    params.model,
+    params.personality,
+    params.jurisdiction,
+    params.rubric,
+  );
+}
+
+export function addChatMessage(params: {
+  sessionId: string;
+  role: string;
+  content: string;
+  personality: string;
+  jurisdiction: string;
+  rubric: string;
+  model: string;
+  inputTokens?: number | null;
+  outputTokens?: number | null;
+  responseTimeMs?: number | null;
+}): string {
+  const db = getDb();
+  const id = randomUUID();
+  db.prepare(
+    `INSERT INTO chat_messages
+     (id, session_id, created_at, role, content, personality, jurisdiction, rubric, model,
+      input_tokens, output_tokens, response_time_ms)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+  ).run(
+    id,
+    params.sessionId,
+    new Date().toISOString(),
+    params.role,
+    params.content,
+    params.personality,
+    params.jurisdiction,
+    params.rubric,
+    params.model,
+    params.inputTokens ?? null,
+    params.outputTokens ?? null,
+    params.responseTimeMs ?? null,
+  );
+
+  // Update session counts
+  db.prepare(
+    `UPDATE chat_sessions SET message_count = (
+       SELECT COUNT(*) FROM chat_messages WHERE session_id = ? AND role != 'system'
+     ) WHERE session_id = ?`,
+  ).run(params.sessionId, params.sessionId);
+
+  return id;
+}
+
+export function updateSessionContextChanges(sessionId: string): void {
+  const db = getDb();
+  db.prepare(
+    `UPDATE chat_sessions SET context_changes = (
+       SELECT COUNT(*) FROM chat_messages WHERE session_id = ? AND role = 'system'
+     ) WHERE session_id = ?`,
+  ).run(sessionId, sessionId);
+}
+
+export function listChatSessions(limit: number = 50): ChatSession[] {
+  const db = getDb();
+  return db
+    .prepare("SELECT * FROM chat_sessions ORDER BY started_at DESC LIMIT ?")
+    .all(limit) as ChatSession[];
+}
+
+export function getChatSession(sessionId: string): ChatSession | undefined {
+  const db = getDb();
+  return db
+    .prepare("SELECT * FROM chat_sessions WHERE session_id = ?")
+    .get(sessionId) as ChatSession | undefined;
+}
+
+export function getChatMessages(sessionId: string): ChatMessage[] {
+  const db = getDb();
+  return db
+    .prepare(
+      "SELECT * FROM chat_messages WHERE session_id = ? ORDER BY created_at ASC",
+    )
+    .all(sessionId) as ChatMessage[];
 }

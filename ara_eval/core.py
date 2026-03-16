@@ -39,7 +39,19 @@ OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY")
 # Configuration
 # ---------------------------------------------------------------------------
 
-DEFAULT_MODEL = "arcee-ai/trinity-large-preview:free"
+# Load shared constants from shared/dimensions.json (single source of truth)
+_shared_dir = _root / "shared"
+with open(_shared_dir / "dimensions.json") as _f:
+    _dim_config = json.load(_f)
+
+DIMENSIONS = _dim_config["dimensions"]
+DIMENSION_LABELS = _dim_config["dimension_labels"]
+LEVEL_ORDER = _dim_config["level_order"]
+
+with open(_shared_dir / "models.json") as _f:
+    _models_config = json.load(_f)
+
+DEFAULT_MODEL = next(m["id"] for m in _models_config if m.get("is_default"))
 # Median response time for Arcee Trinity across 387 calls. Used as the minimum
 # interval between API calls to avoid rate-limiting on free-tier models.
 DEFAULT_CALL_DELAY = 17.0
@@ -59,28 +71,6 @@ def make_headers(api_key: str) -> dict:
 
 
 OPENROUTER_HEADERS = make_headers(OPENROUTER_API_KEY) if OPENROUTER_API_KEY else None
-
-DIMENSIONS = [
-    "decision_reversibility",
-    "failure_blast_radius",
-    "regulatory_exposure",
-    "human_override_latency",
-    "data_confidence",
-    "accountability_chain",
-    "graceful_degradation",
-]
-
-DIMENSION_LABELS = {
-    "decision_reversibility": "Decision Reversibility",
-    "failure_blast_radius": "Failure Blast Radius",
-    "regulatory_exposure": "Regulatory Exposure",
-    "human_override_latency": "Decision Time Pressure",
-    "data_confidence": "Data Confidence",
-    "accountability_chain": "Accountability Chain",
-    "graceful_degradation": "Graceful Degradation",
-}
-
-LEVEL_ORDER = {"A": 0, "B": 1, "C": 2, "D": 3}
 
 
 # ---------------------------------------------------------------------------
