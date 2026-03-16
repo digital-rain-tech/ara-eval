@@ -12,11 +12,13 @@ export async function POST(request: NextRequest) {
     jurisdiction = "hk",
     rubric = "rubric.md",
     structured = false,
+    model: modelOverride,
   } = body as {
     scenario: Scenario;
     jurisdiction?: string;
     rubric?: string;
     structured?: boolean;
+    model?: string;
   };
 
   if (!scenario || !scenario.scenario) {
@@ -31,7 +33,7 @@ export async function POST(request: NextRequest) {
     scenario.id = `custom-${Date.now()}`;
   }
 
-  const model = getCurrentModel();
+  const model = modelOverride || getCurrentModel();
   const personalities = getPersonalities();
   const personalityIds = Object.keys(personalities);
   const totalCalls = personalityIds.length;
@@ -70,6 +72,7 @@ export async function POST(request: NextRequest) {
         jurisdiction,
         rubric,
         structured,
+        model,
       );
 
       logRequest({

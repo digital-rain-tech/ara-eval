@@ -50,6 +50,8 @@ export default function EvaluatePage() {
   const [error, setError] = useState<string | null>(null);
   const [inspectorPersonality, setInspectorPersonality] =
     useState("compliance_officer");
+  const [model, setModel] = useState<string>("");
+  const [defaultModel, setDefaultModel] = useState<string>("");
 
   // Load scenarios and metadata
   useEffect(() => {
@@ -57,6 +59,8 @@ export default function EvaluatePage() {
       .then((r) => r.json())
       .then((data) => {
         setScenarios(data.scenarios || []);
+        setModel(data.model || "");
+        setDefaultModel(data.model || "");
         setPersonalities(data.personalities || {});
       });
   }, []);
@@ -75,6 +79,7 @@ export default function EvaluatePage() {
             scenario,
             jurisdiction,
             structured,
+            model: model !== defaultModel ? model : undefined,
           }),
         });
 
@@ -91,7 +96,7 @@ export default function EvaluatePage() {
         setLoading(false);
       }
     },
-    [jurisdiction],
+    [jurisdiction, model, defaultModel],
   );
 
   // Build results for display components
@@ -115,23 +120,44 @@ export default function EvaluatePage() {
 
       {/* Jurisdiction tabs */}
       <div className="border-b border-gray-800 bg-gray-900/50">
-        <div className="mx-auto flex max-w-7xl items-center gap-1 px-4 py-2">
-          <span className="mr-3 text-xs font-medium text-gray-500">
-            Grounding Level:
-          </span>
-          {JURISDICTION_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setJurisdiction(tab.id)}
-              className={`rounded px-3 py-1.5 text-sm transition-colors ${
-                jurisdiction === tab.id
-                  ? "bg-amber-800/40 text-amber-300"
-                  : "text-gray-400 hover:text-gray-200"
-              }`}
-            >
-              {tab.short}
-            </button>
-          ))}
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
+          <div className="flex items-center gap-1">
+            <span className="mr-3 text-xs font-medium text-gray-500">
+              Grounding Level:
+            </span>
+            {JURISDICTION_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setJurisdiction(tab.id)}
+                className={`rounded px-3 py-1.5 text-sm transition-colors ${
+                  jurisdiction === tab.id
+                    ? "bg-amber-800/40 text-amber-300"
+                    : "text-gray-400 hover:text-gray-200"
+                }`}
+              >
+                {tab.short}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <label htmlFor="model-input">Model:</label>
+            <input
+              id="model-input"
+              value={model}
+              onChange={(e) => setModel(e.target.value)}
+              className="w-72 rounded border border-gray-700 bg-gray-800 px-2 py-0.5 font-mono text-xs text-gray-300 placeholder-gray-600"
+              placeholder="e.g., arcee-ai/trinity-large-preview:free"
+            />
+            {model !== defaultModel && (
+              <button
+                onClick={() => setModel(defaultModel)}
+                className="text-gray-600 hover:text-gray-400"
+                title="Reset to default"
+              >
+                reset
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

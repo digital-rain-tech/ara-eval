@@ -35,8 +35,9 @@ export async function evaluateScenario(
   jurisdiction: string = "hk",
   rubric: string = "rubric.md",
   structured: boolean = false,
+  modelOverride?: string,
 ): Promise<EvaluationResult> {
-  const model = getModel();
+  const model = modelOverride || getModel();
   const apiKey = getApiKey();
 
   const systemPrompt = buildSystemPrompt(personalityId, jurisdiction, rubric);
