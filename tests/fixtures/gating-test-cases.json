@@ -1,0 +1,114 @@
+[
+  {
+    "name": "all_D_ready_now",
+    "dimensions": {
+      "decision_reversibility": {"level": "D", "reasoning": "test"},
+      "failure_blast_radius": {"level": "D", "reasoning": "test"},
+      "regulatory_exposure": {"level": "D", "reasoning": "test"},
+      "human_override_latency": {"level": "D", "reasoning": "test"},
+      "data_confidence": {"level": "D", "reasoning": "test"},
+      "accountability_chain": {"level": "D", "reasoning": "test"},
+      "graceful_degradation": {"level": "D", "reasoning": "test"}
+    },
+    "expected_classification": "ready_now",
+    "expected_fingerprint": "D-D-D-D-D-D-D",
+    "expected_hard_gates": 0,
+    "expected_soft_gates": 0
+  },
+  {
+    "name": "regulatory_A_hard_gate",
+    "dimensions": {
+      "decision_reversibility": {"level": "C", "reasoning": "test"},
+      "failure_blast_radius": {"level": "C", "reasoning": "test"},
+      "regulatory_exposure": {"level": "A", "reasoning": "test"},
+      "human_override_latency": {"level": "C", "reasoning": "test"},
+      "data_confidence": {"level": "C", "reasoning": "test"},
+      "accountability_chain": {"level": "C", "reasoning": "test"},
+      "graceful_degradation": {"level": "C", "reasoning": "test"}
+    },
+    "expected_classification": "human_in_loop_required",
+    "expected_fingerprint": "C-C-A-C-C-C-C",
+    "expected_hard_gates": 1,
+    "expected_soft_gates": 0
+  },
+  {
+    "name": "blast_radius_A_hard_gate",
+    "dimensions": {
+      "decision_reversibility": {"level": "C", "reasoning": "test"},
+      "failure_blast_radius": {"level": "A", "reasoning": "test"},
+      "regulatory_exposure": {"level": "C", "reasoning": "test"},
+      "human_override_latency": {"level": "C", "reasoning": "test"},
+      "data_confidence": {"level": "C", "reasoning": "test"},
+      "accountability_chain": {"level": "C", "reasoning": "test"},
+      "graceful_degradation": {"level": "C", "reasoning": "test"}
+    },
+    "expected_classification": "human_in_loop_required",
+    "expected_fingerprint": "C-A-C-C-C-C-C",
+    "expected_hard_gates": 1,
+    "expected_soft_gates": 0
+  },
+  {
+    "name": "soft_gate_data_confidence_A",
+    "dimensions": {
+      "decision_reversibility": {"level": "C", "reasoning": "test"},
+      "failure_blast_radius": {"level": "C", "reasoning": "test"},
+      "regulatory_exposure": {"level": "C", "reasoning": "test"},
+      "human_override_latency": {"level": "C", "reasoning": "test"},
+      "data_confidence": {"level": "A", "reasoning": "test"},
+      "accountability_chain": {"level": "C", "reasoning": "test"},
+      "graceful_degradation": {"level": "C", "reasoning": "test"}
+    },
+    "expected_classification": "ready_with_prerequisites",
+    "expected_fingerprint": "C-C-C-C-A-C-C",
+    "expected_hard_gates": 0,
+    "expected_soft_gates": 1
+  },
+  {
+    "name": "mixed_B_levels_prerequisites",
+    "dimensions": {
+      "decision_reversibility": {"level": "B", "reasoning": "test"},
+      "failure_blast_radius": {"level": "B", "reasoning": "test"},
+      "regulatory_exposure": {"level": "B", "reasoning": "test"},
+      "human_override_latency": {"level": "B", "reasoning": "test"},
+      "data_confidence": {"level": "B", "reasoning": "test"},
+      "accountability_chain": {"level": "B", "reasoning": "test"},
+      "graceful_degradation": {"level": "B", "reasoning": "test"}
+    },
+    "expected_classification": "ready_with_prerequisites",
+    "expected_fingerprint": "B-B-B-B-B-B-B",
+    "expected_hard_gates": 0,
+    "expected_soft_gates": 0
+  },
+  {
+    "name": "all_C_ready_now",
+    "dimensions": {
+      "decision_reversibility": {"level": "C", "reasoning": "test"},
+      "failure_blast_radius": {"level": "C", "reasoning": "test"},
+      "regulatory_exposure": {"level": "C", "reasoning": "test"},
+      "human_override_latency": {"level": "C", "reasoning": "test"},
+      "data_confidence": {"level": "C", "reasoning": "test"},
+      "accountability_chain": {"level": "C", "reasoning": "test"},
+      "graceful_degradation": {"level": "C", "reasoning": "test"}
+    },
+    "expected_classification": "ready_now",
+    "expected_fingerprint": "C-C-C-C-C-C-C",
+    "expected_hard_gates": 0,
+    "expected_soft_gates": 0
+  },
+  {
+    "name": "double_hard_gate",
+    "dimensions": {
+      "decision_reversibility": {"level": "A", "reasoning": "test"},
+      "failure_blast_radius": {"level": "A", "reasoning": "test"},
+      "regulatory_exposure": {"level": "A", "reasoning": "test"},
+      "human_override_latency": {"level": "B", "reasoning": "test"},
+      "data_confidence": {"level": "C", "reasoning": "test"},
+      "accountability_chain": {"level": "B", "reasoning": "test"},
+      "graceful_degradation": {"level": "B", "reasoning": "test"}
+    },
+    "expected_classification": "human_in_loop_required",
+    "expected_fingerprint": "A-A-A-B-C-B-B",
+    "expected_hard_gates": 2,
+    "expected_soft_gates": 1
+  }
+]

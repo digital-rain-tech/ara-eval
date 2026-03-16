@@ -134,6 +134,26 @@ class TestGatingRules:
         result = apply_gating_rules(fp)
         assert result["fingerprint_string"] == "A-B-C-D-C-B-A"
 
+    def test_shared_gating_fixtures(self):
+        """Cross-runtime contract test: Python gating matches shared fixtures."""
+        fixtures_path = Path(__file__).parent / "fixtures" / "gating-test-cases.json"
+        with open(fixtures_path) as f:
+            cases = json.load(f)
+
+        for case in cases:
+            fp = case["dimensions"]
+            result = apply_gating_rules(fp)
+            assert result["classification"] == case["expected_classification"], \
+                f"Case {case['name']}: expected {case['expected_classification']}, got {result['classification']}"
+            assert result["fingerprint_string"] == case["expected_fingerprint"], \
+                f"Case {case['name']}: fingerprint mismatch"
+            hard = sum(1 for r in result["triggered_rules"] if "HARD GATE" in r)
+            soft = sum(1 for r in result["triggered_rules"] if "SOFT GATE" in r)
+            assert hard == case["expected_hard_gates"], \
+                f"Case {case['name']}: expected {case['expected_hard_gates']} hard gates, got {hard}"
+            assert soft == case["expected_soft_gates"], \
+                f"Case {case['name']}: expected {case['expected_soft_gates']} soft gates, got {soft}"
+
 
 # ---------------------------------------------------------------------------
 # load_prompt path traversal protection
@@ -222,3 +242,34 @@ class TestAgreementMetrics:
     def test_kappa_single_item(self):
         k = lab03.compute_cohens_kappa_self(["A"])
         assert k == 1.0
+
+
+class TestLab05Validation:
+    """Test Lab 05 scenario ID validation against path traversal."""
+
+    @staticmethod
+    def _get_validate():
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "lab05", str(Path(__file__).parent.parent / "labs" / "lab-05-build-your-own-scenario.py"),
+        )
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod._validate_scenario_id
+
+    def test_valid_ids(self):
+        validate = self._get_validate()
+        for sid in ["my-scenario-001", "test", "a-b-c", "abc123"]:
+            validate(sid)  # should not raise
+
+    def test_path_traversal_rejected(self):
+        validate = self._get_validate()
+        for sid in ["../../etc/passwd", "../foo", "foo/bar"]:
+            with pytest.raises(SystemExit):
+                validate(sid)
+
+    def test_invalid_chars_rejected(self):
+        validate = self._get_validate()
+        for sid in ["My Scenario", "test.json", "UPPER", "a_b"]:
+            with pytest.raises(SystemExit):
+                validate(sid)

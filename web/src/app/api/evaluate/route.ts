@@ -1,0 +1,145 @@
+import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "crypto";
+import { getPersonalities } from "@/lib/prompts";
+import { evaluateScenario, getCurrentModel } from "@/lib/openrouter";
+import { createRun, updateRun, logRequest } from "@/lib/db";
+import type { Scenario, EvaluationResult } from "@/lib/constants";
+
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+  const {
+    scenario,
+    jurisdiction = "hk",
+    rubric = "rubric.md",
+    structured = false,
+  } = body as {
+    scenario: Scenario;
+    jurisdiction?: string;
+    rubric?: string;
+    structured?: boolean;
+  };
+
+  if (!scenario || !scenario.scenario) {
+    return NextResponse.json(
+      { error: "Missing scenario data" },
+      { status: 400 },
+    );
+  }
+
+  // Ensure scenario has an id
+  if (!scenario.id) {
+    scenario.id = `custom-${Date.now()}`;
+  }
+
+  const model = getCurrentModel();
+  const personalities = getPersonalities();
+  const personalityIds = Object.keys(personalities);
+  const totalCalls = personalityIds.length;
+
+  // Create run
+  const runId = createRun(model, 1, personalityIds.length, totalCalls, {
+    lab: "web-evaluate",
+    scenario_id: scenario.id,
+    jurisdiction,
+    rubric,
+    structured,
+  });
+
+  const results: Record<
+    string,
+    {
+      personality: string;
+      result: EvaluationResult | null;
+      error: string | null;
+    }
+  > = {};
+
+  let successCount = 0;
+  let failCount = 0;
+  let totalInputTokens = 0;
+  let totalOutputTokens = 0;
+  let totalCost = 0;
+
+  // Evaluate each personality sequentially (to respect rate limits)
+  for (const pid of personalityIds) {
+    const requestId = randomUUID();
+    try {
+      const result = await evaluateScenario(
+        scenario,
+        pid,
+        jurisdiction,
+        rubric,
+        structured,
+      );
+
+      logRequest({
+        runId,
+        requestId,
+        scenarioId: scenario.id,
+        personality: pid,
+        model,
+        responseStatus: 200,
+        errorMessage: null,
+        result,
+        rawRequest: { scenario: scenario.id, personality: pid, jurisdiction },
+        rawResponse: null,
+        jurisdiction,
+        rubric,
+      });
+
+      results[pid] = {
+        personality: personalities[pid].label,
+        result,
+        error: null,
+      };
+
+      successCount++;
+      totalInputTokens += result.usage.input_tokens ?? 0;
+      totalOutputTokens += result.usage.output_tokens ?? 0;
+      totalCost += result.cost ?? 0;
+    } catch (e) {
+      const errorMsg = e instanceof Error ? e.message : String(e);
+
+      logRequest({
+        runId,
+        requestId,
+        scenarioId: scenario.id,
+        personality: pid,
+        model,
+        responseStatus: null,
+        errorMessage: errorMsg,
+        result: null,
+        rawRequest: { scenario: scenario.id, personality: pid, jurisdiction },
+        rawResponse: null,
+        jurisdiction,
+        rubric,
+      });
+
+      results[pid] = {
+        personality: personalities[pid].label,
+        result: null,
+        error: errorMsg,
+      };
+      failCount++;
+    }
+  }
+
+  // Update run
+  updateRun(runId, {
+    finished_at: new Date().toISOString(),
+    successful_calls: successCount,
+    failed_calls: failCount,
+    total_input_tokens: totalInputTokens,
+    total_output_tokens: totalOutputTokens,
+    total_cost_usd: totalCost,
+  });
+
+  return NextResponse.json({
+    run_id: runId,
+    model,
+    scenario_id: scenario.id,
+    jurisdiction,
+    structured,
+    results,
+  });
+}

@@ -18,6 +18,7 @@ LABS_WITH_HELP = [
     "labs/lab-01-risk-fingerprinting.py",
     "labs/lab-02-grounding-experiment.py",
     "labs/lab-03-intra-rater-reliability.py",
+    "labs/lab-05-build-your-own-scenario.py",
     "labs/generate-report.py",
 ]
 

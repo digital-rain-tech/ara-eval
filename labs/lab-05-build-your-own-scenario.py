@@ -64,6 +64,23 @@ from ara_eval.core import (
 _root = Path(__file__).parent.parent
 CUSTOM_DIR = _root / "scenarios" / "custom"
 
+import re
+
+_VALID_SCENARIO_ID = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
+
+def _validate_scenario_id(scenario_id: str) -> None:
+    """Validate scenario ID is a safe slug and resolves inside CUSTOM_DIR."""
+    if not _VALID_SCENARIO_ID.match(scenario_id):
+        raise SystemExit(
+            f"Invalid scenario ID: {scenario_id!r}. "
+            "Use only lowercase letters, numbers, and hyphens."
+        )
+    resolved = (CUSTOM_DIR / f"{scenario_id}.json").resolve()
+    if not str(resolved).startswith(str(CUSTOM_DIR.resolve())):
+        raise SystemExit(f"Scenario ID escapes custom directory: {scenario_id!r}")
+
+
 TEMPLATE = {
     "id": "",
     "domain": "",
@@ -107,6 +124,7 @@ PREDICTION_PROMPTS = {
 
 def init_scenario(scenario_id: str):
     """Create a scenario template for the student to fill in."""
+    _validate_scenario_id(scenario_id)
     CUSTOM_DIR.mkdir(parents=True, exist_ok=True)
     path = CUSTOM_DIR / f"{scenario_id}.json"
     if path.exists():
@@ -130,6 +148,7 @@ def init_scenario(scenario_id: str):
 
 def predict_fingerprint(scenario_id: str):
     """Guide the student through predicting their own fingerprint."""
+    _validate_scenario_id(scenario_id)
     path = CUSTOM_DIR / f"{scenario_id}.json"
     if not path.exists():
         print(f"Scenario not found: {path}")
@@ -191,6 +210,7 @@ def predict_fingerprint(scenario_id: str):
 
 def run_scenario(scenario_id: str):
     """Run the scenario through the LLM judge."""
+    _validate_scenario_id(scenario_id)
     if not OPENROUTER_API_KEY:
         raise SystemExit("OPENROUTER_API_KEY not set. Add it to .env.local or export it.")
 
@@ -295,6 +315,7 @@ def run_scenario(scenario_id: str):
 
 def compare_results(scenario_id: str):
     """Compare student prediction vs model output vs reference."""
+    _validate_scenario_id(scenario_id)
     pred_path = CUSTOM_DIR / f"{scenario_id}-prediction.json"
     result_path = CUSTOM_DIR / f"{scenario_id}-results.json"
     scenario_path = CUSTOM_DIR / f"{scenario_id}.json"
