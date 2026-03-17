@@ -33,12 +33,14 @@ interface ScenarioInputProps {
   scenarios: Scenario[];
   onSubmit: (scenario: Scenario, structured: boolean) => void;
   loading: boolean;
+  onScenarioSelect?: (scenarioId: string) => void;
 }
 
 export default function ScenarioInput({
   scenarios,
   onSubmit,
   loading,
+  onScenarioSelect,
 }: ScenarioInputProps) {
   const [mode, setMode] = useState<InputMode>("preloaded");
   const [selectedId, setSelectedId] = useState<string>("");
@@ -62,8 +64,9 @@ export default function ScenarioInput({
   useEffect(() => {
     if (scenarios.length > 0 && !selectedId) {
       setSelectedId(scenarios[0].id);
+      onScenarioSelect?.(scenarios[0].id);
     }
-  }, [scenarios, selectedId]);
+  }, [scenarios, selectedId, onScenarioSelect]);
 
   const handleSubmit = () => {
     switch (mode) {
@@ -158,7 +161,10 @@ export default function ScenarioInput({
           </label>
           <select
             value={selectedId}
-            onChange={(e) => setSelectedId(e.target.value)}
+            onChange={(e) => {
+              setSelectedId(e.target.value);
+              onScenarioSelect?.(e.target.value);
+            }}
             className="w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200"
           >
             {scenarios.map((s) => (

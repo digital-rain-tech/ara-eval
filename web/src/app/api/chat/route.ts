@@ -31,7 +31,9 @@ interface ChatRequestBody {
   model?: string;
   history: { role: string; content: string }[];
   isNewSession?: boolean;
-  contextChange?: string; // description of what changed
+  contextChange?: string;
+  mode?: "judge" | "agent";
+  agentPrompt?: string; // pre-built agent system prompt (agent mode only)
 }
 
 export async function POST(request: NextRequest) {
@@ -45,6 +47,8 @@ export async function POST(request: NextRequest) {
     history,
     isNewSession,
     contextChange,
+    mode = "judge",
+    agentPrompt,
   } = body;
   const model = body.model || process.env.ARA_MODEL || DEFAULT_MODEL;
 
@@ -55,16 +59,30 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Validate parameters
-  for (const [err] of [
-    [validateModel(model)],
-    [validatePersonality(personality)],
-    [validateJurisdiction(jurisdiction)],
-    [validateRubric(rubric)],
-  ]) {
-    if (err) {
-      return NextResponse.json({ error: err }, { status: 400 });
+  // Validate model always
+  const modelErr = validateModel(model);
+  if (modelErr) {
+    return NextResponse.json({ error: modelErr }, { status: 400 });
+  }
+
+  // Validate judge-mode params (agent mode uses agentPrompt directly)
+  if (mode === "judge") {
+    for (const [err] of [
+      [validatePersonality(personality)],
+      [validateJurisdiction(jurisdiction)],
+      [validateRubric(rubric)],
+    ]) {
+      if (err) {
+        return NextResponse.json({ error: err }, { status: 400 });
+      }
     }
+  }
+
+  if (mode === "agent" && !agentPrompt) {
+    return NextResponse.json(
+      { error: "Agent mode requires agentPrompt" },
+      { status: 400 },
+    );
   }
 
   const apiKey = getApiKey();
@@ -74,7 +92,7 @@ export async function POST(request: NextRequest) {
     createChatSession({
       sessionId,
       model,
-      personality,
+      personality: mode === "agent" ? `agent:${personality}` : personality,
       jurisdiction,
       rubric,
     });
@@ -105,16 +123,21 @@ export async function POST(request: NextRequest) {
     model,
   });
 
-  // Build system prompt from current context
-  const systemPrompt = buildSystemPrompt(personality, jurisdiction, rubric);
+  // Build system prompt based on mode
+  const systemPrompt =
+    mode === "agent"
+      ? agentPrompt!
+      : buildSystemPrompt(personality, jurisdiction, rubric);
 
   // Build messages array for OpenRouter
   const messages = [
     { role: "system" as const, content: systemPrompt },
-    // Include prior conversation history (excluding system context-change markers)
     ...history
       .filter((m) => m.role !== "system")
-      .map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
+      .map((m) => ({
+        role: m.role as "user" | "assistant",
+        content: m.content,
+      })),
     { role: "user" as const, content: message },
   ];
 

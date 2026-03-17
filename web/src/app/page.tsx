@@ -48,6 +48,7 @@ export default function EvaluatePage() {
   const [jurisdiction, setJurisdiction] = useState<JurisdictionId>("hk");
   const [loading, setLoading] = useState(false);
   const [evalResult, setEvalResult] = useState<ApiEvalResult | null>(null);
+  const [isReference, setIsReference] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [inspectorPersonality, setInspectorPersonality] =
     useState("compliance_officer");
@@ -66,11 +67,59 @@ export default function EvaluatePage() {
       });
   }, []);
 
+  const loadReference = useCallback(async (scenarioId: string) => {
+    try {
+      const resp = await fetch(
+        `/api/reference?scenario=${encodeURIComponent(scenarioId)}`,
+      );
+      if (!resp.ok) return;
+      const data = await resp.json();
+      if (!data.result?.evaluations) return;
+
+      // Convert reference format to ApiEvalResult format
+      const evals = data.result.evaluations as Record<
+        string,
+        {
+          personality: string;
+          fingerprint: Record<string, { level: string; reasoning: string }>;
+          gating: { classification: string; triggered_rules: string[]; fingerprint_string: string };
+        }
+      >;
+      const results: ApiEvalResult["results"] = {};
+      for (const [pid, ev] of Object.entries(evals)) {
+        results[pid] = {
+          personality: ev.personality,
+          result: {
+            parsed: { dimensions: ev.fingerprint as EvaluationResult["parsed"]["dimensions"] },
+            gating: ev.gating as EvaluationResult["gating"],
+            usage: { input_tokens: null, output_tokens: null, total_tokens: null },
+            cost: null,
+            response_time_ms: 0,
+            model_used: null,
+          },
+          error: null,
+        };
+      }
+      setEvalResult({
+        run_id: "reference",
+        model: data.source || "reference",
+        scenario_id: scenarioId,
+        jurisdiction: "hk",
+        structured: false,
+        results,
+      });
+      setIsReference(true);
+    } catch {
+      // Silently fail — reference results are optional
+    }
+  }, []);
+
   const handleEvaluate = useCallback(
     async (scenario: Scenario, structured: boolean) => {
       setLoading(true);
       setError(null);
       setEvalResult(null);
+      setIsReference(false);
 
       try {
         const resp = await fetch("/api/evaluate", {
@@ -116,11 +165,11 @@ export default function EvaluatePage() {
     : null;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex h-screen flex-col overflow-hidden">
       <Nav />
 
       {/* Jurisdiction tabs */}
-      <div className="border-b border-gray-800 bg-gray-900/50">
+      <div className="shrink-0 border-b border-gray-800 bg-gray-900/50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
           <div className="flex items-center gap-1">
             <span className="mr-3 text-xs font-medium text-gray-500">
@@ -149,9 +198,9 @@ export default function EvaluatePage() {
       </div>
 
       {/* Split pane */}
-      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-0">
+      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-0 overflow-hidden">
         {/* Left pane — Prompt Inspector */}
-        <div className="w-2/5 border-r border-gray-800 p-4">
+        <div className="flex w-2/5 flex-col border-r border-gray-800 p-4 overflow-hidden">
           <h2 className="mb-3 text-sm font-medium text-gray-400">
             System Prompt
             <span className="ml-2 text-xs text-gray-600">
@@ -171,7 +220,7 @@ export default function EvaluatePage() {
               ))}
             </select>
           </div>
-          <div className="h-[calc(100vh-200px)] overflow-y-auto rounded border border-gray-800 bg-gray-900 p-3">
+          <div className="flex-1 overflow-y-auto rounded border border-gray-800 bg-gray-900 p-3">
             <PromptInspector
               jurisdiction={jurisdiction}
               personality={inspectorPersonality}
@@ -179,7 +228,7 @@ export default function EvaluatePage() {
           </div>
         </div>
 
-        {/* Right pane — Input & Results */}
+        {/* Right pane — Input & Results (scrolls independently) */}
         <div className="w-3/5 overflow-y-auto p-4">
           <h2 className="mb-3 text-sm font-medium text-gray-400">
             Scenario & Results
@@ -192,6 +241,7 @@ export default function EvaluatePage() {
             scenarios={scenarios}
             onSubmit={handleEvaluate}
             loading={loading}
+            onScenarioSelect={loadReference}
           />
 
           {/* Loading indicator */}
@@ -214,6 +264,15 @@ export default function EvaluatePage() {
           {/* Results */}
           {matrixResults && Object.keys(matrixResults).length > 0 && (
             <div className="mt-6 space-y-6">
+              {/* Reference indicator */}
+              {isReference && (
+                <div className="rounded border border-blue-800 bg-blue-900/20 px-3 py-2 text-xs text-blue-400">
+                  Showing pre-computed reference results. Click
+                  &ldquo;Evaluate&rdquo; to run a live evaluation with the
+                  current model and grounding level.
+                </div>
+              )}
+
               {/* Gating verdict — show one per personality */}
               {Object.entries(evalResult!.results)
                 .filter(([, v]) => v.result !== null)
@@ -251,7 +310,20 @@ export default function EvaluatePage() {
                 <DimensionReasoning results={matrixResults} />
               </div>
 
-              {/* Run metadata */}
+              {/* Red Team This + Run metadata */}
+              {(() => {
+                const firstFp = Object.values(evalResult!.results).find(
+                  (v) => v.result !== null,
+                )?.result?.gating.fingerprint_string;
+                return firstFp ? (
+                  <a
+                    href={`/chat?scenario=${encodeURIComponent(evalResult!.scenario_id)}&fingerprint=${encodeURIComponent(firstFp)}`}
+                    className="block rounded border border-red-800 bg-red-900/20 px-4 py-2.5 text-center text-sm font-medium text-red-400 transition-colors hover:bg-red-900/40"
+                  >
+                    Red Team This Agent
+                  </a>
+                ) : null;
+              })()}
               <div className="rounded border border-gray-800 p-3 text-xs text-gray-500">
                 <span>Model: {evalResult!.model}</span>
                 <span className="mx-2">|</span>
