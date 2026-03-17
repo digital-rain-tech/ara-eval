@@ -54,15 +54,48 @@ python3 labs/view-requests.py detail <id>  # full request/response detail
 
 Output goes to date-stamped subdirectories under `results/` (gitignored): JSON results, a `latest` symlink, and `ara-eval.db` (SQLite request log with full provenance). Malformed LLM responses are retried up to 2 times automatically.
 
+## Web Interface
+
+A Next.js web app for interactive evaluation and adversarial red-teaming.
+
+```bash
+cd web
+npm install
+npm run dev          # http://localhost:3000
+```
+
+**Evaluate page** — Split-pane layout: system prompt inspector (left) shows what the model sees; scenario input and results (right) shows fingerprint matrix, gating verdict, and stakeholder disagreements. Four input modes: pre-loaded scenarios (instant reference results), free text, or structured form.
+
+**Chat page** — Two modes:
+- **Agent Mode** (primary): Select a scenario, get an AI agent constrained by its risk fingerprint. Try to get it to violate its guardrails. Challenge banner shows attack targets from A-rated dimensions.
+- **Judge Mode**: Chat directly with the LLM evaluation judge. Swap personality, jurisdiction, and rubric mid-conversation to probe context sensitivity.
+
+Both modes persist to SQLite. Sessions survive page refresh.
+
+**Deployment:**
+```bash
+# Railway (recommended — supports SQLite)
+railway login && railway init
+railway add --service ara-eval-web
+railway service ara-eval-web
+railway variables set OPENROUTER_API_KEY=your-key
+railway up
+railway domain         # get public URL
+```
+
+See [`docs/adr/013-railway-deployment.md`](docs/adr/013-railway-deployment.md) for details.
+
 ## Repository Structure
 
 ```
 docs/               # Framework specification, rubric definitions, model guide
   course-formats/   # 5-week MBA and 10-week undergraduate syllabi
-  adr/              # Architecture Decision Records
+  adr/              # Architecture Decision Records (13)
 labs/               # Runnable Python labs (see below)
-prompts/            # LLM prompt templates (system, user, rubric, jurisdictions)
+prompts/            # LLM prompt templates (system, user, rubric, jurisdictions, agent persona)
 scenarios/          # Starter scenario library (JSON)
+shared/             # Constants shared between Python and TypeScript (dimensions, models, challenges)
+web/                # Next.js web interface (evaluate + adversarial chat)
 results/            # Output (gitignored) — date-stamped JSON + SQLite log
 ```
 
@@ -119,6 +152,9 @@ All requests, responses, token usage, cost, and provider metadata are logged to 
 | **01: Structured Input** (`--structured`) | Same pipeline but with decomposed inputs (subject/object/action/regulatory triggers) | 18 | Compare determinism vs narrative prompts |
 | **02: Grounding Experiment** | Test whether explicit regulatory citations change classifications | 36 | Dimension sensitivity to jurisdiction context |
 | **03: Intra-Rater Reliability** | Repeat evaluations to measure LLM self-consistency | 90 (5 reps) | Per-dimension agreement rates, stability analysis |
+| **04: Inter-Model Comparison** | Compare multiple models against reference fingerprints | varies | Leaderboard scores, gate accuracy |
+| **05: Build Your Own** | Interactive scenario creation: init, predict, run, compare | 3 | Student-authored scenarios with self-assessment |
+| **Web: Adversarial Chat** | Red-team an agent constrained by its risk fingerprint | interactive | Chat transcripts with context-change provenance |
 
 See [`labs/README.md`](labs/README.md) for exercises and key questions. Course syllabi: [`5-week MBA`](docs/course-formats/5-week-mba-capstone.md) | [`10-week undergraduate`](docs/course-formats/10-week-undergraduate.md).
 
