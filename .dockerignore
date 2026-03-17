@@ -1,0 +1,12 @@
+web/node_modules
+web/.next
+web/out
+results/
+.venv/
+__pycache__/
+*.pyc
+.env
+.env.local
+.git
+.claude/
+reviews/
