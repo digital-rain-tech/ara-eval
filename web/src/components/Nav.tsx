@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { href: "/", label: "Evaluate" },
   { href: "/chat", label: "Chat" },
   { href: "/history", label: "Run History" },
+  { href: "/chat/history", label: "Chat History" },
   { href: "/requests", label: "Request Inspector" },
 ];
 
