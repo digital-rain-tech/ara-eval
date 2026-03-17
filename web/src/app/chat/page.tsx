@@ -76,10 +76,60 @@ function ChatPageContent() {
       });
   }, []);
 
-  // Generate session ID on mount
+  // Restore or create session on mount
   useEffect(() => {
-    setSessionId(crypto.randomUUID());
-  }, []);
+    const saved = sessionStorage.getItem("ara-chat-session");
+    if (saved) {
+      try {
+        const state = JSON.parse(saved);
+        setSessionId(state.sessionId);
+        isNewSession.current = false;
+        // Restore mode and scenario if saved
+        if (state.mode) setMode(state.mode);
+        if (state.selectedScenarioId) setSelectedScenarioId(state.selectedScenarioId);
+        if (state.jurisdiction) setJurisdiction(state.jurisdiction);
+        // Reload messages from DB
+        fetch(`/api/chat/sessions?id=${state.sessionId}`)
+          .then((r) => r.json())
+          .then((data) => {
+            if (data.messages?.length > 0) {
+              const restored: ChatMessage[] = data.messages.map(
+                (m: { id: string; role: string; content: string; input_tokens?: number; output_tokens?: number; response_time_ms?: number }) => ({
+                  id: m.id,
+                  role: m.role as "user" | "assistant" | "system",
+                  content: m.content,
+                  input_tokens: m.input_tokens,
+                  output_tokens: m.output_tokens,
+                  response_time_ms: m.response_time_ms,
+                }),
+              );
+              setMessages(restored);
+              msgCounter.current = restored.length;
+            }
+          });
+      } catch {
+        // Corrupted state — start fresh
+        const id = crypto.randomUUID();
+        setSessionId(id);
+      }
+    } else {
+      setSessionId(crypto.randomUUID());
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Persist session state to sessionStorage
+  useEffect(() => {
+    if (!sessionId) return;
+    sessionStorage.setItem(
+      "ara-chat-session",
+      JSON.stringify({
+        sessionId,
+        mode,
+        selectedScenarioId,
+        jurisdiction,
+      }),
+    );
+  }, [sessionId, mode, selectedScenarioId, jurisdiction]);
 
   // Check for URL params (from "Red Team This" button on evaluate page)
   useEffect(() => {
@@ -146,6 +196,22 @@ function ChatPageContent() {
     [scenarios, jurisdiction],
   );
 
+  // Rebuild agent fingerprint after session restore + scenarios load
+  useEffect(() => {
+    if (
+      mode === "agent" &&
+      selectedScenarioId &&
+      scenarios.length > 0 &&
+      !fingerprint
+    ) {
+      const scenario = scenarios.find((s) => s.id === selectedScenarioId);
+      if (scenario?.reference_fingerprint) {
+        const fpString = Object.values(scenario.reference_fingerprint).join("-");
+        loadAgentFromFingerprint(selectedScenarioId, fpString);
+      }
+    }
+  }, [mode, selectedScenarioId, scenarios, fingerprint, loadAgentFromFingerprint]);
+
   // Load agent when scenario selection changes
   const handleScenarioSelect = useCallback(
     (scenarioId: string) => {
@@ -189,6 +255,7 @@ function ChatPageContent() {
   }, [jurisdiction, mode, selectedScenarioId, fingerprint, fingerprintString, gatingClassification, scenarios]);
 
   const startNewSession = useCallback(() => {
+    sessionStorage.removeItem("ara-chat-session");
     setSessionId(crypto.randomUUID());
     setMessages([]);
     setError(null);
