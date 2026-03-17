@@ -8,6 +8,8 @@ ARA-Eval asks the harder question: **When can an AI safely take action on its ow
 
 Developed by [IRAI Labs](https://irai.co) × [Digital Rain Technologies](https://digitalrain.studio).
 
+**[Try the live demo](https://ara-eval-web-production.up.railway.app/)**
+
 ## What This Is
 
 The framework evaluates operational domains across 7 dimensions, producing a **risk fingerprint** — a pattern of level classifications (A–D) that preserves reasoning rather than collapsing it into a single score. Gating rules then determine readiness: which domains are ready now, which need prerequisites, which should stay human-in-loop.
