@@ -263,79 +263,70 @@ export default function EvaluatePage() {
 
           {/* Results */}
           {matrixResults && Object.keys(matrixResults).length > 0 && (
-            <div className="mt-6 space-y-6">
+            <div className="mt-8 space-y-8">
               {/* Reference indicator */}
               {isReference && (
-                <div className="rounded border border-blue-800 bg-blue-900/20 px-3 py-2 text-xs text-blue-400">
-                  Showing pre-computed reference results. Click
-                  &ldquo;Evaluate&rdquo; to run a live evaluation with the
-                  current model and grounding level.
+                <div className="rounded bg-blue-900/10 px-3 py-2 text-xs text-blue-400">
+                  Pre-computed reference results. Click Evaluate for a
+                  live run.
                 </div>
               )}
 
-              {/* Gating verdict — show one per personality */}
-              {Object.entries(evalResult!.results)
-                .filter(([, v]) => v.result !== null)
-                .map(([pid, v]) => (
-                  <GatingVerdict
-                    key={pid}
-                    classification={v.result!.gating.classification}
-                    triggeredRules={v.result!.gating.triggered_rules}
-                    fingerprintString={v.result!.gating.fingerprint_string}
-                  />
-                ))
-                .slice(0, 1)}
+              {/* ── Verdict zone ── */}
+              <div className="space-y-4">
+                {/* Gating verdict */}
+                {Object.entries(evalResult!.results)
+                  .filter(([, v]) => v.result !== null)
+                  .map(([pid, v]) => (
+                    <GatingVerdict
+                      key={pid}
+                      classification={v.result!.gating.classification}
+                      triggeredRules={v.result!.gating.triggered_rules}
+                      fingerprintString={v.result!.gating.fingerprint_string}
+                    />
+                  ))
+                  .slice(0, 1)}
 
-              {/* Fingerprint matrix */}
-              <div>
-                <h3 className="mb-2 text-sm font-medium text-gray-400">
-                  Risk Fingerprint Matrix
-                </h3>
+                {/* Fingerprint matrix */}
                 <FingerprintMatrix results={matrixResults} />
+
+                {/* Red Team This Agent — primary next action */}
+                {(() => {
+                  const firstFp = Object.values(evalResult!.results).find(
+                    (v) => v.result !== null,
+                  )?.result?.gating.fingerprint_string;
+                  return firstFp ? (
+                    <a
+                      href={`/chat?scenario=${encodeURIComponent(evalResult!.scenario_id)}&fingerprint=${encodeURIComponent(firstFp)}`}
+                      className="block rounded bg-red-800/30 px-4 py-3 text-center text-sm font-medium text-red-300 transition-colors hover:bg-red-800/50"
+                    >
+                      Red Team This Agent &rarr;
+                    </a>
+                  ) : null;
+                })()}
               </div>
 
-              {/* Personality delta */}
-              <div>
-                <h3 className="mb-2 text-sm font-medium text-gray-400">
-                  Stakeholder Disagreements
-                </h3>
-                <PersonalityDelta results={matrixResults} />
-              </div>
+              {/* ── Details zone ── */}
+              <div className="space-y-6 border-t border-gray-800 pt-6">
+                <div>
+                  <h3 className="mb-2 text-sm font-medium text-gray-500">
+                    Stakeholder Disagreements
+                  </h3>
+                  <PersonalityDelta results={matrixResults} />
+                </div>
 
-              {/* Per-dimension reasoning */}
-              <div>
-                <h3 className="mb-2 text-sm font-medium text-gray-400">
-                  Dimension Reasoning
-                </h3>
-                <DimensionReasoning results={matrixResults} />
-              </div>
+                <div>
+                  <h3 className="mb-2 text-sm font-medium text-gray-500">
+                    Dimension Reasoning
+                  </h3>
+                  <DimensionReasoning results={matrixResults} />
+                </div>
 
-              {/* Red Team This + Run metadata */}
-              {(() => {
-                const firstFp = Object.values(evalResult!.results).find(
-                  (v) => v.result !== null,
-                )?.result?.gating.fingerprint_string;
-                return firstFp ? (
-                  <a
-                    href={`/chat?scenario=${encodeURIComponent(evalResult!.scenario_id)}&fingerprint=${encodeURIComponent(firstFp)}`}
-                    className="block rounded border border-red-800 bg-red-900/20 px-4 py-2.5 text-center text-sm font-medium text-red-400 transition-colors hover:bg-red-900/40"
-                  >
-                    Red Team This Agent
-                  </a>
-                ) : null;
-              })()}
-              <div className="rounded border border-gray-800 p-3 text-xs text-gray-500">
-                <span>Model: {evalResult!.model}</span>
-                <span className="mx-2">|</span>
-                <span>Run: {evalResult!.run_id.slice(0, 8)}</span>
-                <span className="mx-2">|</span>
-                <span>Jurisdiction: {evalResult!.jurisdiction}</span>
-                {evalResult!.structured && (
-                  <>
-                    <span className="mx-2">|</span>
-                    <span>Structured input</span>
-                  </>
-                )}
+                {/* Run metadata — minimal */}
+                <div className="text-xs text-gray-600">
+                  {evalResult!.model} &middot; {evalResult!.jurisdiction}
+                  {evalResult!.structured && " \u00b7 structured"}
+                </div>
               </div>
             </div>
           )}

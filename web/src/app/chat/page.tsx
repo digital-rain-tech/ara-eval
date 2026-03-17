@@ -468,12 +468,6 @@ function ChatPageContent() {
             />
           </div>
 
-          {/* Session info */}
-          <div className="shrink-0 border-t border-gray-800 px-4 py-1 text-xs text-gray-600">
-            {mode === "agent" ? "Agent" : "Judge"} | Session:{" "}
-            {sessionId.slice(0, 8)} | Messages:{" "}
-            {messages.filter((m) => m.role !== "system").length}
-          </div>
         </div>
       </div>
     </div>
