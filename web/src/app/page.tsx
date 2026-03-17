@@ -40,7 +40,10 @@ const JURISDICTION_TABS: { id: JurisdictionId; label: string; short: string }[] 
     { id: "hk-grounded", label: "HK Grounded (full regulatory text)", short: "HK Grounded" },
   ];
 
+type PageState = "loading" | "ready" | "error";
+
 export default function EvaluatePage() {
+  const [pageState, setPageState] = useState<PageState>("loading");
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [personalities, setPersonalities] = useState<
     Record<string, PersonalityMeta>
@@ -64,8 +67,12 @@ export default function EvaluatePage() {
         setModel(data.model || "");
         setDefaultModel(data.model || "");
         setPersonalities(data.personalities || {});
-      });
+        setPageState("ready");
+      })
+      .catch(() => setPageState("error"));
   }, []);
+
+  // Moved below all hooks — guard is in the JSX return
 
   const loadReference = useCallback(async (scenarioId: string) => {
     try {
@@ -163,6 +170,23 @@ export default function EvaluatePage() {
           ]),
       )
     : null;
+
+  if (pageState !== "ready") {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center bg-gray-950">
+        {pageState === "loading" ? (
+          <>
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gray-700 border-t-blue-400" />
+            <p className="text-sm text-gray-500">Loading ARA-Eval...</p>
+          </>
+        ) : (
+          <p className="text-sm text-red-400">
+            Failed to load. Check that the server is running.
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">

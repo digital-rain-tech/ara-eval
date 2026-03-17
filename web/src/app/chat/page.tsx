@@ -28,9 +28,12 @@ export default function ChatPage() {
   );
 }
 
+type PageState = "loading" | "ready" | "error";
+
 function ChatPageContent() {
   const searchParams = useSearchParams();
 
+  const [pageState, setPageState] = useState<PageState>("loading");
   const [personalities, setPersonalities] = useState<
     Record<string, PersonalityMeta>
   >({});
@@ -73,7 +76,9 @@ function ChatPageContent() {
         setScenarios(data.scenarios || []);
         setModel(data.model || "");
         setDefaultModel(data.model || "");
-      });
+        setPageState("ready");
+      })
+      .catch(() => setPageState("error"));
   }, []);
 
   // Restore or create session on mount
@@ -115,7 +120,7 @@ function ChatPageContent() {
     } else {
       setSessionId(crypto.randomUUID());
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   // Persist session state to sessionStorage
   useEffect(() => {
@@ -369,6 +374,23 @@ function ChatPageContent() {
 
   const challenges =
     fingerprint && mode === "agent" ? generateChallenges(fingerprint) : [];
+
+  if (pageState !== "ready") {
+    return (
+      <div className="flex h-screen flex-col items-center justify-center bg-gray-950">
+        {pageState === "loading" ? (
+          <>
+            <div className="mb-4 h-8 w-8 animate-spin rounded-full border-2 border-gray-700 border-t-blue-400" />
+            <p className="text-sm text-gray-500">Loading ARA-Eval...</p>
+          </>
+        ) : (
+          <p className="text-sm text-red-400">
+            Failed to load. Check that the server is running.
+          </p>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen flex-col overflow-hidden">
