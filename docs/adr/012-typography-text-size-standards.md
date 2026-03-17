@@ -12,36 +12,28 @@ The 8-Bit Oracle project established a strict 20px minimum for all user-facing c
 
 ## Decision
 
-### Two Tiers of Content
+### Single Minimum: 14px (`text-sm`)
 
-**Tier 1 — Interactive content** (the student reads and acts on this):
-- Chat messages, form inputs, buttons, scenario descriptions, challenge banners, gating verdicts
-- Minimum: 16px (`text-base`), target: 18-20px (`text-lg` to `text-xl`)
+**All content** — interactive and reference — uses `text-sm` (14px) as the absolute minimum. No `text-xs` (12px) anywhere in the app.
 
-**Tier 2 — Reference/inspection content** (the student scans or inspects this):
-- Prompt inspector text, data table cells, metadata, token counts, session IDs, timestamps
-- Minimum: 12px (`text-xs`), target: 14px (`text-sm`)
+Initial design used a two-tier system with 12px for reference content (prompt inspector, metadata, data tables). In practice, 12px was too small for comfortable reading even on reference material. Students need to read prompt text carefully to understand what the model sees — it's not just a glance.
 
 ### Text Size Hierarchy
 
-| Use Case | Tailwind Class | Size | Tier | Notes |
-|----------|---------------|------|------|-------|
-| **Page titles** | `text-lg` or larger | 18px+ | 1 | Nav, section headings |
-| **Chat messages** | `text-sm` or larger | 14px+ | 1 | User and assistant messages |
-| **Scenario narrative** | `text-sm` | 14px | 1 | Scenario description in input area |
-| **Form inputs** | `text-sm` | 14px | 1 | Text inputs, textareas, dropdowns |
-| **Buttons** | `text-sm` | 14px | 1 | Evaluate, Send, mode toggles |
-| **Gating verdict** | `text-lg` | 18px | 1 | Classification badge text |
-| **Challenge text** | `text-sm` | 14px | 1 | Attack target descriptions |
-| **Fingerprint cells** | `text-sm font-bold` | 14px | 1 | A/B/C/D level indicators |
-| **Prompt inspector** | `text-xs` | 12px | 2 | Full system prompt display |
-| **Data table cells** | `text-xs` to `text-sm` | 12-14px | 2 | History, request inspector |
-| **Metadata** | `text-xs` | 12px | 2 | Token counts, latency, session IDs |
-| **Section labels** | `text-xs font-medium` | 12px | 2 | "Grounding Level:", "Model:" |
-
-### Prompt Inspector Exception
-
-The prompt inspector displays full system prompts that can be 60+ lines. Using `text-xs` (12px) with `leading-relaxed` is intentional — it maximizes visible content in the split pane so students can see more of the prompt without scrolling. The prompt text is reference material, not interactive content.
+| Use Case | Tailwind Class | Size | Notes |
+|----------|---------------|------|-------|
+| **Page titles** | `text-lg` or larger | 18px+ | Nav, section headings |
+| **Gating verdict** | `text-lg` | 18px | Classification badge text |
+| **Chat messages** | `text-sm` | 14px | User and assistant messages |
+| **Scenario narrative** | `text-sm` | 14px | Scenario description in input area |
+| **Form inputs** | `text-sm` | 14px | Text inputs, textareas, dropdowns |
+| **Buttons** | `text-sm` | 14px | Evaluate, Send, mode toggles |
+| **Challenge text** | `text-sm` | 14px | Attack target descriptions |
+| **Fingerprint cells** | `text-sm font-bold` | 14px | A/B/C/D level indicators |
+| **Prompt inspector** | `text-sm` | 14px | Full system prompt display |
+| **Data table cells** | `text-sm` | 14px | History, request inspector |
+| **Metadata** | `text-sm` | 14px | Token counts, latency, model info |
+| **Section labels** | `text-sm font-medium` | 14px | "Grounding Level:", "Model:" |
 
 ### Responsive Considerations
 
@@ -52,8 +44,8 @@ The prompt inspector displays full system prompts that can be 60+ lines. Using `
 
 ### What NOT to Do
 
-- Don't use `text-[10px]` or smaller for anything, including metadata
-- Don't reduce prompt inspector text below `text-xs` (12px) — it becomes unreadable
+- Don't use `text-xs` (12px) or smaller for anything — 14px is the floor
+- Don't use `text-[10px]` or smaller (exception: tiny text inside colored level badges)
 - Don't use large text (`text-xl`+) for data tables — density matters for comparison
 - Don't mix font sizes inconsistently within a component — pick one size per content type
 

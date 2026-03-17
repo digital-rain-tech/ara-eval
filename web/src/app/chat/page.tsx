@@ -313,13 +313,13 @@ function ChatPageContent() {
         <div className="flex w-2/5 flex-col border-r border-gray-800 p-4 overflow-hidden">
           <h2 className="mb-3 shrink-0 text-sm font-medium text-gray-400">
             {mode === "agent" ? "Agent System Prompt" : "Judge System Prompt"}
-            <span className="ml-2 text-xs text-gray-600">
+            <span className="ml-2 text-sm text-gray-600">
               (what the model sees)
             </span>
           </h2>
           <div className="flex-1 overflow-y-auto rounded border border-gray-800 bg-gray-900 p-3">
             {mode === "agent" && agentPrompt ? (
-              <pre className="whitespace-pre-wrap text-xs leading-relaxed text-gray-300">
+              <pre className="whitespace-pre-wrap text-sm leading-relaxed text-gray-300">
                 {agentPrompt}
               </pre>
             ) : (
@@ -340,7 +340,7 @@ function ChatPageContent() {
               <div className="flex rounded border border-gray-700">
                 <button
                   onClick={() => setMode("agent")}
-                  className={`px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`px-3 py-1 text-sm font-medium transition-colors ${
                     mode === "agent"
                       ? "bg-red-800/40 text-red-300"
                       : "text-gray-400 hover:text-gray-200"
@@ -350,7 +350,7 @@ function ChatPageContent() {
                 </button>
                 <button
                   onClick={() => setMode("judge")}
-                  className={`px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`px-3 py-1 text-sm font-medium transition-colors ${
                     mode === "judge"
                       ? "bg-blue-800/40 text-blue-300"
                       : "text-gray-400 hover:text-gray-200"
@@ -359,7 +359,7 @@ function ChatPageContent() {
                   Judge Mode
                 </button>
               </div>
-              <span className="text-xs text-gray-600">
+              <span className="text-sm text-gray-600">
                 {mode === "agent"
                   ? "Red-team the agent\u2019s guardrails"
                   : "Probe the evaluation judge\u2019s reasoning"}
@@ -370,11 +370,11 @@ function ChatPageContent() {
             {mode === "agent" && (
               <>
                 <div className="flex items-center gap-3">
-                  <label className="text-xs text-gray-500">Scenario:</label>
+                  <label className="text-sm text-gray-500">Scenario:</label>
                   <select
                     value={selectedScenarioId}
                     onChange={(e) => handleScenarioSelect(e.target.value)}
-                    className="flex-1 rounded border border-gray-700 bg-gray-800 px-2 py-1 text-xs text-gray-300"
+                    className="flex-1 rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-300"
                   >
                     <option value="">Select a scenario...</option>
                     {scenarios.map((s) => (
@@ -421,7 +421,7 @@ function ChatPageContent() {
 
             {/* Agent mode: jurisdiction selector (simplified) */}
             {mode === "agent" && selectedScenarioId && (
-              <div className="flex items-center gap-2 text-xs">
+              <div className="flex items-center gap-2 text-sm">
                 <span className="text-gray-500">Grounding:</span>
                 {["generic", "hk", "hk-grounded"].map((j) => (
                   <button

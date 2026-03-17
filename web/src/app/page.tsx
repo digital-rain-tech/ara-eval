@@ -172,7 +172,7 @@ export default function EvaluatePage() {
       <div className="shrink-0 border-b border-gray-800 bg-gray-900/50">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
           <div className="flex items-center gap-1">
-            <span className="mr-3 text-xs font-medium text-gray-500">
+            <span className="mr-3 text-sm font-medium text-gray-500">
               Grounding Level:
             </span>
             {JURISDICTION_TABS.map((tab) => (
@@ -203,7 +203,7 @@ export default function EvaluatePage() {
         <div className="flex w-2/5 flex-col border-r border-gray-800 p-4 overflow-hidden">
           <h2 className="mb-3 text-sm font-medium text-gray-400">
             System Prompt
-            <span className="ml-2 text-xs text-gray-600">
+            <span className="ml-2 text-sm text-gray-600">
               (what the model sees)
             </span>
           </h2>
@@ -211,7 +211,7 @@ export default function EvaluatePage() {
             <select
               value={inspectorPersonality}
               onChange={(e) => setInspectorPersonality(e.target.value)}
-              className="rounded border border-gray-700 bg-gray-800 px-2 py-1 text-xs text-gray-300"
+              className="rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-300"
             >
               {Object.entries(personalities).map(([id, meta]) => (
                 <option key={id} value={id}>
@@ -232,7 +232,7 @@ export default function EvaluatePage() {
         <div className="w-3/5 overflow-y-auto p-4">
           <h2 className="mb-3 text-sm font-medium text-gray-400">
             Scenario & Results
-            <span className="ml-2 text-xs text-gray-600">
+            <span className="ml-2 text-sm text-gray-600">
               (what the model concludes)
             </span>
           </h2>
@@ -266,7 +266,7 @@ export default function EvaluatePage() {
             <div className="mt-8 space-y-8">
               {/* Reference indicator */}
               {isReference && (
-                <div className="rounded bg-blue-900/10 px-3 py-2 text-xs text-blue-400">
+                <div className="rounded bg-blue-900/10 px-3 py-2 text-sm text-blue-400">
                   Pre-computed reference results. Click Evaluate for a
                   live run.
                 </div>
@@ -323,7 +323,7 @@ export default function EvaluatePage() {
                 </div>
 
                 {/* Run metadata — minimal */}
-                <div className="text-xs text-gray-600">
+                <div className="text-sm text-gray-600">
                   {evalResult!.model} &middot; {evalResult!.jurisdiction}
                   {evalResult!.structured && " \u00b7 structured"}
                 </div>

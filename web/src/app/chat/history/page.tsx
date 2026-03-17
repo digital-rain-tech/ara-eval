@@ -100,28 +100,28 @@ export default function ChatHistoryPage() {
                             : "hover:bg-gray-900/50"
                         }`}
                       >
-                        <td className="px-2 py-2 text-xs text-gray-300">
+                        <td className="px-2 py-2 text-sm text-gray-300">
                           {date.toLocaleDateString()}{" "}
                           {date.toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
                         </td>
-                        <td className="px-2 py-2 font-mono text-xs text-gray-400">
+                        <td className="px-2 py-2 font-mono text-sm text-gray-400">
                           {s.model.length > 25
                             ? s.model.slice(0, 25) + "..."
                             : s.model}
                         </td>
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {s.initial_personality}
                         </td>
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {s.initial_jurisdiction}
                         </td>
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {s.message_count}
                         </td>
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {s.context_changes}
                         </td>
                       </tr>
@@ -141,7 +141,7 @@ export default function ChatHistoryPage() {
                 </h2>
                 <button
                   onClick={() => setSelectedId(null)}
-                  className="text-xs text-gray-500 hover:text-gray-300"
+                  className="text-sm text-gray-500 hover:text-gray-300"
                 >
                   Close
                 </button>
@@ -153,7 +153,7 @@ export default function ChatHistoryPage() {
                     return (
                       <div
                         key={msg.id}
-                        className="text-center text-xs italic text-gray-600"
+                        className="text-center text-sm italic text-gray-600"
                       >
                         {msg.content}
                       </div>
@@ -174,7 +174,7 @@ export default function ChatHistoryPage() {
                         }`}
                       >
                         <div className="whitespace-pre-wrap">{msg.content}</div>
-                        <div className="mt-1 flex gap-3 text-xs text-gray-600">
+                        <div className="mt-1 flex gap-3 text-sm text-gray-600">
                           <span>{msg.personality}</span>
                           <span>{msg.jurisdiction}</span>
                           {!isUser && msg.input_tokens != null && (

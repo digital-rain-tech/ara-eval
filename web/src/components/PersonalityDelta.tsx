@@ -72,7 +72,7 @@ export default function PersonalityDelta({ results }: PersonalityDeltaProps) {
             <span className="text-sm font-medium text-gray-200">
               {delta.dimension}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-sm text-gray-500">
               spread: {delta.spread} level{delta.spread > 1 ? "s" : ""}
             </span>
           </div>

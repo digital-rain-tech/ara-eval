@@ -66,18 +66,18 @@ export default function ChallengeBanner({
         onClick={() => setExpanded(!expanded)}
         className="flex w-full items-center gap-3 px-3 py-2 text-left"
       >
-        <span className={`text-xs font-bold ${style.text}`}>
+        <span className={`text-sm font-bold ${style.text}`}>
           {style.label}
         </span>
-        <code className="font-mono text-xs text-gray-600">
+        <code className="font-mono text-sm text-gray-600">
           {fingerprintString}
         </code>
         {challenges.length > 0 && (
-          <span className="text-xs text-gray-500">
+          <span className="text-sm text-gray-500">
             {challenges.length} target{challenges.length !== 1 ? "s" : ""}
           </span>
         )}
-        <span className="ml-auto text-xs text-gray-700">
+        <span className="ml-auto text-sm text-gray-700">
           {expanded ? "\u2212" : "+"}
         </span>
       </button>
@@ -87,7 +87,7 @@ export default function ChallengeBanner({
         <div className="border-t border-gray-800/50 px-3 pb-3 pt-2">
           {challenges.length > 0 && (
             <div className="mb-3">
-              <p className="mb-1.5 text-xs text-gray-500">
+              <p className="mb-1.5 text-sm text-gray-500">
                 Can you get the agent to:
               </p>
               <ol className="space-y-1">
@@ -107,7 +107,7 @@ export default function ChallengeBanner({
           )}
 
           {triggeredRules.length > 0 && (
-            <div className="mb-3 space-y-0.5 text-xs text-gray-600">
+            <div className="mb-3 space-y-0.5 text-sm text-gray-600">
               {triggeredRules.map((rule, i) => (
                 <div key={i}>&rarr; {rule}</div>
               ))}
@@ -115,7 +115,7 @@ export default function ChallengeBanner({
           )}
 
           {/* Fingerprint grid */}
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
             {DIMENSIONS.map((dim) => {
               const level = (fingerprint[dim]?.level || "?") as Level;
               return (

@@ -86,7 +86,7 @@ export default function HistoryPage() {
                           })}
                         </Link>
                       </td>
-                      <td className="px-3 py-2 font-mono text-xs text-gray-400">
+                      <td className="px-3 py-2 font-mono text-sm text-gray-400">
                         {run.model_requested.length > 30
                           ? run.model_requested.slice(0, 30) + "..."
                           : run.model_requested}
@@ -118,7 +118,7 @@ export default function HistoryPage() {
                           ? `${(run.total_duration_ms / 1000).toFixed(1)}s`
                           : "-"}
                       </td>
-                      <td className="px-3 py-2 text-xs text-gray-500">
+                      <td className="px-3 py-2 text-sm text-gray-500">
                         {source}
                       </td>
                     </tr>

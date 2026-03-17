@@ -137,35 +137,35 @@ export default function RequestsPage() {
                             : "hover:bg-gray-900/50"
                         }`}
                       >
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {date.toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
                             second: "2-digit",
                           })}
                         </td>
-                        <td className="px-2 py-2 font-mono text-xs text-gray-300">
+                        <td className="px-2 py-2 font-mono text-sm text-gray-300">
                           {req.scenario_id || "-"}
                         </td>
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {req.personality || "-"}
                         </td>
-                        <td className="px-2 py-2 font-mono text-xs text-gray-300">
+                        <td className="px-2 py-2 font-mono text-sm text-gray-300">
                           {req.fingerprint_string || "-"}
                         </td>
                         <td className="px-2 py-2">
                           <span
-                            className={`text-xs ${classificationColor(req.gating_classification)}`}
+                            className={`text-sm ${classificationColor(req.gating_classification)}`}
                           >
                             {req.gating_classification
                               ?.replace(/_/g, " ")
                               .toUpperCase() || "-"}
                           </span>
                         </td>
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {req.total_tokens?.toLocaleString() || "-"}
                         </td>
-                        <td className="px-2 py-2 text-xs text-gray-400">
+                        <td className="px-2 py-2 text-sm text-gray-400">
                           {req.response_time_ms
                             ? `${(req.response_time_ms / 1000).toFixed(1)}s`
                             : "-"}
@@ -187,13 +187,13 @@ export default function RequestsPage() {
                 </h2>
                 <button
                   onClick={() => setSelectedId(null)}
-                  className="text-xs text-gray-500 hover:text-gray-300"
+                  className="text-sm text-gray-500 hover:text-gray-300"
                 >
                   Close
                 </button>
               </div>
 
-              <div className="space-y-4 text-xs">
+              <div className="space-y-4 text-sm">
                 {/* Metadata */}
                 <div className="space-y-1">
                   <Row label="ID" value={detail.id} />

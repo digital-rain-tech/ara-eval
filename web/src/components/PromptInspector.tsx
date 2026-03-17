@@ -56,7 +56,7 @@ function SectionBlock({
     >
       <button
         onClick={onToggle}
-        className="flex w-full items-center gap-2 py-1.5 text-left text-xs"
+        className="flex w-full items-center gap-2 py-1.5 text-left text-sm"
       >
         <span className={`font-medium ${meta.accent}`}>{meta.label}</span>
         {section.label && (
@@ -69,7 +69,7 @@ function SectionBlock({
         <span className="text-gray-700">{collapsed ? "+" : "\u2212"}</span>
       </button>
       {!collapsed && (
-        <pre className="whitespace-pre-wrap border-l border-gray-800 pl-3 pb-3 text-xs leading-relaxed text-gray-400">
+        <pre className="whitespace-pre-wrap border-l border-gray-800 pl-3 pb-3 text-sm leading-relaxed text-gray-400">
           {section.text}
         </pre>
       )}
@@ -155,7 +155,7 @@ export default function PromptInspector({
 
   return (
     <div className="h-full overflow-y-auto">
-      <div className="mb-2 text-xs text-gray-600">
+      <div className="mb-2 text-sm text-gray-600">
         {totalLines} lines &middot; click to expand
       </div>
       <div className="divide-y divide-gray-800/50">

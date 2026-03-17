@@ -137,7 +137,7 @@ export default function ScenarioInput({
     <div className="space-y-4">
       {/* Mode selector */}
       <div>
-        <label className="mb-1 block text-xs font-medium text-gray-400">
+        <label className="mb-1 block text-sm font-medium text-gray-400">
           Input Mode
         </label>
         <select
@@ -156,7 +156,7 @@ export default function ScenarioInput({
       {/* Pre-loaded scenario selector */}
       {(mode === "preloaded" || mode === "preloaded-structured") && (
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-400">
+          <label className="mb-1 block text-sm font-medium text-gray-400">
             Scenario
           </label>
           <select
@@ -180,7 +180,7 @@ export default function ScenarioInput({
             </div>
           )}
           {mode === "preloaded-structured" && !hasStructuredContext && (
-            <p className="mt-1 text-xs text-yellow-500">
+            <p className="mt-1 text-sm text-yellow-500">
               This scenario has no structured context. Will fall back to
               unstructured.
             </p>
@@ -191,7 +191,7 @@ export default function ScenarioInput({
       {/* Free text input */}
       {mode === "freetext" && (
         <div>
-          <label className="mb-1 block text-xs font-medium text-gray-400">
+          <label className="mb-1 block text-sm font-medium text-gray-400">
             Scenario Description
           </label>
           <textarea
@@ -209,7 +209,7 @@ export default function ScenarioInput({
         <div className="space-y-3">
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-400">
+              <label className="mb-1 block text-sm font-medium text-gray-400">
                 Domain
               </label>
               <input
@@ -222,7 +222,7 @@ export default function ScenarioInput({
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs font-medium text-gray-400">
+              <label className="mb-1 block text-sm font-medium text-gray-400">
                 Industry
               </label>
               <input
@@ -237,7 +237,7 @@ export default function ScenarioInput({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-sm font-medium text-gray-400">
               Scenario Narrative
             </label>
             <textarea
@@ -252,7 +252,7 @@ export default function ScenarioInput({
           </div>
 
           <div className="border-t border-gray-800 pt-3">
-            <p className="mb-2 text-xs font-medium text-gray-400">
+            <p className="mb-2 text-sm font-medium text-gray-400">
               Structured Context
             </p>
             <div className="space-y-2">
@@ -269,7 +269,7 @@ export default function ScenarioInput({
                 ] as const
               ).map(([field, label]) => (
                 <div key={field}>
-                  <label className="mb-0.5 block text-xs text-gray-500">
+                  <label className="mb-0.5 block text-sm text-gray-500">
                     {label}
                   </label>
                   <input
@@ -286,7 +286,7 @@ export default function ScenarioInput({
           </div>
 
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-400">
+            <label className="mb-1 block text-sm font-medium text-gray-400">
               Jurisdiction Notes
             </label>
             <input

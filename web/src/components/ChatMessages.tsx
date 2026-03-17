@@ -28,7 +28,7 @@ export default function ChatMessages({ messages, loading }: ChatMessagesProps) {
       <div className="flex flex-1 items-center justify-center text-sm text-gray-600">
         <div className="text-center">
           <p className="mb-2">Start a conversation with the LLM judge.</p>
-          <p className="text-xs text-gray-700">
+          <p className="text-sm text-gray-700">
             Try pasting a scenario description, or ask it to evaluate a
             situation. Change the context controls above to see how responses
             shift.
@@ -45,7 +45,7 @@ export default function ChatMessages({ messages, loading }: ChatMessagesProps) {
           return (
             <div
               key={msg.id}
-              className="text-center text-xs italic text-gray-600"
+              className="text-center text-sm italic text-gray-600"
             >
               {msg.content}
             </div>
@@ -68,7 +68,7 @@ export default function ChatMessages({ messages, loading }: ChatMessagesProps) {
               <div className="whitespace-pre-wrap">{msg.content}</div>
               {!isUser &&
                 (msg.input_tokens != null || msg.response_time_ms != null) && (
-                  <div className="mt-1 text-xs text-gray-600">
+                  <div className="mt-1 text-sm text-gray-600">
                     {msg.input_tokens != null && msg.output_tokens != null && (
                       <span>
                         {msg.input_tokens}+{msg.output_tokens} tokens

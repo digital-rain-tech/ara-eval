@@ -37,13 +37,13 @@ export default function ModelSelector({
   };
 
   return (
-    <div className="flex items-center gap-2 text-xs text-gray-500">
+    <div className="flex items-center gap-2 text-sm text-gray-500">
       <label htmlFor="model-select">Model:</label>
       <select
         id="model-select"
         value={showCustom ? "__custom__" : value}
         onChange={(e) => handleSelect(e.target.value)}
-        className="rounded border border-gray-700 bg-gray-800 px-2 py-0.5 text-xs text-gray-300"
+        className="rounded border border-gray-700 bg-gray-800 px-2 py-0.5 text-sm text-gray-300"
       >
         {TESTED_MODELS.map((m) => (
           <option key={m.id} value={m.id}>
@@ -57,7 +57,7 @@ export default function ModelSelector({
           value={customValue}
           onChange={(e) => handleCustomChange(e.target.value)}
           placeholder="e.g., meta-llama/llama-3.3-70b-instruct:free"
-          className="w-64 rounded border border-gray-700 bg-gray-800 px-2 py-0.5 font-mono text-xs text-gray-300 placeholder-gray-600"
+          className="w-64 rounded border border-gray-700 bg-gray-800 px-2 py-0.5 font-mono text-sm text-gray-300 placeholder-gray-600"
         />
       )}
       {value !== defaultModel && (
