@@ -71,6 +71,7 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
     # Hard gate tracking
     hard_gate_correct = 0  # true positives + true negatives
     hard_gate_total = 0
+    hard_gate_true_pos = 0   # correctly detected a gate
     hard_gate_false_neg = 0  # missed a gate that should fire
     hard_gate_false_pos = 0  # fired a gate that shouldn't
 
@@ -107,6 +108,8 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
 
                 if ref_fires == eval_fires:
                     hard_gate_correct += 1
+                    if ref_fires:
+                        hard_gate_true_pos += 1
                 elif ref_fires and not eval_fires:
                     hard_gate_false_neg += 1
                 elif not ref_fires and eval_fires:
@@ -150,6 +153,19 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
     nonzero_spreads = sum(1 for s in personality_spreads if s > 0)
     differentiation_rate = nonzero_spreads / len(personality_spreads) if personality_spreads else 0
 
+    # Gate recall, precision, and F2 score
+    # Recall: of gates that should fire, how many did? (safety-critical)
+    # Precision: of gates that fired, how many were correct?
+    # F2: beta=2 weights recall 4x over precision — penalises missed gates heavily
+    tp = hard_gate_true_pos
+    gate_recall = tp / (tp + hard_gate_false_neg) if (tp + hard_gate_false_neg) else 1.0
+    gate_precision = tp / (tp + hard_gate_false_pos) if (tp + hard_gate_false_pos) else 1.0
+    beta = 2
+    if gate_precision + gate_recall > 0:
+        gate_f2 = (1 + beta**2) * (gate_precision * gate_recall) / (beta**2 * gate_precision + gate_recall)
+    else:
+        gate_f2 = 0.0
+
     per_dim_accuracy = {}
     for dim in DIMENSIONS:
         if per_dim_total[dim] > 0:
@@ -165,6 +181,10 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
         "successful": successful_evals,
         "total": total_evals,
         "hard_gate_accuracy": hard_gate_accuracy,
+        "gate_recall": gate_recall,
+        "gate_precision": gate_precision,
+        "gate_f2": gate_f2,
+        "hard_gate_true_positives": tp,
         "hard_gate_false_negatives": hard_gate_false_neg,
         "hard_gate_false_positives": hard_gate_false_pos,
         "hard_gate_total": hard_gate_total,
@@ -184,26 +204,30 @@ def print_leaderboard(scores: list[dict]):
     print(f"  Gold standard: human-authored reference fingerprints (6 core scenarios)")
     print(f"{'='*90}")
 
-    # Sort by hard gate accuracy (safety-critical), then dimension match rate
-    scores.sort(key=lambda s: (s["hard_gate_accuracy"], s["dimension_match_rate"]), reverse=True)
+    # Sort by F2 (safety-weighted composite), then dimension match rate
+    scores.sort(key=lambda s: (s["gate_f2"], s["dimension_match_rate"]), reverse=True)
 
-    print(f"\n  {'MODEL':<30} {'COMPLETE':>8} {'GATE ACC':>9} {'FN':>4} {'FP':>4} {'DIM MATCH':>10} {'DIFF':>6}")
-    print(f"  {'-'*30} {'-'*8} {'-'*9} {'-'*4} {'-'*4} {'-'*10} {'-'*6}")
+    print(f"\n  {'MODEL':<26} {'DONE':>5} {'F2':>5} {'RECALL':>7} {'PREC':>6} {'FN':>4} {'FP':>4} {'DIM':>5} {'DIFF':>5}")
+    print(f"  {'-'*26} {'-'*5} {'-'*5} {'-'*7} {'-'*6} {'-'*4} {'-'*4} {'-'*5} {'-'*5}")
 
     for s in scores:
         complete = f"{s['successful']}/{s['total']}"
-        gate_acc = f"{s['hard_gate_accuracy']:.0%}"
+        f2 = f"{s['gate_f2']:.0%}"
+        recall = f"{s['gate_recall']:.0%}"
+        prec = f"{s['gate_precision']:.0%}"
         fn = str(s["hard_gate_false_negatives"])
         fp = str(s["hard_gate_false_positives"])
         dim_match = f"{s['dimension_match_rate']:.0%}"
         diff = f"{s['personality_differentiation_rate']:.0%}"
-        print(f"  {s['model']:<30} {complete:>8} {gate_acc:>9} {fn:>4} {fp:>4} {dim_match:>10} {diff:>6}")
+        print(f"  {s['model']:<26} {complete:>5} {f2:>5} {recall:>7} {prec:>6} {fn:>4} {fp:>4} {dim_match:>5} {diff:>5}")
 
-    print(f"\n  GATE ACC = hard gate accuracy (Reg=A, Blast=A correct detection)")
+    print(f"\n  F2 = F-beta score (beta=2): weights recall 4x over precision — the primary ranking metric")
+    print(f"  RECALL = gate recall: of gates that should fire, how many did? (1.0 = no missed gates)")
+    print(f"  PREC = gate precision: of gates that fired, how many were correct? (1.0 = no false alarms)")
     print(f"  FN = false negatives (missed gates — dangerous)")
-    print(f"  FP = false positives (over-fired gates — conservative)")
-    print(f"  DIM MATCH = exact dimension-level match vs reference")
-    print(f"  DIFF = personality differentiation rate (% of dims where CO/CRO/Ops disagree)")
+    print(f"  FP = false positives (over-fired gates — conservative but wrong)")
+    print(f"  DIM = exact dimension-level match vs reference")
+    print(f"  DIFF = personality differentiation (% of dims where CO/CRO/Ops disagree)")
 
     # Per-dimension breakdown
     print(f"\n{'='*90}")
