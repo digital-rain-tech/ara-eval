@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-21",
+  "last_updated": "2026-03-22",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
@@ -49,6 +49,40 @@
       "dimension_match": 0.89,
       "differentiation": 0.26,
       "bias": "calibrated",
+      "cost_per_eval": null,
+      "is_default": false
+    },
+    {
+      "id": "claude-sonnet-4.6-subagent",
+      "label": "Claude Sonnet 4.6",
+      "method": "subagent",
+      "method_note": "18 isolated subagent evaluations via Claude Code Agent tool (no cross-scenario anchoring)",
+      "completion": "18/18",
+      "f2": 0.89,
+      "gate_recall": 0.92,
+      "gate_precision": 0.79,
+      "false_negatives": 1,
+      "false_positives": 3,
+      "dimension_match": 0.39,
+      "differentiation": 0.62,
+      "bias": "jittery",
+      "cost_per_eval": null,
+      "is_default": false
+    },
+    {
+      "id": "claude-haiku-4.5-subagent",
+      "label": "Claude Haiku 4.5",
+      "method": "subagent",
+      "method_note": "18 isolated subagent evaluations via Claude Code Agent tool — used wrong dimension names in all responses, 1 refusal, 1 cheat. Not scorable.",
+      "completion": "17/18",
+      "f2": null,
+      "gate_recall": null,
+      "gate_precision": null,
+      "false_negatives": null,
+      "false_positives": null,
+      "dimension_match": null,
+      "differentiation": null,
+      "bias": "unscorable",
       "cost_per_eval": null,
       "is_default": false
     },
