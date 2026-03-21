@@ -23,6 +23,12 @@ python labs/lab-02-grounding-experiment.py          # grounding A/B experiment
 python labs/lab-03-intra-rater-reliability.py       # reliability testing
 python labs/lab-03-intra-rater-reliability.py --repetitions 5 --scenarios banking-fraud-001
 
+# Subagent evaluation (no API key needed — uses Claude Code subagents)
+python labs/lab-05-subagent-evaluation.py --structured           # generate manifest
+python labs/lab-05-subagent-evaluation.py --structured --grounding  # with grounding variant
+python labs/lab-05-subagent-evaluation.py --assemble <run-id>    # assemble results
+python labs/lab-05-dispatch.py [run-id]                          # print dispatch prompts
+
 # Utilities
 python labs/view-requests.py                        # inspect SQLite request log
 python labs/generate-report.py --last               # report from most recent run
@@ -63,6 +69,16 @@ Output goes to `results/` (gitignored): JSON results, markdown reports, and `ara
 **Prompt template system** (`prompts/`): System prompts are composed from Mustache templates via `chevron`. `build_system_prompt()` combines personality + rubric + jurisdiction + output format. Personalities and jurisdictions are registered in `_index.json` files. `load_prompt()` enforces path traversal protection.
 
 **Scenario format** (`scenarios/starter-scenarios.json`): Each scenario has `id`, `domain`, `industry`, `risk_tier`, `scenario` (narrative), `reference_fingerprint` (human-authored ground truth), and `jurisdiction_notes`. Scenarios are split into `core: true` (6) and extended (13 total). All scenarios include `structured_context` fields for use with `--structured`.
+
+**Subagent evaluation** (`labs/lab-05-subagent-evaluation.py`): Dispatches isolated Claude Code subagents for each scenario × personality × variant. Uses `.claude/commands/ara-evaluate.md` as the skill (full rubric baked in). Supports `--structured`, `--grounding`, `--repetitions`. Run `--assemble <run-id>` to collect results into lab-01 format for lab-04 scoring.
+
+**Shared data** (`shared/`): Structured JSON files consumed by the sister project `ara-eval-site` via GitHub raw URLs. **When leaderboard scores change, update `shared/leaderboard.json`** — this is the source of truth for the public site. Files:
+- `leaderboard.json` — model scores (raw floats), metric descriptions, metadata
+- `models.json` — model registry with labels and notes
+- `dimensions.json` — dimension IDs, labels, level ordering
+- `challenges.json` — adversarial challenge text per dimension × level
+
+Lab 04 writes `results/reference/leaderboard.json` (gitignored, verbose). The `shared/leaderboard.json` is the curated public version — update it manually after significant leaderboard changes.
 
 ## Framework Specification
 

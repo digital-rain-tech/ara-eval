@@ -96,7 +96,7 @@ docs/               # Framework specification, rubric definitions, model guide
 labs/               # Runnable Python labs (see below)
 prompts/            # LLM prompt templates (system, user, rubric, jurisdictions, agent persona)
 scenarios/          # Starter scenario library (JSON)
-shared/             # Constants shared between Python and TypeScript (dimensions, models, challenges)
+shared/             # Structured data shared across projects (dimensions, models, leaderboard, challenges)
 web/                # Next.js web interface (evaluate + adversarial chat)
 results/            # Output (gitignored) — date-stamped JSON + SQLite log
 ```
@@ -182,6 +182,30 @@ How well do different judge models reproduce human-authored reference fingerprin
 Two Claude Opus 4.6 entries reflect different evaluation methods: **subagent** dispatched 18 isolated evaluations via `labs/lab-05-subagent-evaluation.py` (pipeline-comparable, no cross-scenario anchoring); **manual** was a single-pass expert analysis with full document context. Raw results in `results/reference/`.
 
 *Last updated: 2026-03-21. See [`docs/adr/007-free-model-comparison.md`](docs/adr/007-free-model-comparison.md) for full testing notes.*
+
+### Consuming Leaderboard Data
+
+The leaderboard is available as structured JSON for integration into other projects:
+
+```
+shared/leaderboard.json   — model scores, metric definitions, metadata
+shared/models.json        — model registry with labels and notes
+shared/dimensions.json    — dimension IDs, labels, level ordering
+shared/challenges.json    — adversarial challenge text per dimension×level
+```
+
+Fetch directly from GitHub:
+```bash
+curl https://raw.githubusercontent.com/digital-rain-tech/ara-eval/main/shared/leaderboard.json
+```
+
+Or in JavaScript/TypeScript:
+```ts
+const res = await fetch('https://raw.githubusercontent.com/digital-rain-tech/ara-eval/main/shared/leaderboard.json');
+const { models, metrics, last_updated } = await res.json();
+```
+
+All numeric values are raw floats (e.g. `0.87` not `"87%"`) — format in your UI layer. The `metrics` object provides human-readable descriptions for tooltips or legends. To regenerate after adding new model results: `python labs/lab-04-inter-model-comparison.py`.
 
 ## Contributing
 
