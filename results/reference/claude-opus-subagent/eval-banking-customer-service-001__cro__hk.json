@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "D",
+      "reasoning": "Both actions — answering a factual query and updating a mailing address — are fully reversible; the address can be changed back immediately with no lasting impact."
+    },
+    "failure_blast_radius": {
+      "level": "D",
+      "reasoning": "A wrong answer about branch hours or an incorrect address update affects a single customer with zero financial exposure — this is contained, low-stakes interaction."
+    },
+    "regulatory_exposure": {
+      "level": "D",
+      "reasoning": "No specific HKMA, SFC, or PCPD regulatory mandate governs answering branch inquiries or processing customer-initiated address changes; standard PDPO data handling applies but imposes no prescriptive AI requirements."
+    },
+    "human_override_latency": {
+      "level": "D",
+      "reasoning": "There is no time pressure whatsoever — this is a conversational customer service interaction with no deadline, and the customer can re-contact or visit a branch if needed."
+    },
+    "data_confidence": {
+      "level": "D",
+      "reasoning": "Branch hours and ATM locations are structured reference data with high confidence, and the address update is customer-initiated with explicit input — there is no ambiguity in the data signals."
+    },
+    "accountability_chain": {
+      "level": "D",
+      "reasoning": "The chatbot interaction is fully logged with a complete audit trail of the customer request and system response, providing full transparency and clear accountability to the bank's digital channels team."
+    },
+    "graceful_degradation": {
+      "level": "D",
+      "reasoning": "If the chatbot fails, it can safely fall back to a human agent queue or suggest the customer call the hotline, with no data loss or downstream system impact."
+    }
+  },
+  "interpretation": "Strong candidate for full autonomy — all dimensions at Level D; this is a textbook low-risk use case where autonomous operation with standard logging delivers immediate customer value with negligible risk."
+}

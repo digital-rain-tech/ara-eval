@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "D",
+      "reasoning": "Both actions are fully reversible: answering a factual query has no persistent state change, and a mailing address update can be immediately reverted by the customer or any agent."
+    },
+    "failure_blast_radius": {
+      "level": "D",
+      "reasoning": "Impact is confined to a single customer's non-financial contact information and a factual inquiry — no financial exposure, no downstream system dependencies, no other customers affected."
+    },
+    "regulatory_exposure": {
+      "level": "D",
+      "reasoning": "No specific regulatory mandate governs answering branch hours or updating a mailing address; standard PDPO data handling applies but imposes no prescriptive AI requirements on this interaction."
+    },
+    "human_override_latency": {
+      "level": "D",
+      "reasoning": "There is no time pressure whatsoever — this is a conversational customer service interaction with no deadline, and the customer can simply call back or visit a branch if the chatbot fails."
+    },
+    "data_confidence": {
+      "level": "D",
+      "reasoning": "Branch hours and ATM locations are structured, validated reference data maintained by the bank, and the address update is explicitly provided by the customer — there is no ambiguity or interpretation required."
+    },
+    "accountability_chain": {
+      "level": "D",
+      "reasoning": "The chatbot interaction is fully logged with a clear audit trail — the customer initiated the request, the system processed it against structured data, and standard chatbot logging captures the entire exchange."
+    },
+    "graceful_degradation": {
+      "level": "D",
+      "reasoning": "If the chatbot fails on either task, the failure mode is safe: the query goes unanswered or the address update does not process, and the customer is routed to a human agent or retries — no data corruption, no cascading effects."
+    }
+  },
+  "interpretation": "Strong candidate for full autonomy — all seven dimensions are at Level D, reflecting a low-risk, fully reversible, well-structured interaction with proven fallback paths to human agents."
+}

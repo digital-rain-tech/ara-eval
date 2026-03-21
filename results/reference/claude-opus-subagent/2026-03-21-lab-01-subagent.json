@@ -1,0 +1,648 @@
+{
+  "insurance-claims-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "While the HK$180,000 payment is technically recoverable, clawback from a cross-border Shenzhen policyholder is operationally costly and legally complex, requiring manual intervention and potential mainland legal proceedings."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Impact is contained to a single policyholder and a single claim of HK$180,000, with no systemic or multi-customer exposure."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border claim triggers PIPL for mainland policyholder data, PDPO for HK-side processing, and Insurance Authority claims processing requirements \u2014 autonomous approval of a regulated insurance claim without human review directly contravenes regulatory mandates."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no time pressure on claims approval \u2014 claims processing queues operate on days-to-weeks timelines, allowing ample time for human review without material consequence."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "While the claim data is complete and matches policy terms with a 94% historical approval rate, the cross-border element introduces data provenance concerns under PIPL, and the 6% rejection rate for similar claims means edge cases still require interpretive judgment."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "While the approving system can be identified, the end-to-end chain from cross-border data ingestion through autonomous payment disbursement likely has gaps in audit trail completeness, particularly around the PIPL compliance verification steps."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "A failure in autonomous approval would be contained to this single claim and could fall back to a human review queue, though an erroneous payment once disbursed cross-border would require manual recovery effort."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 Regulatory Exposure at Level A due to cross-border PIPL/PDPO obligations and IA claims requirements triggers a hard gate, despite strong data signals and no time pressure."
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Payment of HK$180,000 can technically be recovered via clawback, but the process is operationally costly and creates customer friction, making it hard to reverse cleanly."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Impact is contained to a single policyholder and a single claim of HK$180,000 \u2014 well within appetite for autonomous processing given the positive expected value at 94% approval rate."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border claim from a Shenzhen policyholder directly triggers PIPL data transfer requirements, PDPO processing obligations, and IA claims handling mandates \u2014 unavoidable regulatory exposure."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no time pressure on claims approval \u2014 claims routinely sit in processing queues for days, so delayed decision has zero material impact."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Claim data is complete, matches policy terms exactly, diagnosis aligns with treatment, and 94% historical approval rate for similar claims provides high-confidence structured signal."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Automated claims processing systems produce clear decision logs with policy matching rationale, and the approval chain from data intake to payment is well-documented and auditable."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "A wrongly approved claim is caught in downstream audit and recovered through standard clawback procedures; a system failure routes the claim back to the manual review queue with no data loss."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 despite strong data confidence and no time pressure favoring autonomy, Regulatory Exposure at Level A (cross-border PIPL/PDPO/IA requirements) triggers the hard gate and mandates human oversight regardless of the favorable risk-reward profile."
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Disbursing HK$180,000 is operationally recoverable via clawback but requires manual intervention, cross-border coordination with the Shenzhen policyholder, and introduces delay and customer friction \u2014 a hard-to-reverse action in practice."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Impact is contained to a single policyholder and a single claim of HK$180,000 \u2014 no systemic or multi-customer exposure."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border claim from a Shenzhen policyholder triggers PIPL for mainland personal data, PDPO for HK-side processing, and Insurance Authority claims processing requirements \u2014 a direct regulatory mandate under multiple frameworks."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no time pressure on claims approval \u2014 the claim sits in a processing queue and can wait days or weeks without material consequence to the policyholder or the insurer."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Claim data is complete, matches policy terms, diagnosis aligns with treatment, and 94% historical approval rate for similar claims \u2014 this is high-confidence structured data with minimal ambiguity."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "The responsible party (claims processing system) is identifiable, but the cross-border nature introduces gaps in the audit trail \u2014 mainland data handling, PIPL compliance documentation, and the AI-to-payment handoff lack fully transparent end-to-end logging."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "If the agent fails or produces an incorrect approval, the failure is contained to one claim and recoverable through existing appeals and clawback processes, though it does not fail into a known-safe state automatically \u2014 it requires manual correction rather than automatic fallback to a human queue."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 despite strong data confidence and no time pressure, Regulatory Exposure at Level A (cross-border PIPL/PDPO/IA obligations) triggers the hard gate, and the lack of proven automatic fallback paths means an operations director would not approve autonomous disbursement."
+      }
+    }
+  },
+  "banking-customer-service-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "D",
+            "reasoning": "A mailing address change can be immediately reverted by the customer or staff, and answering branch hours has no persistent effect \u2014 fully reversible with no customer impact."
+          },
+          "failure_blast_radius": {
+            "level": "D",
+            "reasoning": "Impact is confined to a single customer's non-financial contact information and a factual inquiry \u2014 no financial exposure, no downstream systems affected."
+          },
+          "regulatory_exposure": {
+            "level": "C",
+            "reasoning": "Updating a mailing address involves personal data under the PDPO, which imposes general compliance obligations for data handling, but there is no specific regulatory mandate governing autonomous address changes in banking."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "This is a conversational customer service interaction with no time pressure \u2014 there is no deadline and the customer can always be transferred to a human agent at any point."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Branch hours and ATM locations are structured reference data maintained by the bank, and the new mailing address is provided directly by the customer \u2014 high-confidence, validated inputs."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "The chatbot interaction should be logged with a clear audit trail showing the customer request and the system's action, but as a compliance officer I require verification that the logging captures the full decision chain including the data change event."
+          },
+          "graceful_degradation": {
+            "level": "D",
+            "reasoning": "If the chatbot fails at any point, the interaction can seamlessly fall back to a human agent queue with no data loss \u2014 the address change either completes or does not, with no partial corruption risk."
+          }
+        },
+        "interpretation": "Strong candidate for autonomy with standard audit trail \u2014 all dimensions at Level C or D; the only caution is ensuring PDPO-compliant logging of the personal data update, which is a standard compliance requirement rather than a barrier to autonomous operation."
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "D",
+            "reasoning": "Both actions \u2014 answering a factual query and updating a mailing address \u2014 are fully reversible; the address can be changed back immediately with no lasting impact."
+          },
+          "failure_blast_radius": {
+            "level": "D",
+            "reasoning": "A wrong answer about branch hours or an incorrect address update affects a single customer with zero financial exposure \u2014 this is contained, low-stakes interaction."
+          },
+          "regulatory_exposure": {
+            "level": "D",
+            "reasoning": "No specific HKMA, SFC, or PCPD regulatory mandate governs answering branch inquiries or processing customer-initiated address changes; standard PDPO data handling applies but imposes no prescriptive AI requirements."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no time pressure whatsoever \u2014 this is a conversational customer service interaction with no deadline, and the customer can re-contact or visit a branch if needed."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Branch hours and ATM locations are structured reference data with high confidence, and the address update is customer-initiated with explicit input \u2014 there is no ambiguity in the data signals."
+          },
+          "accountability_chain": {
+            "level": "D",
+            "reasoning": "The chatbot interaction is fully logged with a complete audit trail of the customer request and system response, providing full transparency and clear accountability to the bank's digital channels team."
+          },
+          "graceful_degradation": {
+            "level": "D",
+            "reasoning": "If the chatbot fails, it can safely fall back to a human agent queue or suggest the customer call the hotline, with no data loss or downstream system impact."
+          }
+        },
+        "interpretation": "Strong candidate for full autonomy \u2014 all dimensions at Level D; this is a textbook low-risk use case where autonomous operation with standard logging delivers immediate customer value with negligible risk."
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "D",
+            "reasoning": "Both actions are fully reversible: answering a factual query has no persistent state change, and a mailing address update can be immediately reverted by the customer or any agent."
+          },
+          "failure_blast_radius": {
+            "level": "D",
+            "reasoning": "Impact is confined to a single customer's non-financial contact information and a factual inquiry \u2014 no financial exposure, no downstream system dependencies, no other customers affected."
+          },
+          "regulatory_exposure": {
+            "level": "D",
+            "reasoning": "No specific regulatory mandate governs answering branch hours or updating a mailing address; standard PDPO data handling applies but imposes no prescriptive AI requirements on this interaction."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no time pressure whatsoever \u2014 this is a conversational customer service interaction with no deadline, and the customer can simply call back or visit a branch if the chatbot fails."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Branch hours and ATM locations are structured, validated reference data maintained by the bank, and the address update is explicitly provided by the customer \u2014 there is no ambiguity or interpretation required."
+          },
+          "accountability_chain": {
+            "level": "D",
+            "reasoning": "The chatbot interaction is fully logged with a clear audit trail \u2014 the customer initiated the request, the system processed it against structured data, and standard chatbot logging captures the entire exchange."
+          },
+          "graceful_degradation": {
+            "level": "D",
+            "reasoning": "If the chatbot fails on either task, the failure mode is safe: the query goes unanswered or the address update does not process, and the customer is routed to a human agent or retries \u2014 no data corruption, no cascading effects."
+          }
+        },
+        "interpretation": "Strong candidate for full autonomy \u2014 all seven dimensions are at Level D, reflecting a low-risk, fully reversible, well-structured interaction with proven fallback paths to human agents."
+      }
+    }
+  },
+  "algo-trading-deployment-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Executed trades are irreversible once filled \u2014 market impact across 80+ equities cannot be unwound, as the Knight Capital $440M loss demonstrates."
+          },
+          "failure_blast_radius": {
+            "level": "A",
+            "reasoning": "Systemic impact across 80+ HKEx equities affecting multiple market participants, with potential market-wide disruption consistent with the Knight Capital precedent."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Algorithmic trading on HKEx falls directly under SFC Circular 24EC55 electronic trading requirements and SFC licensed corporation obligations, making this a directly regulated activity."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "Sub-second trade execution with 4-minute average human response time means damage accrues continuously and human intervention cannot prevent losses during the gap."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "The 15% rejected order increase is a partial anomaly signal \u2014 the agent has not identified the root cause (server misconfiguration) and cannot distinguish deployment error from market conditions or exchange issues."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "The deployment process that allowed one of six servers to miss the update reveals gaps in change management accountability, and the multi-server configuration complicates auditability of which server generated which orders."
+          },
+          "graceful_degradation": {
+            "level": "A",
+            "reasoning": "Failure to act results in continued execution of trades using a deprecated order type across 80+ equities, creating cascading financial losses that compound every second \u2014 the Knight Capital scenario is the canonical example of ungraceful algorithmic trading failure."
+          }
+        },
+        "interpretation": "Autonomy not permitted for continued trading \u2014 multiple Level A dimensions including regulatory exposure and blast radius trigger hard gates. The compliance question is whether the autonomous kill switch itself is acceptable, but from a compliance perspective, even emergency halts carry regulatory notification obligations under SFC rules."
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Executed trades are irreversible and market impact cannot be unwound; even prioritizing speed-to-market, the CRO cannot alter the physical finality of trade settlement."
+          },
+          "failure_blast_radius": {
+            "level": "A",
+            "reasoning": "80+ equities on HKEx with sub-second execution means a malfunctioning algorithm impacts multiple market participants systemically, as the Knight Capital $440M precedent demonstrates \u2014 no positive expected-value argument survives losses of that magnitude."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "SFC Circular 24EC55 and HKEx algorithmic trading rules impose direct regulatory mandates on electronic trading systems, and a deployment error of this nature would trigger immediate regulatory scrutiny."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "Sub-second trade execution with 4-minute average human response means damage accrues continuously and at scale before any human can intervene \u2014 the CRO recognizes this actually argues for an autonomous kill switch rather than human decision-making."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "A 15% spike in rejected orders within 3 minutes is a strong operational signal that something is materially wrong, even though the root cause has not been isolated \u2014 from a revenue-protection standpoint this is sufficient signal to act on."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Trading systems maintain comprehensive order logs, the trading desk is the clearly identified accountable party, and SFC record-keeping requirements ensure a documented decision trail for any halt or continuation decision."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "The agent offers tiered responses (full halt, 90% position reduction, escalation) which provide structured degradation paths, but the underlying server misconfiguration represents an ungraceful failure mode requiring manual intervention to fully resolve."
+          }
+        },
+        "interpretation": "Autonomy not permitted for continued trading due to multiple Level A dimensions, but the CRO would advocate strongly for an autonomous kill switch as the revenue-protecting response \u2014 the 4-minute human response gap is itself the biggest threat to the P&L."
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Executed trades on HKEx are immediately settled and cannot be unwound; market impact from erroneous orders across 80+ equities is irreversible, as the Knight Capital precedent demonstrates."
+          },
+          "failure_blast_radius": {
+            "level": "A",
+            "reasoning": "Sub-second trading across 80+ equities affects multiple market participants and can destabilize the broader market; Knight Capital's $440M loss in 45 minutes shows systemic blast radius from a single deployment error."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "SFC Circular 24EC55 and HKEx algorithmic trading rules impose direct regulatory mandates on electronic trading controls, including pre-trade risk checks and kill switch requirements."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "Trades execute in sub-seconds while average human response is 4 minutes; damage accrues continuously during that gap, making human intervention physically impossible before material losses accumulate."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "The 15% rejected order increase is a partial signal that something is wrong, but the root cause \u2014 one misconfigured server among six \u2014 has not been identified by the agent, leaving uncertainty about whether the anomaly reflects the full scope of the problem."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "The trading desk and deployment pipeline provide identifiable responsible parties, but in a multi-server production environment where one server silently runs stale code, the audit trail for which orders came from which server version has gaps that complicate post-incident attribution."
+          },
+          "graceful_degradation": {
+            "level": "A",
+            "reasoning": "The misconfigured server continued executing deprecated order types without any automatic failover or isolation; the system lacks circuit breakers that would contain the failure to the affected server, allowing errors to cascade across all 80+ equities."
+          }
+        },
+        "interpretation": "Autonomy not permitted for continued trading \u2014 multiple Level A dimensions including blast radius, regulatory exposure, and critically poor graceful degradation make this scenario demand immediate human-in-loop intervention; however, an autonomous kill switch to halt trading is the operationally correct safe-failure path."
+      }
+    }
+  },
+  "genai-data-leakage-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Blocking or deleting a GenAI prompt is easily reversible \u2014 the employee retains the original data and can re-submit after obtaining proper clearance, and the block can be overridden by compliance."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Impact is contained to a single customer's portfolio data in a single employee interaction; no systemic or multi-customer exposure results from either blocking or failing to block."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "HKMA GenAI Circular consumer protection principles, PDPO personal data handling obligations, and PCPD AI Framework data governance requirements all provide applicable regulatory guidance on handling client PII in GenAI contexts, though no single prescriptive mandate governs the DLP blocking action itself."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The data has not yet left the bank's control and the agent can intercept before submission, so there is no urgent time pressure \u2014 the compliance team can review within a normal workflow cycle of days."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "Pattern matching on account numbers, portfolio formatting, and net worth figures provides strong structured signal for PII detection, though false positives on partial matches remain a known caveat of regex-based DLP."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "While the DLP agent logs the detection and action taken, the end-to-end accountability chain \u2014 from employee action through agent decision to compliance review \u2014 requires verified audit trail completeness that a compliance officer would not assume without inspection."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "If the DLP agent fails, the prompt proceeds to the approved internal GenAI tool without blocking \u2014 a contained failure that reverts to the pre-DLP baseline rather than causing cascading system failures."
+          }
+        },
+        "interpretation": "Ready with prerequisites \u2014 the DLP blocking action is easily reversible and contained to a single customer, but HKMA and PDPO regulatory guidance on GenAI data handling requires documented compliance controls and audit trails before autonomous blocking can proceed without human review."
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Blocking a GenAI prompt is easily reversible \u2014 the employee can re-enter the prompt or request an override, with no lasting impact on client service or data."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Impact is contained to a single customer's data within a single employee interaction on an already-approved internal tool, posing no systemic or multi-customer risk."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "HKMA GenAI Circular, PDPO, and PCPD AI Framework provide relevant guidance on PII handling in GenAI contexts, but no prescriptive mandate specifically governs this DLP blocking action."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The data has not left the bank's control and the agent intercepts before submission, so there is no urgency \u2014 normal review workflows over days are acceptable."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "Pattern matching on account numbers and portfolio formatting provides strong signal with known limitations around edge cases like partial matches or false positives on similar numeric patterns."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "The DLP agent logs the detection event, the blocked action, and the employee identity, creating a clear audit trail with an identifiable responsible party in compliance."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "If the agent fails to detect PII the data remains within an approved internal tool, and if it over-blocks the employee simply re-enters the prompt \u2014 failure is contained and recoverable either way."
+          }
+        },
+        "interpretation": "Ready with prerequisites \u2014 the CRO perspective favors autonomy here since blocking is low-impact and easily reversible with strong detection signal, but regulatory guidance on GenAI data handling (HKMA, PDPO, PCPD) requires documented compliance controls before full autonomous deployment."
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Blocking the prompt is easily reversible \u2014 the employee can re-enter the prompt after proper redaction, and the deleted content can be recreated; no permanent operational damage occurs from either blocking or allowing with a warning."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "A failure (false positive block or false negative allow) affects a single customer's data in a single employee interaction \u2014 contained to one account relationship, not a systemic or multi-customer exposure."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "HKMA GenAI Circular, PDPO personal data handling rules, and the PCPD AI Framework provide regulatory guidance on GenAI data governance, but there is no prescriptive mandate specifically governing this DLP action \u2014 it falls under regulatory guidance rather than direct mandate."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The data has not yet left the bank's control and the agent acts before submission, so there is no urgent time pressure \u2014 days-level review workflows are acceptable, and the compliance escalation path operates on normal business timelines."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "Pattern matching on account numbers and portfolio formatting provides strong, structured signal with known limitations \u2014 the DLP agent can reliably detect PII patterns, though edge cases like partial matches or obfuscated data introduce minor caveats."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "The DLP agent logs the detection, the action taken (block/warn/escalate), and the employee identity, creating a clear audit trail with a documented responsible party \u2014 standard for enterprise DLP systems operating under established policy."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "If the DLP agent fails, the fallback is contained \u2014 a missed detection means a single prompt reaches an already-approved internal tool (not an external service), and a false block simply delays the employee's task with no cascading operational impact."
+          }
+        },
+        "interpretation": "Ready with prerequisites \u2014 from an operations perspective, the DLP action has proven fallback paths (block falls back to manual redaction workflow, failure is contained to a single interaction), and all dimensions are at C or better, but regulatory guidance on GenAI data handling requires documented compliance procedures before granting full autonomy."
+      }
+    }
+  },
+  "claims-denial-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Denial can be appealed and overturned, but delayed rehabilitation care for a 78-year-old hip replacement patient risks health deterioration that cannot be fully undone \u2014 reversal requires manual intervention and causes direct patient harm."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "While the immediate impact is a single patient, the UnitedHealth precedent demonstrates that a pattern of algorithmic care denials creates significant legal and reputational exposure affecting the insurer's entire policyholder base and regulatory standing."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Autonomous denial of care against a treating physician's recommendation falls directly under IA policyholder protection requirements and PDPO health data processing obligations, and mirrors the regulatory and legal exposure seen in the UnitedHealth class action precedent."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The 3-day medical reviewer turnaround is acceptable because patient care continues during the review period, meaning delay does not foreclose treatment options or create immediate harm."
+          },
+          "data_confidence": {
+            "level": "A",
+            "reasoning": "The model's recommendation directly conflicts with the treating physician's clinical judgment, and the 40% human override rate for patients over 75 constitutes clear evidence that the model produces ambiguous and unreliable signals for this demographic subpopulation."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "The insurer bears responsibility for the decision, but the audit trail connecting the model's denial rationale to the patient's specific clinical circumstances and the physician's contradicting recommendation contains gaps that would be difficult to defend to regulators."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "An incorrect autonomous denial fails ungracefully \u2014 it triggers an appeals process requiring manual recovery, delays medically necessary care, and creates downstream legal exposure rather than failing into a safe state like routing to human review."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 Regulatory Exposure at Level A (IA policyholder protection) triggers mandatory human oversight, compounded by Level A Data Confidence reflecting the model's demonstrated unreliability for elderly patients and direct conflict with physician judgment."
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "While the denial can be appealed and overturned, delayed rehabilitation care for a 78-year-old hip replacement patient risks health deterioration that cannot be fully reversed, making correction costly even if the administrative decision is reversible."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Impact is contained to a single patient and a single claim interaction; the reputational and class-action risk from a pattern of algorithmic denials is real but speculative at the individual case level, and from a revenue perspective the exposure per case is bounded."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Denying care against a treating physician's recommendation falls squarely under IA policyholder protection requirements and PDPO health data processing obligations, creating direct regulatory mandate exposure that even an aggressive revenue posture cannot discount."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The 3-day medical reviewer turnaround is well within normal claims processing timelines and patient care continues during the review period, so days are acceptable and there is no urgency forcing autonomous action."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "The 40% human override rate for patients over 75 is a clear signal that the model's predictions are unreliable for this demographic, creating conflicting signals between the model's standard recovery prediction and real-world clinical outcomes despite otherwise structured claims data."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Claims adjudication systems typically maintain clear audit trails of decision inputs, model outputs, and denial rationale, and the responsible insurer is identifiable, though the CRO notes that strong logging makes autonomous operation more defensible."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "A wrongful denial defaults to an appeal process that requires manual intervention and causes patient disruption during the review period; while the system does not cascade-fail, the recovery path is ungraceful and creates friction for both the patient and the insurer."
+          }
+        },
+        "interpretation": "Human-in-loop required due to Level A regulatory exposure from IA policyholder protection mandates \u2014 even from a CRO perspective that favors autonomy, the 40% override rate for this demographic and direct regulatory mandate make autonomous denial indefensible, though the moderate time pressure and single-patient blast radius suggest the review process itself could be streamlined for speed."
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "A denial can be appealed and overturned, but the delayed rehabilitation care during the appeal window may cause measurable health deterioration in a 78-year-old patient, making full reversal of harm difficult."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "The immediate impact is contained to a single patient and claim, though from an operational standpoint a pattern of such denials creates systemic reputational and legal exposure that could escalate."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Autonomously denying care against a treating physician's recommendation directly engages IA policyholder protection requirements and PDPO health data obligations, and mirrors the exact pattern that triggered class action litigation in the UnitedHealth precedent."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The 3-day medical reviewer turnaround is operationally acceptable since the patient continues receiving care during the review period, meaning routing to a human does not create a gap in service delivery."
+          },
+          "data_confidence": {
+            "level": "A",
+            "reasoning": "The 40% human override rate for patients over 75 is a clear signal that the model's predictions are unreliable for this demographic \u2014 the agent would be acting on data it demonstrably gets wrong nearly half the time for this subpopulation."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "The model's denial recommendation can be logged and attributed, but the reasoning chain from structured data to denial decision lacks the clinical transparency needed for a healthcare coverage determination, leaving gaps in the audit trail."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "The system has a viable fallback path \u2014 routing to a medical reviewer with a 3-day turnaround \u2014 and patient care continues during review, so failure to make an autonomous decision degrades into a contained and recoverable state."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 the 40% override rate for this demographic represents an operationally unacceptable failure rate for autonomous denial, the regulatory exposure is direct, and the existing 3-day medical reviewer pathway provides a proven fallback with no gap in patient care."
+      }
+    }
+  },
+  "cross-border-model-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "The model itself can be taken offline, but credit decisions already made for rejected HK applicants are hard to reverse and cause material customer impact through denied credit access."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "A flawed model affects multiple HK credit applicants simultaneously and exposes the bank to regulatory sanctions across two jurisdictions, constituting multi-customer impact with significant financial and reputational exposure."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Model weights trained on 2 million mainland personal records directly trigger PIPL Articles 38-43 cross-border transfer requirements, GBA Standard Contract obligations, PDPO compliance, and HKMA model risk management expectations \u2014 a direct regulatory mandate across multiple frameworks."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no time pressure whatsoever \u2014 the deployment decision can wait weeks or months for thorough legal review of PIPL transfer requirements and GBA Standard Contract compliance without any business cost."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "While the model shows strong backtest performance, mainland behavioral data (e-commerce activity, social media signals, payment patterns) may not generalize to Hong Kong applicants, and the legal classification of model weights as derived personal information under PIPL remains uncertain."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Responsibility spans the Shenzhen subsidiary (model development), HK data science team (deployment), and compliance function (approval), creating a cross-border multi-entity accountability chain with gaps in how model development decisions in mainland China are audited from Hong Kong."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "If the model proves flawed or non-compliant, it can be taken offline and the bank can fall back to existing credit scoring methods, though credit decisions already issued during deployment require individual remediation."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 Regulatory Exposure at Level A due to PIPL cross-border transfer obligations for mainland-trained model weights makes autonomous approval impermissible; legal review of GBA Standard Contract applicability and PIPL Article 38-43 compliance must precede any deployment decision."
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "The model itself can be taken offline, but credit decisions already issued to rejected HK applicants are hard to reverse \u2014 the CRO acknowledges downstream lending decisions create real correction costs."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Multiple HK credit applicants would be affected by a poorly generalizing model, and the bank's regulatory standing is at risk if PIPL transfer requirements were not met \u2014 this is multi-customer impact even if expected value looks positive."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "PIPL Articles 38-43 directly govern cross-border transfer of data derived from mainland personal information, GBA Standard Contracts may apply, and HKMA model risk expectations add a second regulatory layer \u2014 even a revenue-focused CRO cannot dismiss dual-jurisdiction compliance mandates."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no deployment deadline and the decision can wait for legal review without any loss of competitive position or revenue opportunity."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "The model shows strong backtest performance on mainland data, but the CRO recognizes that mainland behavioral signals (e-commerce, social media, payment patterns) may not generalize to HK applicants \u2014 strong signal with known caveats."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "The cross-border nature of the model pipeline \u2014 developed by the Shenzhen subsidiary, deployed by the HK data science team \u2014 creates accountability gaps between legal entities, even though responsible parties can be identified."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "The model can be taken offline and the bank can fall back to existing credit scoring methods, containing the failure without cascading effects \u2014 the CRO sees this as a manageable operational switchback."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 the dual-jurisdiction regulatory exposure (PIPL cross-border transfer rules and HKMA model risk expectations) is Level A, triggering a hard gate regardless of the otherwise manageable risk profile; the CRO recommends fast-tracking the legal review rather than bypassing it."
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "The model itself can be taken offline, but credit decisions already made for rejected applicants require costly manual remediation and cannot be seamlessly undone."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Multiple Hong Kong credit applicants would be affected by flawed scoring decisions, and the bank's regulatory standing with both HKMA and mainland authorities is at risk."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Model weights trained on 2 million mainland personal records likely constitute derived personal information under PIPL Articles 38-43, triggering cross-border transfer requirements across two jurisdictions (PIPL and PDPO) with potential GBA Standard Contract obligations."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "There is no time pressure on this deployment decision \u2014 it can wait for full legal and compliance review without any operational cost."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "While backtests show good performance, mainland behavioral data (payment patterns, e-commerce, social media signals) may not generalize to Hong Kong applicants, creating a material domain-shift uncertainty that an operations director cannot overlook."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "The model was developed by the Shenzhen subsidiary and would be deployed by the Hong Kong entity, creating a cross-border handoff with potential gaps in the audit trail between development and production accountability."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "If the model is blocked or fails in production, the bank can fall back to its existing credit scoring processes \u2014 the failure is contained and recoverable, though switching requires operational coordination."
+          }
+        },
+        "interpretation": "Human-in-loop required \u2014 the dual-jurisdiction regulatory exposure (PIPL cross-border transfer for model weights derived from mainland personal data) demands legal review before deployment, and the domain-shift uncertainty in the training data makes autonomous approval operationally irresponsible despite the lack of time pressure."
+      }
+    }
+  },
+  "_run": {
+    "model": "claude-code-subagent",
+    "stats": {
+      "total": 18,
+      "successful": 18,
+      "failed": 0,
+      "missing": 0
+    },
+    "assembled_at": "2026-03-21T15:38:24.024589+00:00"
+  }
+}

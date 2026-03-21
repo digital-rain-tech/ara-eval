@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "C",
+      "reasoning": "Blocking a GenAI prompt is easily reversible — the employee can re-enter the prompt or request an override, with no lasting impact on client service or data."
+    },
+    "failure_blast_radius": {
+      "level": "C",
+      "reasoning": "Impact is contained to a single customer's data within a single employee interaction on an already-approved internal tool, posing no systemic or multi-customer risk."
+    },
+    "regulatory_exposure": {
+      "level": "B",
+      "reasoning": "HKMA GenAI Circular, PDPO, and PCPD AI Framework provide relevant guidance on PII handling in GenAI contexts, but no prescriptive mandate specifically governs this DLP blocking action."
+    },
+    "human_override_latency": {
+      "level": "C",
+      "reasoning": "The data has not left the bank's control and the agent intercepts before submission, so there is no urgency — normal review workflows over days are acceptable."
+    },
+    "data_confidence": {
+      "level": "C",
+      "reasoning": "Pattern matching on account numbers and portfolio formatting provides strong signal with known limitations around edge cases like partial matches or false positives on similar numeric patterns."
+    },
+    "accountability_chain": {
+      "level": "C",
+      "reasoning": "The DLP agent logs the detection event, the blocked action, and the employee identity, creating a clear audit trail with an identifiable responsible party in compliance."
+    },
+    "graceful_degradation": {
+      "level": "C",
+      "reasoning": "If the agent fails to detect PII the data remains within an approved internal tool, and if it over-blocks the employee simply re-enters the prompt — failure is contained and recoverable either way."
+    }
+  },
+  "interpretation": "Ready with prerequisites — the CRO perspective favors autonomy here since blocking is low-impact and easily reversible with strong detection signal, but regulatory guidance on GenAI data handling (HKMA, PDPO, PCPD) requires documented compliance controls before full autonomous deployment."
+}

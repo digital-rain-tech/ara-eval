@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "B",
+      "reasoning": "The model itself can be taken offline, but credit decisions already made for rejected HK applicants are hard to reverse and cause material customer impact through denied credit access."
+    },
+    "failure_blast_radius": {
+      "level": "B",
+      "reasoning": "A flawed model affects multiple HK credit applicants simultaneously and exposes the bank to regulatory sanctions across two jurisdictions, constituting multi-customer impact with significant financial and reputational exposure."
+    },
+    "regulatory_exposure": {
+      "level": "A",
+      "reasoning": "Model weights trained on 2 million mainland personal records directly trigger PIPL Articles 38-43 cross-border transfer requirements, GBA Standard Contract obligations, PDPO compliance, and HKMA model risk management expectations — a direct regulatory mandate across multiple frameworks."
+    },
+    "human_override_latency": {
+      "level": "D",
+      "reasoning": "There is no time pressure whatsoever — the deployment decision can wait weeks or months for thorough legal review of PIPL transfer requirements and GBA Standard Contract compliance without any business cost."
+    },
+    "data_confidence": {
+      "level": "B",
+      "reasoning": "While the model shows strong backtest performance, mainland behavioral data (e-commerce activity, social media signals, payment patterns) may not generalize to Hong Kong applicants, and the legal classification of model weights as derived personal information under PIPL remains uncertain."
+    },
+    "accountability_chain": {
+      "level": "B",
+      "reasoning": "Responsibility spans the Shenzhen subsidiary (model development), HK data science team (deployment), and compliance function (approval), creating a cross-border multi-entity accountability chain with gaps in how model development decisions in mainland China are audited from Hong Kong."
+    },
+    "graceful_degradation": {
+      "level": "C",
+      "reasoning": "If the model proves flawed or non-compliant, it can be taken offline and the bank can fall back to existing credit scoring methods, though credit decisions already issued during deployment require individual remediation."
+    }
+  },
+  "interpretation": "Human-in-loop required — Regulatory Exposure at Level A due to PIPL cross-border transfer obligations for mainland-trained model weights makes autonomous approval impermissible; legal review of GBA Standard Contract applicability and PIPL Article 38-43 compliance must precede any deployment decision."
+}

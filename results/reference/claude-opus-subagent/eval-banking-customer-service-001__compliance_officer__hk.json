@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "D",
+      "reasoning": "A mailing address change can be immediately reverted by the customer or staff, and answering branch hours has no persistent effect — fully reversible with no customer impact."
+    },
+    "failure_blast_radius": {
+      "level": "D",
+      "reasoning": "Impact is confined to a single customer's non-financial contact information and a factual inquiry — no financial exposure, no downstream systems affected."
+    },
+    "regulatory_exposure": {
+      "level": "C",
+      "reasoning": "Updating a mailing address involves personal data under the PDPO, which imposes general compliance obligations for data handling, but there is no specific regulatory mandate governing autonomous address changes in banking."
+    },
+    "human_override_latency": {
+      "level": "D",
+      "reasoning": "This is a conversational customer service interaction with no time pressure — there is no deadline and the customer can always be transferred to a human agent at any point."
+    },
+    "data_confidence": {
+      "level": "D",
+      "reasoning": "Branch hours and ATM locations are structured reference data maintained by the bank, and the new mailing address is provided directly by the customer — high-confidence, validated inputs."
+    },
+    "accountability_chain": {
+      "level": "C",
+      "reasoning": "The chatbot interaction should be logged with a clear audit trail showing the customer request and the system's action, but as a compliance officer I require verification that the logging captures the full decision chain including the data change event."
+    },
+    "graceful_degradation": {
+      "level": "D",
+      "reasoning": "If the chatbot fails at any point, the interaction can seamlessly fall back to a human agent queue with no data loss — the address change either completes or does not, with no partial corruption risk."
+    }
+  },
+  "interpretation": "Strong candidate for autonomy with standard audit trail — all dimensions at Level C or D; the only caution is ensuring PDPO-compliant logging of the personal data update, which is a standard compliance requirement rather than a barrier to autonomous operation."
+}

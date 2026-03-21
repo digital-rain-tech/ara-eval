@@ -166,7 +166,8 @@ How well do different judge models reproduce human-authored reference fingerprin
 
 | Model | Done | F2 | Recall | Precision | FN | FP | Dim Match | Diff |
 |-------|-----:|---:|-------:|----------:|---:|---:|----------:|-----:|
-| Claude Opus 4.6 (manual) | 18/18 | **89%** | **87%** | **100%** | 2 | 0 | **89%** | 26% |
+| Claude Opus 4.6 (subagent) | 18/18 | **100%** | **100%** | **100%** | 0 | 0 | **87%** | 31% |
+| Claude Opus 4.6 (manual) | 18/18 | 89% | 87% | **100%** | 2 | 0 | **89%** | 26% |
 | Hunter Alpha (1T, stealth) | 18/18 | 74% | 73% | 79% | 4 | 3 | 43% | 64% |
 | Healer Alpha (omni, stealth) | 18/18 | 62% | 60% | 75% | 6 | 3 | 49% | 60% |
 | Arcee Trinity (free) | 18/18 | 57% | 53% | 80% | 7 | 2 | 48% | **69%** |
@@ -178,7 +179,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 - **Dim Match** = exact level match vs reference across all 7 dimensions.
 - **Diff** = personality differentiation (% of dimensions where CO/CRO/Ops disagree). Higher = more stakeholder perspective sensitivity.
 
-The Claude Opus 4.6 result is a manual expert analysis (single-pass, full document context), not a pipeline evaluation. See `results/reference/claude-opus-analysis/` for methodology and reasoning. For pipeline-comparable results, use `labs/lab-05-subagent-evaluation.py`.
+Two Claude Opus 4.6 entries reflect different evaluation methods: **subagent** dispatched 18 isolated evaluations via `labs/lab-05-subagent-evaluation.py` (pipeline-comparable, no cross-scenario anchoring); **manual** was a single-pass expert analysis with full document context. Raw results in `results/reference/`.
 
 *Last updated: 2026-03-21. See [`docs/adr/007-free-model-comparison.md`](docs/adr/007-free-model-comparison.md) for full testing notes.*
 

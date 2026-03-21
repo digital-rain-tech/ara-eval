@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "B",
+      "reasoning": "While the denial can be appealed and overturned, delayed rehabilitation care for a 78-year-old hip replacement patient risks health deterioration that cannot be fully reversed, making correction costly even if the administrative decision is reversible."
+    },
+    "failure_blast_radius": {
+      "level": "C",
+      "reasoning": "Impact is contained to a single patient and a single claim interaction; the reputational and class-action risk from a pattern of algorithmic denials is real but speculative at the individual case level, and from a revenue perspective the exposure per case is bounded."
+    },
+    "regulatory_exposure": {
+      "level": "A",
+      "reasoning": "Denying care against a treating physician's recommendation falls squarely under IA policyholder protection requirements and PDPO health data processing obligations, creating direct regulatory mandate exposure that even an aggressive revenue posture cannot discount."
+    },
+    "human_override_latency": {
+      "level": "C",
+      "reasoning": "The 3-day medical reviewer turnaround is well within normal claims processing timelines and patient care continues during the review period, so days are acceptable and there is no urgency forcing autonomous action."
+    },
+    "data_confidence": {
+      "level": "B",
+      "reasoning": "The 40% human override rate for patients over 75 is a clear signal that the model's predictions are unreliable for this demographic, creating conflicting signals between the model's standard recovery prediction and real-world clinical outcomes despite otherwise structured claims data."
+    },
+    "accountability_chain": {
+      "level": "C",
+      "reasoning": "Claims adjudication systems typically maintain clear audit trails of decision inputs, model outputs, and denial rationale, and the responsible insurer is identifiable, though the CRO notes that strong logging makes autonomous operation more defensible."
+    },
+    "graceful_degradation": {
+      "level": "B",
+      "reasoning": "A wrongful denial defaults to an appeal process that requires manual intervention and causes patient disruption during the review period; while the system does not cascade-fail, the recovery path is ungraceful and creates friction for both the patient and the insurer."
+    }
+  },
+  "interpretation": "Human-in-loop required due to Level A regulatory exposure from IA policyholder protection mandates — even from a CRO perspective that favors autonomy, the 40% override rate for this demographic and direct regulatory mandate make autonomous denial indefensible, though the moderate time pressure and single-patient blast radius suggest the review process itself could be streamlined for speed."
+}

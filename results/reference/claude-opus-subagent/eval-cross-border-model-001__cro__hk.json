@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "B",
+      "reasoning": "The model itself can be taken offline, but credit decisions already issued to rejected HK applicants are hard to reverse — the CRO acknowledges downstream lending decisions create real correction costs."
+    },
+    "failure_blast_radius": {
+      "level": "B",
+      "reasoning": "Multiple HK credit applicants would be affected by a poorly generalizing model, and the bank's regulatory standing is at risk if PIPL transfer requirements were not met — this is multi-customer impact even if expected value looks positive."
+    },
+    "regulatory_exposure": {
+      "level": "A",
+      "reasoning": "PIPL Articles 38-43 directly govern cross-border transfer of data derived from mainland personal information, GBA Standard Contracts may apply, and HKMA model risk expectations add a second regulatory layer — even a revenue-focused CRO cannot dismiss dual-jurisdiction compliance mandates."
+    },
+    "human_override_latency": {
+      "level": "D",
+      "reasoning": "There is no deployment deadline and the decision can wait for legal review without any loss of competitive position or revenue opportunity."
+    },
+    "data_confidence": {
+      "level": "C",
+      "reasoning": "The model shows strong backtest performance on mainland data, but the CRO recognizes that mainland behavioral signals (e-commerce, social media, payment patterns) may not generalize to HK applicants — strong signal with known caveats."
+    },
+    "accountability_chain": {
+      "level": "B",
+      "reasoning": "The cross-border nature of the model pipeline — developed by the Shenzhen subsidiary, deployed by the HK data science team — creates accountability gaps between legal entities, even though responsible parties can be identified."
+    },
+    "graceful_degradation": {
+      "level": "C",
+      "reasoning": "The model can be taken offline and the bank can fall back to existing credit scoring methods, containing the failure without cascading effects — the CRO sees this as a manageable operational switchback."
+    }
+  },
+  "interpretation": "Human-in-loop required — the dual-jurisdiction regulatory exposure (PIPL cross-border transfer rules and HKMA model risk expectations) is Level A, triggering a hard gate regardless of the otherwise manageable risk profile; the CRO recommends fast-tracking the legal review rather than bypassing it."
+}

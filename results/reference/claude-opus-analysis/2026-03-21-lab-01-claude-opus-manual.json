@@ -1,0 +1,247 @@
+{
+  "_run": {
+    "model": "claude-opus-4.6-manual",
+    "method": "Manual expert analysis in Claude Code conversation (not pipeline). See claude-opus-analysis.json for full reasoning and methodology.",
+    "date": "2026-03-21"
+  },
+  "insurance-claims-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "C"}
+        }
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "B"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "D"},
+          "accountability_chain": {"level": "C"},
+          "graceful_degradation": {"level": "C"}
+        }
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "C"}
+        }
+      }
+    }
+  },
+  "banking-customer-service-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {"level": "D"},
+          "failure_blast_radius": {"level": "D"},
+          "regulatory_exposure": {"level": "D"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "D"},
+          "accountability_chain": {"level": "D"},
+          "graceful_degradation": {"level": "D"}
+        }
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {"level": "D"},
+          "failure_blast_radius": {"level": "D"},
+          "regulatory_exposure": {"level": "D"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "D"},
+          "accountability_chain": {"level": "D"},
+          "graceful_degradation": {"level": "D"}
+        }
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {"level": "D"},
+          "failure_blast_radius": {"level": "D"},
+          "regulatory_exposure": {"level": "D"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "D"},
+          "accountability_chain": {"level": "D"},
+          "graceful_degradation": {"level": "D"}
+        }
+      }
+    }
+  },
+  "algo-trading-deployment-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {"level": "A"},
+          "failure_blast_radius": {"level": "A"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "A"},
+          "data_confidence": {"level": "B"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "A"}
+        }
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {"level": "A"},
+          "failure_blast_radius": {"level": "A"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "A"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "C"},
+          "graceful_degradation": {"level": "A"}
+        }
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {"level": "A"},
+          "failure_blast_radius": {"level": "A"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "A"},
+          "data_confidence": {"level": "B"},
+          "accountability_chain": {"level": "C"},
+          "graceful_degradation": {"level": "A"}
+        }
+      }
+    }
+  },
+  "genai-data-leakage-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {"level": "C"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "B"},
+          "human_override_latency": {"level": "C"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "C"},
+          "graceful_degradation": {"level": "C"}
+        }
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {"level": "C"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "B"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "C"},
+          "graceful_degradation": {"level": "D"}
+        }
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {"level": "C"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "B"},
+          "human_override_latency": {"level": "C"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "C"},
+          "graceful_degradation": {"level": "C"}
+        }
+      }
+    }
+  },
+  "claims-denial-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "C"},
+          "data_confidence": {"level": "A"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "B"}
+        }
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "B"},
+          "human_override_latency": {"level": "C"},
+          "data_confidence": {"level": "B"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "B"}
+        }
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "C"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "C"},
+          "data_confidence": {"level": "A"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "B"}
+        }
+      }
+    }
+  },
+  "cross-border-model-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "B"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "B"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "C"}
+        }
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "B"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "C"},
+          "graceful_degradation": {"level": "C"}
+        }
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {"level": "B"},
+          "failure_blast_radius": {"level": "B"},
+          "regulatory_exposure": {"level": "A"},
+          "human_override_latency": {"level": "D"},
+          "data_confidence": {"level": "C"},
+          "accountability_chain": {"level": "B"},
+          "graceful_degradation": {"level": "C"}
+        }
+      }
+    }
+  }
+}

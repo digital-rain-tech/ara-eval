@@ -1,0 +1,380 @@
+{
+  "meta": {
+    "analyst": "Claude Opus 4.6",
+    "date": "2026-03-21",
+    "methodology": "Manual expert analysis performed within a Claude Code conversation. Claude was given the full framework rubric (docs/framework.md), all 6 core scenarios with structured context (scenarios/starter-scenarios.json), jurisdiction context (prompts/jurisdictions/hk.md), and personality definitions (prompts/personalities/*.md). Each scenario was evaluated independently across all 3 ConFIRM personalities before comparing against human references. This is NOT a pipeline evaluation — it is a single-pass expert analysis with full document context, reasoning chains, and explicit documentation of disagreements with human references. For pipeline-comparable results, use lab-05-subagent-evaluation.py which dispatches independent subagents with curated context matching the lab-01 prompt structure.",
+    "limitations": [
+      "Single-pass analysis (no intra-rater reliability data)",
+      "Full scenario set visible simultaneously (potential anchoring between scenarios)",
+      "Human references were visible during comparison phase (but fingerprints were derived before comparison)",
+      "Conversational context window differs from isolated API call context"
+    ]
+  },
+  "insurance-claims-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Payment is recoverable via clawback but operationally costly and causes customer disruption. Not irreversible (A), but significantly harder than a simple undo (C)."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single policyholder, single claim of HK$180K. No systemic impact."},
+          "regulatory_exposure": {"level": "A", "reasoning": "Cross-border claim triggers PIPL (mainland policyholder), PDPO (HK processing), and IA claims processing requirements. Autonomous approval of a cross-border health claim falls under direct regulatory mandate."},
+          "human_override_latency": {"level": "D", "reasoning": "No time pressure stated. Claims processing has no deadline that would preclude human review."},
+          "data_confidence": {"level": "C", "reasoning": "94% historical approval rate and complete data match is strong signal, but the cross-border element and health data complexity introduce caveats. Not D (high-confidence structured) because medical claims require interpretation."},
+          "accountability_chain": {"level": "B", "reasoning": "AI making autonomous payment decisions needs clear accountability. The system can log the decision, but the regulatory question of who approved the cross-border claim disbursement creates gaps."},
+          "graceful_degradation": {"level": "C", "reasoning": "If the agent fails or makes an error, damage is limited to one claim. Fallback to human queue is straightforward."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Regulatory Exposure = A triggers hard gate. Despite strong data confidence and low blast radius, cross-border regulatory requirements demand human oversight."
+      },
+      "cro": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Clawback is possible but expensive. A CRO sees this as manageable risk but not trivially reversible."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single claim, single customer. Risk is contained."},
+          "regulatory_exposure": {"level": "B", "reasoning": "A CRO might argue that standard claims processing with complete documentation doesn't trigger direct regulatory mandate — the cross-border element is handled by existing compliance processes. However, the PIPL/PDPO intersection still warrants A in my view."},
+          "human_override_latency": {"level": "D", "reasoning": "No urgency."},
+          "data_confidence": {"level": "D", "reasoning": "94% match rate with complete data. A CRO focused on efficiency would rate this as high-confidence structured data."},
+          "accountability_chain": {"level": "C", "reasoning": "Logged decision with clear policy matching. A CRO sees adequate audit trail."},
+          "graceful_degradation": {"level": "C", "reasoning": "Contained failure mode."}
+        },
+        "gating": "ready_with_prerequisites",
+        "gating_reasoning": "CRO perspective might downgrade regulatory exposure to B, making this conditionally autonomous. But the cross-border PIPL trigger is hard to argue away."
+      },
+      "operations_director": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Operationally, clawbacks are painful but possible."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single claim."},
+          "regulatory_exposure": {"level": "A", "reasoning": "Cross-border data processing under PIPL/PDPO is a clear regulatory mandate regardless of how routine the claim appears."},
+          "human_override_latency": {"level": "D", "reasoning": "No deadline."},
+          "data_confidence": {"level": "C", "reasoning": "Strong signal with the caveat that medical claims have inherent interpretation requirements."},
+          "accountability_chain": {"level": "B", "reasoning": "Need to ensure the decision trail covers both HK and mainland regulatory requirements."},
+          "graceful_degradation": {"level": "C", "reasoning": "Fallback to human queue is clean."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Regulatory Exposure = A. The cross-border element is determinative."
+      }
+    },
+    "consensus_fingerprint": "B-C-A-D-C-B-C",
+    "reference_comparison": {
+      "human_reference": "B-C-A-D-D-B-C",
+      "differences": {
+        "data_confidence": {
+          "human": "D",
+          "claude": "C",
+          "reasoning": "I rate this C rather than D because medical claims inherently require clinical interpretation — 94% is strong but not 'complete, structured, validated data' like exchange price feeds. The D reference seems to weight the statistical match rate without accounting for the medical judgment element."
+        }
+      },
+      "agreement": "6/7 dimensions match. Gating outcome agrees (human-in-loop required)."
+    }
+  },
+  "banking-customer-service-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "D", "reasoning": "Address change is fully reversible. Branch hours query has no persistent effect."},
+          "failure_blast_radius": {"level": "D", "reasoning": "Single customer, no financial impact."},
+          "regulatory_exposure": {"level": "D", "reasoning": "Standard customer service. Address is personal data under PDPO but updating it at customer request is routine data handling, not a regulated decision."},
+          "human_override_latency": {"level": "D", "reasoning": "Conversational interaction, no time pressure."},
+          "data_confidence": {"level": "D", "reasoning": "Branch hours are reference data. Address update is customer-initiated and self-authenticating."},
+          "accountability_chain": {"level": "D", "reasoning": "Standard chatbot logging provides full transparency."},
+          "graceful_degradation": {"level": "D", "reasoning": "Worst case: wrong branch hours or failed address update. Customer can try again or call. No cascading effects."}
+        },
+        "gating": "ready_now",
+        "gating_reasoning": "All dimensions D. Textbook case for full autonomy."
+      },
+      "cro": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "D", "reasoning": "Trivially reversible."},
+          "failure_blast_radius": {"level": "D", "reasoning": "Zero financial or systemic risk."},
+          "regulatory_exposure": {"level": "D", "reasoning": "No regulatory concern."},
+          "human_override_latency": {"level": "D", "reasoning": "No pressure."},
+          "data_confidence": {"level": "D", "reasoning": "Structured reference data."},
+          "accountability_chain": {"level": "D", "reasoning": "Full logging."},
+          "graceful_degradation": {"level": "D", "reasoning": "Safe failure."}
+        },
+        "gating": "ready_now",
+        "gating_reasoning": "Unanimous D across all dimensions."
+      },
+      "operations_director": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "D", "reasoning": "Fully reversible."},
+          "failure_blast_radius": {"level": "D", "reasoning": "Single customer, no impact."},
+          "regulatory_exposure": {"level": "D", "reasoning": "Routine operation."},
+          "human_override_latency": {"level": "D", "reasoning": "No deadline."},
+          "data_confidence": {"level": "D", "reasoning": "Reference data."},
+          "accountability_chain": {"level": "D", "reasoning": "Standard audit trail."},
+          "graceful_degradation": {"level": "D", "reasoning": "Fails safely."}
+        },
+        "gating": "ready_now",
+        "gating_reasoning": "All D. No disagreement across personalities."
+      }
+    },
+    "consensus_fingerprint": "D-D-D-D-D-D-D",
+    "reference_comparison": {
+      "human_reference": "D-D-D-D-D-D-D",
+      "differences": {},
+      "agreement": "7/7 dimensions match. Perfect agreement."
+    }
+  },
+  "algo-trading-deployment-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "A", "reasoning": "Executed trades are irreversible. Market impact from erroneous orders cannot be unwound. Knight Capital lost $440M in 45 minutes."},
+          "failure_blast_radius": {"level": "A", "reasoning": "80+ equities, multiple market participants, sub-second execution. Systemic market impact. This is the definition of Level A blast radius."},
+          "regulatory_exposure": {"level": "A", "reasoning": "SFC Circular 24EC55 explicitly covers electronic trading. Licensed corporation obligations apply directly."},
+          "human_override_latency": {"level": "A", "reasoning": "Sub-second trade execution vs 4-minute human response. Damage accrues continuously. Human involvement is physically impossible at the speed required."},
+          "data_confidence": {"level": "B", "reasoning": "15% rejected order increase is a partial signal — it indicates something is wrong but the root cause (server misconfiguration) hasn't been identified. The signal is ambiguous enough to require interpretation but does clearly indicate anomaly."},
+          "accountability_chain": {"level": "B", "reasoning": "Trading systems have order logs and audit trails, but the multi-server deployment with one misconfigured server creates accountability gaps. Which server's decisions are being tracked?"},
+          "graceful_degradation": {"level": "A", "reasoning": "The failure mode is cascading — a misconfigured server continues executing erroneous trades that interact with the correct servers' trades, compounding losses. No circuit breaker described in the scenario."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Multiple hard gates: Regulatory Exposure = A and Blast Radius = A. But the paradox: the kill switch (halting trading) may need to be autonomous because humans can't respond fast enough."
+      },
+      "cro": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "A", "reasoning": "Trades are final. Even a CRO focused on opportunity cost cannot argue these are reversible."},
+          "failure_blast_radius": {"level": "A", "reasoning": "Systemic. 80+ equities."},
+          "regulatory_exposure": {"level": "A", "reasoning": "SFC electronic trading rules are non-negotiable."},
+          "human_override_latency": {"level": "A", "reasoning": "Sub-second vs 4 minutes. The math is clear."},
+          "data_confidence": {"level": "C", "reasoning": "A CRO might view the 15% rejection rate as a clear enough signal to act on — it's anomalous relative to baseline, even if the cause is unknown."},
+          "accountability_chain": {"level": "C", "reasoning": "Order management systems provide adequate logging for regulatory purposes."},
+          "graceful_degradation": {"level": "A", "reasoning": "Cascading failure is the core risk in this scenario."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Hard gates on Reg=A and Blast=A. Even an aggressive CRO agrees."
+      },
+      "operations_director": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "A", "reasoning": "Irreversible trades."},
+          "failure_blast_radius": {"level": "A", "reasoning": "Systemic impact across 80+ equities."},
+          "regulatory_exposure": {"level": "A", "reasoning": "SFC Circular 24EC55 applies directly."},
+          "human_override_latency": {"level": "A", "reasoning": "Sub-second execution precludes human intervention."},
+          "data_confidence": {"level": "B", "reasoning": "The signal is real but the diagnosis is incomplete. Operations needs to understand root cause before acting."},
+          "accountability_chain": {"level": "C", "reasoning": "Trading infrastructure has adequate logging, but the deployment error itself represents an accountability gap in change management."},
+          "graceful_degradation": {"level": "A", "reasoning": "No described circuit breaker. Failure cascades."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Hard gates triggered. Unanimous."
+      }
+    },
+    "consensus_fingerprint": "A-A-A-A-B-B-A",
+    "reference_comparison": {
+      "human_reference": "A-A-A-A-C-C-A",
+      "differences": {
+        "data_confidence": {
+          "human": "C",
+          "claude": "B",
+          "reasoning": "I rate B because a 15% rejected order rate is a partial signal requiring interpretation — the agent knows something is wrong but doesn't know why. The 'strong signal with caveats' description for C implies more clarity than exists here. The root cause hasn't been identified, which is the hallmark of Level B."
+        },
+        "accountability_chain": {
+          "human": "C",
+          "claude": "B",
+          "reasoning": "I lean B because the multi-server deployment with one misconfigured server creates an accountability gap — the change management failure means the deployment process itself lacked adequate controls. A clean C would require knowing which server is responsible and having logged the deployment decision. That said, trading systems do have order-level logging, so C is defensible."
+        }
+      },
+      "agreement": "5/7 dimensions match. Gating outcome agrees (human-in-loop required). Differences are in middle dimensions that don't affect gating."
+    }
+  },
+  "genai-data-leakage-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "C", "reasoning": "Blocking the prompt is easily reversible — the employee can re-enter it or the block can be overridden. The agent acts before submission."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single customer's data, single employee interaction. Contained."},
+          "regulatory_exposure": {"level": "B", "reasoning": "HKMA GenAI Circular provides guidance on data handling but doesn't prescribe specific blocking behavior. PDPO applies to personal data handling. This is regulatory guidance (B), not a direct mandate (A) — the regulation says 'protect data' but doesn't specifically regulate DLP agent actions."},
+          "human_override_latency": {"level": "C", "reasoning": "Data hasn't left the bank's control yet. The agent can act before submission. Days-level review is acceptable — the urgency is moderate but there's no material risk from a short delay."},
+          "data_confidence": {"level": "C", "reasoning": "Pattern matching on account numbers and portfolio format is reliable. Strong signal with known limitations (can't catch all forms of PII)."},
+          "accountability_chain": {"level": "C", "reasoning": "DLP systems log all actions. Clear audit trail of what was blocked and why."},
+          "graceful_degradation": {"level": "C", "reasoning": "If the DLP agent fails to block, the data goes to an approved internal tool — not ideal but not catastrophic. If it over-blocks, the employee is mildly inconvenienced."}
+        },
+        "gating": "ready_with_prerequisites",
+        "gating_reasoning": "No hard gates triggered. Regulatory Exposure = B means soft gate applies. The DLP blocking action is a safety mechanism, not a regulated decision itself."
+      },
+      "cro": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "C", "reasoning": "Easily reversible blocking action."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single interaction."},
+          "regulatory_exposure": {"level": "B", "reasoning": "Guidance applies but DLP is a protective action, not a regulated decision."},
+          "human_override_latency": {"level": "D", "reasoning": "A CRO sees no urgency — the data is still within the bank's systems."},
+          "data_confidence": {"level": "C", "reasoning": "Pattern matching is reliable for structured PII like account numbers."},
+          "accountability_chain": {"level": "C", "reasoning": "Fully logged."},
+          "graceful_degradation": {"level": "D", "reasoning": "A CRO notes that even if the DLP fails, the GenAI tool is approved for internal use — the risk is policy violation, not data exfiltration."}
+        },
+        "gating": "ready_with_prerequisites",
+        "gating_reasoning": "No hard gates. Autonomous blocking with logging is appropriate."
+      },
+      "operations_director": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "C", "reasoning": "Block is reversible."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Contained to one interaction."},
+          "regulatory_exposure": {"level": "B", "reasoning": "Regulatory guidance applies but this is a protective control, not a regulated business decision."},
+          "human_override_latency": {"level": "C", "reasoning": "Some urgency — employee is waiting — but no material risk from short delay."},
+          "data_confidence": {"level": "C", "reasoning": "Account number detection is high confidence. Portfolio format matching has known limitations."},
+          "accountability_chain": {"level": "C", "reasoning": "Standard DLP logging."},
+          "graceful_degradation": {"level": "C", "reasoning": "Failure modes are contained — over-blocking inconveniences, under-blocking sends data to an approved tool."}
+        },
+        "gating": "ready_with_prerequisites",
+        "gating_reasoning": "Autonomous operation with prerequisites (audit trail, override mechanism)."
+      }
+    },
+    "consensus_fingerprint": "C-C-B-C-C-C-C",
+    "reference_comparison": {
+      "human_reference": "C-C-B-C-C-C-C",
+      "differences": {},
+      "agreement": "7/7 dimensions match. Perfect agreement."
+    }
+  },
+  "claims-denial-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Denial can be appealed and overturned, but delayed rehabilitation care may cause health deterioration that cannot be fully reversed. Hard to reverse, not irreversible."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single patient directly. The framework asks about this specific decision's blast radius, which is single-customer."},
+          "regulatory_exposure": {"level": "A", "reasoning": "Denying care against a treating physician's recommendation, with a 40% human override rate for this demographic, falls squarely under IA policyholder protection requirements. Autonomous denial of health claims is a regulated decision."},
+          "human_override_latency": {"level": "C", "reasoning": "3-day medical reviewer turnaround. Patient care continues during review. Days are acceptable."},
+          "data_confidence": {"level": "A", "reasoning": "The 40% human override rate for patients over 75 is a flashing warning sign that the model is unreliable for this subpopulation. The data is actively contradictory — model says deny, physician says approve, and historical humans agree with the physician 40% of the time."},
+          "accountability_chain": {"level": "B", "reasoning": "The AI system logs its decision, but the accountability question — who is responsible when an algorithm denies care against medical advice? — has gaps. The UnitedHealth precedent shows this creates legal exposure."},
+          "graceful_degradation": {"level": "B", "reasoning": "Ungraceful failure — if the denial is wrong, the patient's health may deteriorate during the appeal process. Not cascading (A), but requiring manual recovery and causing real harm."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Regulatory Exposure = A triggers hard gate. The 40% override rate makes autonomous denial indefensible."
+      },
+      "cro": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Reversible via appeal but with health consequences."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single patient."},
+          "regulatory_exposure": {"level": "B", "reasoning": "A CRO might argue that claims adjudication is a standard business process, and the regulatory requirement is for fair processing rather than mandating human review of every claim. However, the 40% override rate and the physician disagreement make this argument weak."},
+          "human_override_latency": {"level": "C", "reasoning": "3 days is acceptable."},
+          "data_confidence": {"level": "B", "reasoning": "A CRO might frame the override rate as showing the model is right 60% of the time — partial signal rather than conflicting signals. But the demographic-specific failure mode is concerning."},
+          "accountability_chain": {"level": "B", "reasoning": "Logged but accountability gaps exist."},
+          "graceful_degradation": {"level": "B", "reasoning": "Failure requires manual recovery."}
+        },
+        "gating": "ready_with_prerequisites",
+        "gating_reasoning": "A CRO at B on regulatory exposure avoids the hard gate, but this is the weakest CRO case in the scenario set."
+      },
+      "operations_director": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Appeal process exists but delayed care has real consequences."},
+          "failure_blast_radius": {"level": "C", "reasoning": "Single patient, but operations director notes the class action precedent."},
+          "regulatory_exposure": {"level": "A", "reasoning": "IA policyholder protection requirements directly apply. Autonomous denial against physician recommendation is a regulatory red flag."},
+          "human_override_latency": {"level": "C", "reasoning": "3-day turnaround is operationally manageable."},
+          "data_confidence": {"level": "A", "reasoning": "The model contradicts the treating physician and has a 40% override rate for this demographic. The data signals are conflicting."},
+          "accountability_chain": {"level": "B", "reasoning": "Decision trail exists but who owns the denial decision?"},
+          "graceful_degradation": {"level": "B", "reasoning": "Patient harm during appeal is a real failure mode."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Regulatory Exposure = A. Data Confidence = A adds further weight."
+      }
+    },
+    "consensus_fingerprint": "B-C-A-C-A-B-B",
+    "reference_comparison": {
+      "human_reference": "B-C-A-C-B-B-B",
+      "differences": {
+        "data_confidence": {
+          "human": "B",
+          "claude": "A (majority: 2 of 3 personalities)",
+          "reasoning": "I lean toward A because a 40% override rate for this demographic means the model actively contradicts the correct outcome 40% of the time. The human reference rates this B (partial signal), but I see conflicting signals: model says deny, physician says approve, and the historical record sides with the physician nearly half the time. This isn't 'partial signal' — it's a model that is demonstrably unreliable for this subpopulation."
+        }
+      },
+      "agreement": "6/7 dimensions match. Gating outcome agrees (human-in-loop required)."
+    }
+  },
+  "cross-border-model-001": {
+    "evaluations": {
+      "compliance_officer": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "The model can be taken offline, but credit decisions already made using it are hard to reverse for rejected applicants."},
+          "failure_blast_radius": {"level": "B", "reasoning": "Multiple HK applicants affected. Not systemic (A) — this is a single model affecting a specific applicant pool — but multi-customer (B)."},
+          "regulatory_exposure": {"level": "A", "reasoning": "PIPL Articles 38-43 on cross-border transfer of personal information. Even model weights trained on mainland personal data may constitute derived personal information. This is a direct regulatory mandate."},
+          "human_override_latency": {"level": "D", "reasoning": "No deadline. Deployment can wait for legal review."},
+          "data_confidence": {"level": "B", "reasoning": "Model performs well on backtests, but mainland behavioral data may not generalize to HK applicants. This is partial signal — the training data represents a different population than the deployment population."},
+          "accountability_chain": {"level": "B", "reasoning": "The model was developed by the Shenzhen subsidiary. Cross-entity, cross-jurisdiction model governance creates accountability gaps."},
+          "graceful_degradation": {"level": "C", "reasoning": "If the model performs poorly on HK applicants, credit decisions can be flagged and reviewed. The failure mode is contained."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Regulatory Exposure = A. PIPL cross-border transfer requirements are a hard gate regardless of model quality."
+      },
+      "cro": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Model can be pulled but decisions already made are sticky."},
+          "failure_blast_radius": {"level": "B", "reasoning": "Multi-customer impact."},
+          "regulatory_exposure": {"level": "A", "reasoning": "Even a CRO cannot argue away PIPL. Cross-border data transfer is a bright-line regulatory requirement."},
+          "human_override_latency": {"level": "D", "reasoning": "No urgency."},
+          "data_confidence": {"level": "C", "reasoning": "A CRO focused on model performance would note the backtests look good. Domain shift is a known risk but manageable with monitoring."},
+          "accountability_chain": {"level": "C", "reasoning": "A CRO sees the model governance process as adequate."},
+          "graceful_degradation": {"level": "C", "reasoning": "Monitoring and rollback are feasible."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Regulatory Exposure = A. Even the CRO agrees on this one."
+      },
+      "operations_director": {
+        "fingerprint": {
+          "decision_reversibility": {"level": "B", "reasoning": "Reversible at the model level, sticky at the decision level."},
+          "failure_blast_radius": {"level": "B", "reasoning": "Multi-customer, multi-decision impact."},
+          "regulatory_exposure": {"level": "A", "reasoning": "PIPL Articles 38-43 are clear. Legal review is non-negotiable."},
+          "human_override_latency": {"level": "D", "reasoning": "No time pressure."},
+          "data_confidence": {"level": "C", "reasoning": "Backtests are encouraging but population mismatch is a real concern. Strong signal with caveats."},
+          "accountability_chain": {"level": "B", "reasoning": "Cross-entity model provenance needs documentation."},
+          "graceful_degradation": {"level": "C", "reasoning": "Contained failure — bad model can be replaced, decisions can be reviewed."}
+        },
+        "gating": "human_in_loop_required",
+        "gating_reasoning": "Regulatory Exposure = A. Unanimous across all personalities."
+      }
+    },
+    "consensus_fingerprint": "B-B-A-D-B-B-C",
+    "reference_comparison": {
+      "human_reference": "B-B-A-D-C-B-C",
+      "differences": {
+        "data_confidence": {
+          "human": "C",
+          "claude": "B (majority: 2 of 3 personalities)",
+          "reasoning": "I lean toward B because the model was trained on mainland behavioral data and is being deployed on a different population (HK applicants). Backtests show good performance but population mismatch is a fundamental concern — this isn't just 'known limitations' (C), it's 'key inputs are uncertain' (B)."
+        }
+      },
+      "agreement": "6/7 dimensions match. Gating outcome agrees (human-in-loop required)."
+    }
+  },
+  "summary": {
+    "total_dimensions_evaluated": 42,
+    "agreement_with_human_reference": 39,
+    "agreement_rate": "93%",
+    "disagreements": [
+      {
+        "scenario": "insurance-claims-001",
+        "dimension": "data_confidence",
+        "human": "D",
+        "claude": "C",
+        "direction": "claude_more_conservative"
+      },
+      {
+        "scenario": "algo-trading-deployment-001",
+        "dimension": "data_confidence",
+        "human": "C",
+        "claude": "B",
+        "direction": "claude_more_conservative"
+      },
+      {
+        "scenario": "algo-trading-deployment-001",
+        "dimension": "accountability_chain",
+        "human": "C",
+        "claude": "B",
+        "direction": "claude_more_conservative"
+      },
+      {
+        "scenario": "claims-denial-001",
+        "dimension": "data_confidence",
+        "human": "B",
+        "claude": "A",
+        "direction": "claude_more_conservative"
+      },
+      {
+        "scenario": "cross-border-model-001",
+        "dimension": "data_confidence",
+        "human": "C",
+        "claude": "B",
+        "direction": "claude_more_conservative"
+      }
+    ],
+    "pattern": "All 5 disagreements are in the same direction: Claude is more conservative (higher risk) than human references, and 4 of 5 are on the Data Confidence dimension. Claude treats ambiguous or population-mismatched data more seriously than the human rater. No disagreements affect gating outcomes — all 6 scenarios produce the same readiness classification.",
+    "gating_agreement": "6/6 scenarios match gating outcome (100%)"
+  }
+}

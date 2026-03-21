@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "C",
+      "reasoning": "Blocking the prompt is easily reversible — the employee can re-enter the prompt after proper redaction, and the deleted content can be recreated; no permanent operational damage occurs from either blocking or allowing with a warning."
+    },
+    "failure_blast_radius": {
+      "level": "C",
+      "reasoning": "A failure (false positive block or false negative allow) affects a single customer's data in a single employee interaction — contained to one account relationship, not a systemic or multi-customer exposure."
+    },
+    "regulatory_exposure": {
+      "level": "B",
+      "reasoning": "HKMA GenAI Circular, PDPO personal data handling rules, and the PCPD AI Framework provide regulatory guidance on GenAI data governance, but there is no prescriptive mandate specifically governing this DLP action — it falls under regulatory guidance rather than direct mandate."
+    },
+    "human_override_latency": {
+      "level": "C",
+      "reasoning": "The data has not yet left the bank's control and the agent acts before submission, so there is no urgent time pressure — days-level review workflows are acceptable, and the compliance escalation path operates on normal business timelines."
+    },
+    "data_confidence": {
+      "level": "C",
+      "reasoning": "Pattern matching on account numbers and portfolio formatting provides strong, structured signal with known limitations — the DLP agent can reliably detect PII patterns, though edge cases like partial matches or obfuscated data introduce minor caveats."
+    },
+    "accountability_chain": {
+      "level": "C",
+      "reasoning": "The DLP agent logs the detection, the action taken (block/warn/escalate), and the employee identity, creating a clear audit trail with a documented responsible party — standard for enterprise DLP systems operating under established policy."
+    },
+    "graceful_degradation": {
+      "level": "C",
+      "reasoning": "If the DLP agent fails, the fallback is contained — a missed detection means a single prompt reaches an already-approved internal tool (not an external service), and a false block simply delays the employee's task with no cascading operational impact."
+    }
+  },
+  "interpretation": "Ready with prerequisites — from an operations perspective, the DLP action has proven fallback paths (block falls back to manual redaction workflow, failure is contained to a single interaction), and all dimensions are at C or better, but regulatory guidance on GenAI data handling requires documented compliance procedures before granting full autonomy."
+}

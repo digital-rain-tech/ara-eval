@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "B",
+      "reasoning": "A denial can be appealed and overturned, but the delayed rehabilitation care during the appeal window may cause measurable health deterioration in a 78-year-old patient, making full reversal of harm difficult."
+    },
+    "failure_blast_radius": {
+      "level": "C",
+      "reasoning": "The immediate impact is contained to a single patient and claim, though from an operational standpoint a pattern of such denials creates systemic reputational and legal exposure that could escalate."
+    },
+    "regulatory_exposure": {
+      "level": "A",
+      "reasoning": "Autonomously denying care against a treating physician's recommendation directly engages IA policyholder protection requirements and PDPO health data obligations, and mirrors the exact pattern that triggered class action litigation in the UnitedHealth precedent."
+    },
+    "human_override_latency": {
+      "level": "C",
+      "reasoning": "The 3-day medical reviewer turnaround is operationally acceptable since the patient continues receiving care during the review period, meaning routing to a human does not create a gap in service delivery."
+    },
+    "data_confidence": {
+      "level": "A",
+      "reasoning": "The 40% human override rate for patients over 75 is a clear signal that the model's predictions are unreliable for this demographic — the agent would be acting on data it demonstrably gets wrong nearly half the time for this subpopulation."
+    },
+    "accountability_chain": {
+      "level": "B",
+      "reasoning": "The model's denial recommendation can be logged and attributed, but the reasoning chain from structured data to denial decision lacks the clinical transparency needed for a healthcare coverage determination, leaving gaps in the audit trail."
+    },
+    "graceful_degradation": {
+      "level": "C",
+      "reasoning": "The system has a viable fallback path — routing to a medical reviewer with a 3-day turnaround — and patient care continues during review, so failure to make an autonomous decision degrades into a contained and recoverable state."
+    }
+  },
+  "interpretation": "Human-in-loop required — the 40% override rate for this demographic represents an operationally unacceptable failure rate for autonomous denial, the regulatory exposure is direct, and the existing 3-day medical reviewer pathway provides a proven fallback with no gap in patient care."
+}

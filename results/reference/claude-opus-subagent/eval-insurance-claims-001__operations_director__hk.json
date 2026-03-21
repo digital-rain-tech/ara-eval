@@ -1,0 +1,33 @@
+{
+  "dimensions": {
+    "decision_reversibility": {
+      "level": "B",
+      "reasoning": "Disbursing HK$180,000 is operationally recoverable via clawback but requires manual intervention, cross-border coordination with the Shenzhen policyholder, and introduces delay and customer friction — a hard-to-reverse action in practice."
+    },
+    "failure_blast_radius": {
+      "level": "C",
+      "reasoning": "Impact is contained to a single policyholder and a single claim of HK$180,000 — no systemic or multi-customer exposure."
+    },
+    "regulatory_exposure": {
+      "level": "A",
+      "reasoning": "Cross-border claim from a Shenzhen policyholder triggers PIPL for mainland personal data, PDPO for HK-side processing, and Insurance Authority claims processing requirements — a direct regulatory mandate under multiple frameworks."
+    },
+    "human_override_latency": {
+      "level": "D",
+      "reasoning": "There is no time pressure on claims approval — the claim sits in a processing queue and can wait days or weeks without material consequence to the policyholder or the insurer."
+    },
+    "data_confidence": {
+      "level": "D",
+      "reasoning": "Claim data is complete, matches policy terms, diagnosis aligns with treatment, and 94% historical approval rate for similar claims — this is high-confidence structured data with minimal ambiguity."
+    },
+    "accountability_chain": {
+      "level": "B",
+      "reasoning": "The responsible party (claims processing system) is identifiable, but the cross-border nature introduces gaps in the audit trail — mainland data handling, PIPL compliance documentation, and the AI-to-payment handoff lack fully transparent end-to-end logging."
+    },
+    "graceful_degradation": {
+      "level": "C",
+      "reasoning": "If the agent fails or produces an incorrect approval, the failure is contained to one claim and recoverable through existing appeals and clawback processes, though it does not fail into a known-safe state automatically — it requires manual correction rather than automatic fallback to a human queue."
+    }
+  },
+  "interpretation": "Human-in-loop required — despite strong data confidence and no time pressure, Regulatory Exposure at Level A (cross-border PIPL/PDPO/IA obligations) triggers the hard gate, and the lack of proven automatic fallback paths means an operations director would not approve autonomous disbursement."
+}
