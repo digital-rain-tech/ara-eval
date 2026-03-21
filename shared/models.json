@@ -2,21 +2,35 @@
   {
     "id": "arcee-ai/trinity-large-preview:free",
     "label": "Arcee Trinity",
-    "note": "default, 100% reliable",
+    "note": "default free model, 100% completion rate",
     "success_rate": "18/18",
     "is_default": true
   },
   {
     "id": "openrouter/hunter-alpha",
     "label": "Hunter Alpha",
-    "note": "most aggressive rater",
+    "note": "best gate accuracy among API models",
     "success_rate": "18/18",
     "is_default": false
   },
   {
     "id": "openrouter/healer-alpha",
     "label": "Healer Alpha",
-    "note": "fastest, over-classifies",
+    "note": "highest dimension match among API models",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "claude-opus-4.6-subagent",
+    "label": "Claude Opus 4.6 (subagent)",
+    "note": "perfect gate detection, isolated subagent pipeline",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "claude-opus-4.6-manual",
+    "label": "Claude Opus 4.6 (manual)",
+    "note": "expert analysis, highest dimension match",
     "success_rate": "18/18",
     "is_default": false
   }
