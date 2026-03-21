@@ -164,13 +164,13 @@ See [`labs/README.md`](labs/README.md) for exercises and key questions. Course s
 
 How well do different judge models reproduce human-authored reference fingerprints? Run `python labs/lab-04-inter-model-comparison.py` to regenerate.
 
-| Model | Done | F2 | Recall | Precision | FN | FP | Dim Match | Diff |
-|-------|-----:|---:|-------:|----------:|---:|---:|----------:|-----:|
-| Claude Opus 4.6 (subagent) | 18/18 | **100%** | **100%** | **100%** | 0 | 0 | **87%** | 31% |
-| Claude Opus 4.6 (manual) | 18/18 | 89% | 87% | **100%** | 2 | 0 | **89%** | 26% |
-| Hunter Alpha (1T, stealth) | 18/18 | 74% | 73% | 79% | 4 | 3 | 43% | 64% |
-| Healer Alpha (omni, stealth) | 18/18 | 62% | 60% | 75% | 6 | 3 | 49% | 60% |
-| Arcee Trinity (free) | 18/18 | 57% | 53% | 80% | 7 | 2 | 48% | **69%** |
+| Model | Done | F2 | Recall | Prec | FN | FP | Dim | Diff | Bias |
+|-------|-----:|---:|-------:|-----:|---:|---:|----:|-----:|------|
+| Claude Opus 4.6 (subagent) | 18/18 | **100%** | **100%** | **100%** | 0 | 0 | **87%** | 31% | Calibrated |
+| Claude Opus 4.6 (manual) | 18/18 | 89% | 87% | **100%** | 2 | 0 | **89%** | 26% | Calibrated |
+| Hunter Alpha (1T, stealth) | 18/18 | 74% | 73% | 79% | 4 | 3 | 43% | 64% | Noisy |
+| Healer Alpha (omni, stealth) | 18/18 | 62% | 60% | 75% | 6 | 3 | 49% | 60% | Sleepy |
+| Arcee Trinity (free) | 18/18 | 57% | 53% | 80% | 7 | 2 | 48% | **69%** | Sleepy |
 
 - **F2** = F-beta score (beta=2): weights recall 4x over precision. The primary ranking metric — penalises missed gates heavily.
 - **Recall** = of gates that should fire, how many did? (1.0 = no missed gates). A model that blocks everything scores 100% here.
@@ -178,6 +178,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 - **FN** = false negatives (missed gates — dangerous). **FP** = false positives (fired gates that shouldn't — conservative but wrong).
 - **Dim Match** = exact level match vs reference across all 7 dimensions.
 - **Diff** = personality differentiation (% of dimensions where CO/CRO/Ops disagree). Higher = more stakeholder perspective sensitivity.
+- **Bias** = error direction. *Calibrated*: few errors. *Sleepy*: misses real risks (high FN, low FP). *Jittery*: over-triggers (high FP, low FN). *Noisy*: errors in both directions.
 
 Two Claude Opus 4.6 entries reflect different evaluation methods: **subagent** dispatched 18 isolated evaluations via `labs/lab-05-subagent-evaluation.py` (pipeline-comparable, no cross-scenario anchoring); **manual** was a single-pass expert analysis with full document context. Raw results in `results/reference/`.
 

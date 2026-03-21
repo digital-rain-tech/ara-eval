@@ -166,6 +166,18 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
     else:
         gate_f2 = 0.0
 
+    # Error bias classification
+    fn = hard_gate_false_neg
+    fp = hard_gate_false_pos
+    if fn + fp <= 2:
+        bias = "calibrated"
+    elif fn >= 2 * fp and fn > fp:
+        bias = "sleepy"      # misses real risks
+    elif fp >= 2 * fn and fp > fn:
+        bias = "jittery"     # over-triggers
+    else:
+        bias = "noisy"       # errors in both directions
+
     per_dim_accuracy = {}
     for dim in DIMENSIONS:
         if per_dim_total[dim] > 0:
@@ -188,6 +200,7 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
         "hard_gate_false_negatives": hard_gate_false_neg,
         "hard_gate_false_positives": hard_gate_false_pos,
         "hard_gate_total": hard_gate_total,
+        "bias": bias,
         "dimension_match_rate": dim_match_rate,
         "dimension_matches": dim_matches,
         "dimension_total": dim_total,
@@ -207,8 +220,8 @@ def print_leaderboard(scores: list[dict]):
     # Sort by F2 (safety-weighted composite), then dimension match rate
     scores.sort(key=lambda s: (s["gate_f2"], s["dimension_match_rate"]), reverse=True)
 
-    print(f"\n  {'MODEL':<26} {'DONE':>5} {'F2':>5} {'RECALL':>7} {'PREC':>6} {'FN':>4} {'FP':>4} {'DIM':>5} {'DIFF':>5}")
-    print(f"  {'-'*26} {'-'*5} {'-'*5} {'-'*7} {'-'*6} {'-'*4} {'-'*4} {'-'*5} {'-'*5}")
+    print(f"\n  {'MODEL':<26} {'DONE':>5} {'F2':>5} {'RECALL':>7} {'PREC':>6} {'FN':>4} {'FP':>4} {'DIM':>5} {'DIFF':>5}  {'BIAS':<11}")
+    print(f"  {'-'*26} {'-'*5} {'-'*5} {'-'*7} {'-'*6} {'-'*4} {'-'*4} {'-'*5} {'-'*5}  {'-'*11}")
 
     for s in scores:
         complete = f"{s['successful']}/{s['total']}"
@@ -219,7 +232,8 @@ def print_leaderboard(scores: list[dict]):
         fp = str(s["hard_gate_false_positives"])
         dim_match = f"{s['dimension_match_rate']:.0%}"
         diff = f"{s['personality_differentiation_rate']:.0%}"
-        print(f"  {s['model']:<26} {complete:>5} {f2:>5} {recall:>7} {prec:>6} {fn:>4} {fp:>4} {dim_match:>5} {diff:>5}")
+        bias = s["bias"]
+        print(f"  {s['model']:<26} {complete:>5} {f2:>5} {recall:>7} {prec:>6} {fn:>4} {fp:>4} {dim_match:>5} {diff:>5}  {bias:<11}")
 
     print(f"\n  F2 = F-beta score (beta=2): weights recall 4x over precision — the primary ranking metric")
     print(f"  RECALL = gate recall: of gates that should fire, how many did? (1.0 = no missed gates)")
@@ -228,6 +242,7 @@ def print_leaderboard(scores: list[dict]):
     print(f"  FP = false positives (over-fired gates — conservative but wrong)")
     print(f"  DIM = exact dimension-level match vs reference")
     print(f"  DIFF = personality differentiation (% of dims where CO/CRO/Ops disagree)")
+    print(f"  BIAS = error direction: calibrated | sleepy (misses risks) | jittery (over-triggers) | noisy (both)")
 
     # Per-dimension breakdown
     print(f"\n{'='*90}")
