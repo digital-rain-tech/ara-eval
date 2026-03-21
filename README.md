@@ -164,19 +164,23 @@ See [`labs/README.md`](labs/README.md) for exercises and key questions. Course s
 
 How well do different judge models reproduce human-authored reference fingerprints? Run `python labs/lab-04-inter-model-comparison.py` to regenerate.
 
-| Model | Completion | Gate Accuracy | False Neg | False Pos | Dim Match | Differentiation |
-|-------|-----------|---------------|-----------|-----------|-----------|-----------------|
-| Hunter Alpha (1T, stealth) | 18/18 | **81%** | 4 | 3 | 43% | 64% |
-| Healer Alpha (omni, stealth) | 18/18 | 75% | 6 | 3 | **49%** | 60% |
-| Arcee Trinity (free) | 18/18 | 75% | 7 | 2 | 48% | **69%** |
+| Model | Done | F2 | Recall | Precision | FN | FP | Dim Match | Diff |
+|-------|-----:|---:|-------:|----------:|---:|---:|----------:|-----:|
+| Claude Opus 4.6 (manual) | 18/18 | **89%** | **87%** | **100%** | 2 | 0 | **89%** | 26% |
+| Hunter Alpha (1T, stealth) | 18/18 | 74% | 73% | 79% | 4 | 3 | 43% | 64% |
+| Healer Alpha (omni, stealth) | 18/18 | 62% | 60% | 75% | 6 | 3 | 49% | 60% |
+| Arcee Trinity (free) | 18/18 | 57% | 53% | 80% | 7 | 2 | 48% | **69%** |
 
-- **Gate Accuracy** = correct hard gate detection (Regulatory=A, Blast Radius=A). The safety-critical metric.
-- **False Neg** = missed a gate that should fire. Dangerous.
-- **False Pos** = fired a gate that shouldn't. Conservative but wrong.
+- **F2** = F-beta score (beta=2): weights recall 4x over precision. The primary ranking metric — penalises missed gates heavily.
+- **Recall** = of gates that should fire, how many did? (1.0 = no missed gates). A model that blocks everything scores 100% here.
+- **Precision** = of gates that fired, how many were correct? (1.0 = no false alarms). Prevents gaming recall by rejecting everything.
+- **FN** = false negatives (missed gates — dangerous). **FP** = false positives (fired gates that shouldn't — conservative but wrong).
 - **Dim Match** = exact level match vs reference across all 7 dimensions.
-- **Differentiation** = % of dimensions where the 3 personality variants disagree. Higher = more stakeholder perspective sensitivity.
+- **Diff** = personality differentiation (% of dimensions where CO/CRO/Ops disagree). Higher = more stakeholder perspective sensitivity.
 
-*Last updated: 2026-03-15. See [`docs/adr/007-free-model-comparison.md`](docs/adr/007-free-model-comparison.md) for full testing notes.*
+The Claude Opus 4.6 result is a manual expert analysis (single-pass, full document context), not a pipeline evaluation. See `results/reference/claude-opus-analysis/` for methodology and reasoning. For pipeline-comparable results, use `labs/lab-05-subagent-evaluation.py`.
+
+*Last updated: 2026-03-21. See [`docs/adr/007-free-model-comparison.md`](docs/adr/007-free-model-comparison.md) for full testing notes.*
 
 ## Contributing
 
