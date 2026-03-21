@@ -18,8 +18,9 @@ scenarios/custom/
 .env
 .env.local
 
-# Claude local settings
+# Claude local settings and memory
 .claude/settings.local.json
+.claude/projects/*/memory/
 
 # IDE
 .vscode/
