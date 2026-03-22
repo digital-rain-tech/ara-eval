@@ -140,7 +140,11 @@ python labs/generate-report.py <run-id>    # get run-id from eval output or view
 #    - shared/leaderboard.json — add new model entry in rank order (by F2 score)
 #    - shared/models.json — add new model to registry with label and notes
 
-# 6. Archive the previous leaderboard
+# 6. Update README.md leaderboard table (auto-generated from shared/leaderboard.json)
+python labs/update-readme-leaderboard.py
+python labs/update-readme-leaderboard.py --check   # CI: exits 1 if stale
+
+# 7. Archive the previous leaderboard
 #    - shared/archive/ contains dated snapshots of previous leaderboard.json versions
 #    - shared/archive/index.json is the browsable index of all snapshots
 #    - Add a new entry to index.json describing what changed

@@ -12,96 +12,7 @@ Developed by [IRAI Labs](https://irai.co) × [Digital Rain Technologies](https:/
 
 ## What This Is
 
-The framework evaluates operational domains across 7 dimensions, producing a **risk fingerprint** — a pattern of level classifications (A–D) that preserves reasoning rather than collapsing it into a single score. Gating rules then determine readiness: which domains are ready now, which need prerequisites, which should stay human-in-loop.
-
-## Quickstart
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate   # macOS / Linux
-# .venv\Scripts\activate    # Windows (Command Prompt)
-
-pip install -r requirements.txt
-pip install -e .   # install ara_eval package
-```
-
-Add your OpenRouter API key to `.env.local`:
-```
-OPENROUTER_API_KEY=your-key-here
-```
-
-Run the labs:
-```bash
-python3 labs/lab-01-risk-fingerprinting.py             # risk fingerprinting (6 scenarios × 3 personalities)
-python3 labs/lab-01-risk-fingerprinting.py --structured # with structured input decomposition
-python3 labs/lab-01-risk-fingerprinting.py --all        # all 13 scenarios
-python3 labs/lab-02-grounding-experiment.py             # regulatory grounding experiment
-python3 labs/lab-03-intra-rater-reliability.py          # intra-rater reliability (5 reps default)
-```
-
-Default model: **Arcee Trinity Large** (`arcee-ai/trinity-large-preview:free`) via OpenRouter — zero cost. Swap models without touching code:
-```bash
-ARA_MODEL=qwen/qwen3-235b-a22b-2507 python3 labs/lab-01-risk-fingerprinting.py  # paid tier
-```
-
-See [`docs/models.md`](docs/models.md) for alternatives and pricing.
-
-Browse results:
-```bash
-python3 labs/view-requests.py              # list runs
-python3 labs/view-requests.py --last       # show most recent run
-python3 labs/view-requests.py --stats      # aggregate stats
-python3 labs/view-requests.py detail <id>  # full request/response detail
-```
-
-Output goes to date-stamped subdirectories under `results/` (gitignored): JSON results, a `latest` symlink, and `ara-eval.db` (SQLite request log with full provenance). Malformed LLM responses are retried up to 2 times automatically.
-
-## Web Interface
-
-A Next.js web app for interactive evaluation and adversarial red-teaming.
-
-```bash
-cd web
-npm install
-npm run dev          # http://localhost:3000
-```
-
-**Evaluate page** — Split-pane layout: system prompt inspector (left) shows what the model sees; scenario input and results (right) shows fingerprint matrix, gating verdict, and stakeholder disagreements. Four input modes: pre-loaded scenarios (instant reference results), free text, or structured form.
-
-**Chat page** — Two modes:
-- **Agent Mode** (primary): Select a scenario, get an AI agent constrained by its risk fingerprint. Try to get it to violate its guardrails. Challenge banner shows attack targets from A-rated dimensions.
-- **Judge Mode**: Chat directly with the LLM evaluation judge. Swap personality, jurisdiction, and rubric mid-conversation to probe context sensitivity.
-
-Both modes persist to SQLite. Sessions survive page refresh.
-
-**Deployment:**
-```bash
-# Railway (recommended — supports SQLite)
-railway login && railway init
-railway add --service ara-eval-web
-railway service ara-eval-web
-railway variables set OPENROUTER_API_KEY=your-key
-railway up
-railway domain         # get public URL
-```
-
-See [`docs/adr/013-railway-deployment.md`](docs/adr/013-railway-deployment.md) for details.
-
-## Repository Structure
-
-```
-docs/               # Framework specification, rubric definitions, model guide
-  course-formats/   # 5-week MBA and 10-week undergraduate syllabi
-  adr/              # Architecture Decision Records (13)
-labs/               # Runnable Python labs (see below)
-prompts/            # LLM prompt templates (system, user, rubric, jurisdictions, agent persona)
-scenarios/          # Starter scenario library (JSON)
-shared/             # Structured data shared across projects (dimensions, models, leaderboard, challenges)
-web/                # Next.js web interface (evaluate + adversarial chat)
-results/            # Output (gitignored) — date-stamped JSON + SQLite log
-```
-
-## The 7 Dimensions
+The framework evaluates operational domains across **7 dimensions**, producing a **risk fingerprint** — a pattern of level classifications (A–D) that preserves reasoning rather than collapsing it into a single score. Deterministic gating rules then classify readiness: ready now, ready with prerequisites, or human-in-loop required.
 
 | # | Dimension | Core Question |
 |---|-----------|---------------|
@@ -113,104 +24,132 @@ results/            # Output (gitignored) — date-stamped JSON + SQLite log
 | 06 | Accountability Chain | When the agent acts, who is responsible? Can you audit the decision? |
 | 07 | Graceful Degradation | When the agent fails, does it fail safely — or cascade? |
 
-Each dimension uses a four-level classification (A–D) with narrative anchors:
-- **Level A** — Highest risk / most restrictive
-- **Level B** — Significant risk / requires safeguards
-- **Level C** — Moderate risk / manageable with audit trails
-- **Level D** — Low risk / suitable for autonomy
+**Gating rules** — certain dimensions override everything else, like aviation safety checklists:
+- **Regulatory Exposure = A** → autonomy not permitted
+- **Blast Radius = A** → human oversight required
+- **Reversibility ≥ C** AND **Blast Radius ≤ C** → autonomy possible with audit trail
 
-## Gating Rules
+## Quickstart
 
-Certain dimensions override everything else — like aviation safety checklists:
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt && pip install -e .
+```
 
-- If **Regulatory Exposure = A** → autonomy not permitted
-- If **Blast Radius = A** → human oversight required
-- If **Reversibility ≥ C** AND **Blast Radius ≤ C** → autonomy possible with audit trail
+Add your OpenRouter API key to `.env.local`:
+```
+OPENROUTER_API_KEY=your-key-here
+```
 
-## HK-Specific Context
+Run the core evaluation:
+```bash
+python3 labs/lab-01-risk-fingerprinting.py --all --structured
+```
 
-The framework synthesizes international governance standards (NIST AI RMF, EU AI Act, Singapore Model AI Governance) with Hong Kong's unique regulatory landscape:
+Default model: **Arcee Trinity Large** (free via OpenRouter). Swap models without touching code:
+```bash
+ARA_MODEL=qwen/qwen3-235b-a22b-2507 python3 labs/lab-01-risk-fingerprinting.py --all --structured
+```
 
-- HKMA GenAI Circular (Nov 2024)
-- SFC Circular 24EC55 (Nov 2024)
-- PCPD AI Framework (Jun 2024)
-- Cross-border complexity: PIPL, GBA data flows, CAC algorithm registration
+See [`docs/models.md`](docs/models.md) for alternatives and pricing.
+
+## Model Leaderboard
+
+How well do different judge models reproduce human-authored reference fingerprints? Regenerate with `python labs/lab-04-inter-model-comparison.py`, then `python labs/update-readme-leaderboard.py`.
+
+<!-- LEADERBOARD:START -->
+| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias |
+|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|
+| 1 | Claude Opus 4.6 | subagent | **100%** | **100%** | **100%** | 87% | 31% | Calibrated |
+| 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Calibrated |
+| 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Calibrated |
+| 4 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 89% | 26% | Calibrated |
+| 5 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery |
+| 6 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy |
+| 7 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy |
+| 8 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy |
+| 9 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 49% | 60% | Sleepy |
+| 10 | Arcee Trinity (free) | api | 57% | 53% | 80% | 48% | 69% | Sleepy |
+| 11 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken |
+
+*11 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-03-22.*
+
+**Metrics:** **F2** = F-beta (beta=2), weights recall 4x over precision. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both).
+<!-- LEADERBOARD:END -->
+
+Previous leaderboard versions are archived in [`shared/archive/`](shared/archive/) with an [`index.json`](shared/archive/index.json) for browsing.
 
 ## How It Works
 
 1. Scenarios describe potential autonomous AI actions (e.g., "an AI blocks a $2M wire transfer at 2:47 AM")
-2. An LLM judge evaluates each scenario from 3 stakeholder perspectives (compliance officer, CRO, operations director) using ConFIRM-based personality variants
+2. An LLM judge evaluates each scenario from 3 stakeholder perspectives (compliance officer, CRO, operations director)
 3. Each evaluation produces a **risk fingerprint** — e.g., `C-B-A-A-C-B-C`
-4. **Deterministic gating rules** (not the LLM) classify readiness: Ready Now / Ready with Prerequisites / Human-in-Loop Required
-5. Personality deltas surface where stakeholders disagree — revealing where organizational alignment is needed before deployment
+4. **Deterministic gating rules** (not the LLM) classify readiness
+5. Personality deltas surface where stakeholders disagree
 
-All requests, responses, token usage, cost, and provider metadata are logged to SQLite for full traceability and reproducibility.
+All requests, responses, token usage, and provider metadata are logged to SQLite for full traceability.
 
 ## Labs
 
-| Lab | Purpose | Calls | Key Output |
-|-----|---------|-------|------------|
-| **01: Risk Fingerprinting** | Evaluate scenarios across 7 dimensions with 3 stakeholder personalities | 18 | Risk fingerprints, gate decisions, personality deltas, reference comparison |
-| **01: Structured Input** (`--structured`) | Same pipeline but with decomposed inputs (subject/object/action/regulatory triggers) | 18 | Compare determinism vs narrative prompts |
-| **02: Grounding Experiment** | Test whether explicit regulatory citations change classifications | 36 | Dimension sensitivity to jurisdiction context |
-| **03: Intra-Rater Reliability** | Repeat evaluations to measure LLM self-consistency | 90 (5 reps) | Per-dimension agreement rates, stability analysis |
-| **04: Inter-Model Comparison** | Compare multiple models against reference fingerprints | varies | Leaderboard scores, gate accuracy |
-| **05: Build Your Own** | Interactive scenario creation: init, predict, run, compare | 3 | Student-authored scenarios with self-assessment |
-| **Web: Adversarial Chat** | Red-team an agent constrained by its risk fingerprint | interactive | Chat transcripts with context-change provenance |
+| Lab | Purpose |
+|-----|---------|
+| **01: Risk Fingerprinting** | Evaluate scenarios across 7 dimensions with 3 stakeholder personalities |
+| **02: Grounding Experiment** | Test whether explicit regulatory citations change classifications |
+| **03: Intra-Rater Reliability** | Repeat evaluations to measure LLM self-consistency |
+| **04: Inter-Model Comparison** | Compare multiple models against reference fingerprints |
+| **05: Build Your Own** | Interactive scenario creation: init, predict, run, compare |
+| **Web: Adversarial Chat** | Red-team an agent constrained by its risk fingerprint |
 
 See [`labs/README.md`](labs/README.md) for exercises and key questions. Course syllabi: [`5-week MBA`](docs/course-formats/5-week-mba-capstone.md) | [`10-week undergraduate`](docs/course-formats/10-week-undergraduate.md).
 
-## Model Leaderboard
+## Web Interface
 
-How well do different judge models reproduce human-authored reference fingerprints? Run `python labs/lab-04-inter-model-comparison.py` to regenerate.
+A Next.js web app for interactive evaluation and adversarial red-teaming.
 
-| Model | Done | F2 | Recall | Prec | FN | FP | Dim | Diff | Bias |
-|-------|-----:|---:|-------:|-----:|---:|---:|----:|-----:|------|
-| Claude Opus 4.6 (subagent) | 18/18 | **100%** | **100%** | **100%** | 0 | 0 | **87%** | 31% | Calibrated |
-| Claude Opus 4.6 (manual) | 18/18 | 89% | 87% | **100%** | 2 | 0 | **89%** | 26% | Calibrated |
-| Hunter Alpha (1T, stealth) | 18/18 | 74% | 73% | 79% | 4 | 3 | 43% | 64% | Noisy |
-| Healer Alpha (omni, stealth) | 18/18 | 62% | 60% | 75% | 6 | 3 | 49% | 60% | Sleepy |
-| Arcee Trinity (free) | 18/18 | 57% | 53% | 80% | 7 | 2 | 48% | **69%** | Sleepy |
-
-- **F2** = F-beta score (beta=2): weights recall 4x over precision. The primary ranking metric — penalises missed gates heavily.
-- **Recall** = of gates that should fire, how many did? (1.0 = no missed gates). A model that blocks everything scores 100% here.
-- **Precision** = of gates that fired, how many were correct? (1.0 = no false alarms). Prevents gaming recall by rejecting everything.
-- **FN** = false negatives (missed gates — dangerous). **FP** = false positives (fired gates that shouldn't — conservative but wrong).
-- **Dim Match** = exact level match vs reference across all 7 dimensions.
-- **Diff** = personality differentiation (% of dimensions where CO/CRO/Ops disagree). Higher = more stakeholder perspective sensitivity.
-- **Bias** = error direction. *Calibrated*: few errors. *Sleepy*: misses real risks (high FN, low FP). *Jittery*: over-triggers (high FP, low FN). *Noisy*: errors in both directions.
-
-Two Claude Opus 4.6 entries reflect different evaluation methods: **subagent** dispatched 18 isolated evaluations via `labs/lab-05-subagent-evaluation.py` (pipeline-comparable, no cross-scenario anchoring); **manual** was a single-pass expert analysis with full document context. Raw results in `results/reference/`.
-
-*Last updated: 2026-03-21. See [`docs/adr/007-free-model-comparison.md`](docs/adr/007-free-model-comparison.md) for full testing notes.*
-
-### Consuming Leaderboard Data
-
-The leaderboard is available as structured JSON for integration into other projects:
-
-```
-shared/leaderboard.json   — model scores, metric definitions, metadata
-shared/models.json        — model registry with labels and notes
-shared/dimensions.json    — dimension IDs, labels, level ordering
-shared/challenges.json    — adversarial challenge text per dimension×level
+```bash
+cd web && npm install && npm run dev   # http://localhost:3000
 ```
 
-Fetch directly from GitHub:
+- **Evaluate page** — Split-pane: system prompt inspector + scenario input with fingerprint matrix and gating verdict
+- **Chat page** — Agent Mode (red-team an agent constrained by its fingerprint) or Judge Mode (probe the LLM judge directly)
+
+See [`docs/adr/013-railway-deployment.md`](docs/adr/013-railway-deployment.md) for deployment.
+
+## Repository Structure
+
+```
+docs/               Framework spec, rubric, model guide, course syllabi, ADRs
+labs/               Runnable Python labs
+prompts/            LLM prompt templates (Mustache)
+scenarios/          Starter scenario library (JSON, 13 scenarios)
+shared/             Structured data for site integration (leaderboard, models, dimensions, challenges)
+  archive/          Historical leaderboard snapshots
+web/                Next.js web interface
+results/            Output (gitignored) — date-stamped JSON + SQLite log
+```
+
+## Consuming Leaderboard Data
+
+The leaderboard is available as structured JSON for integration:
+
 ```bash
 curl https://raw.githubusercontent.com/digital-rain-tech/ara-eval/main/shared/leaderboard.json
 ```
 
-Or in JavaScript/TypeScript:
 ```ts
 const res = await fetch('https://raw.githubusercontent.com/digital-rain-tech/ara-eval/main/shared/leaderboard.json');
 const { models, metrics, last_updated } = await res.json();
 ```
 
-All numeric values are raw floats (e.g. `0.87` not `"87%"`) — format in your UI layer. The `metrics` object provides human-readable descriptions for tooltips or legends. To regenerate after adding new model results: `python labs/lab-04-inter-model-comparison.py`.
+All numeric values are raw floats (e.g. `0.87` not `"87%"`). The `metrics` object provides human-readable descriptions for tooltips.
+
+## HK-Specific Context
+
+The framework synthesizes international governance standards (NIST AI RMF, EU AI Act, Singapore Model AI Governance) with Hong Kong's regulatory landscape: HKMA GenAI Circular (Nov 2024), SFC Circular 24EC55 (Nov 2024), PCPD AI Framework (Jun 2024), and cross-border complexity (PIPL, GBA data flows, CAC algorithm registration).
 
 ## Contributing
 
-Have a messy business workflow, a process you've debated automating, or a news story that stuck with you? [**Open an issue**](../../issues/new?template=scenario.yml) and tell us about it. You don't need to know our framework — we'll structure it, run it through the pipeline, and credit you. Takes 2 minutes.
+Have a messy business workflow, a process you've debated automating, or a news story that stuck with you? [**Open an issue**](../../issues/new?template=scenario.yml) and tell us about it. You don't need to know our framework — we'll structure it, run it through the pipeline, and credit you.
 
 Also accepting [model evaluation results](CONTRIBUTING.md#model-evaluation-results-pr) — run ARA-Eval through a different LLM and submit the output.
 
