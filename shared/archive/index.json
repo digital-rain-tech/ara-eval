@@ -1,0 +1,40 @@
+{
+  "description": "Historical leaderboard snapshots. Each file is a complete leaderboard.json from that point in time.",
+  "snapshots": [
+    {
+      "file": "leaderboard-2026-03-19-initial.json",
+      "date": "2026-03-19",
+      "label": "Initial leaderboard",
+      "models": 3,
+      "note": "Arcee Trinity, Hunter Alpha, Healer Alpha — first 3 API models scored"
+    },
+    {
+      "file": "leaderboard-2026-03-20-bias-labels.json",
+      "date": "2026-03-20",
+      "label": "Added bias classification",
+      "models": 5,
+      "note": "Added Claude Opus (subagent + manual), introduced bias labels (calibrated/sleepy/jittery/noisy)"
+    },
+    {
+      "file": "leaderboard-2026-03-21-sonnet-haiku.json",
+      "date": "2026-03-21",
+      "label": "Added Sonnet 4.6 and Haiku 4.5",
+      "models": 7,
+      "note": "Sonnet 4.6 subagent (jittery, F2 0.89), Haiku 4.5 subagent (broken, F2 0.08)"
+    },
+    {
+      "file": "leaderboard-2026-03-21-haiku-scored.json",
+      "date": "2026-03-21",
+      "label": "Haiku rescored with non-compliant penalty",
+      "models": 7,
+      "note": "Haiku 4.5 non-compliant outputs scored as all-missed instead of skipped"
+    },
+    {
+      "file": "../leaderboard.json",
+      "date": "2026-03-22",
+      "label": "Added 4 new models (batch evaluation)",
+      "models": 11,
+      "note": "Gemini 2.5 Flash Lite, Qwen3 235B, Grok 4.1 Fast, DeepSeek v3.2. Renamed metrics: hard_gate_recall, hard_gate_precision, fingerprint_match."
+    }
+  ]
+}

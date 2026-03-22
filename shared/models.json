@@ -47,5 +47,33 @@
     "note": "instruction-following failure — invented own dimensions in 14/18 evals, 1 refusal, 1 cheat. F2 0.08.",
     "success_rate": "17/18",
     "is_default": false
+  },
+  {
+    "id": "google/gemini-2.5-flash-lite-preview-09-2025",
+    "label": "Gemini 2.5 Flash Lite",
+    "note": "perfect hard gate recall, fastest model (70s/39 calls), calibrated bias. 2nd place overall.",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "qwen/qwen3-235b-a22b-2507",
+    "label": "Qwen3 235B",
+    "note": "perfect hard gate recall, calibrated bias, low personality differentiation (19%). 3rd place.",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "x-ai/grok-4.1-fast",
+    "label": "Grok 4.1 Fast",
+    "note": "solid mid-tier (F2 0.87), noisy bias with errors in both directions. 39/39 completion.",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "deepseek/deepseek-v3.2",
+    "label": "DeepSeek v3.2",
+    "note": "sleepy bias (misses gates), 1 eval failure on graceful_degradation. 17/18 completion.",
+    "success_rate": "17/18",
+    "is_default": false
   }
 ]

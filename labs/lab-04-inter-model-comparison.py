@@ -193,18 +193,18 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
         "successful": successful_evals,
         "total": total_evals,
         "hard_gate_accuracy": hard_gate_accuracy,
-        "gate_recall": gate_recall,
-        "gate_precision": gate_precision,
+        "hard_gate_recall": gate_recall,
+        "hard_gate_precision": gate_precision,
         "gate_f2": gate_f2,
         "hard_gate_true_positives": tp,
         "hard_gate_false_negatives": hard_gate_false_neg,
         "hard_gate_false_positives": hard_gate_false_pos,
         "hard_gate_total": hard_gate_total,
         "bias": bias,
-        "dimension_match_rate": dim_match_rate,
-        "dimension_matches": dim_matches,
-        "dimension_total": dim_total,
-        "per_dimension_accuracy": per_dim_accuracy,
+        "fingerprint_match_rate": dim_match_rate,
+        "fingerprint_matches": dim_matches,
+        "fingerprint_total": dim_total,
+        "per_dimension_fingerprint_match": per_dim_accuracy,
         "avg_personality_spread": avg_personality_spread,
         "personality_differentiation_rate": differentiation_rate,
     }
@@ -218,35 +218,35 @@ def print_leaderboard(scores: list[dict]):
     print(f"{'='*90}")
 
     # Sort by F2 (safety-weighted composite), then dimension match rate
-    scores.sort(key=lambda s: (s["gate_f2"], s["dimension_match_rate"]), reverse=True)
+    scores.sort(key=lambda s: (s["gate_f2"], s["fingerprint_match_rate"]), reverse=True)
 
-    print(f"\n  {'MODEL':<26} {'DONE':>5} {'F2':>5} {'RECALL':>7} {'PREC':>6} {'FN':>4} {'FP':>4} {'DIM':>5} {'DIFF':>5}  {'BIAS':<11}")
-    print(f"  {'-'*26} {'-'*5} {'-'*5} {'-'*7} {'-'*6} {'-'*4} {'-'*4} {'-'*5} {'-'*5}  {'-'*11}")
+    print(f"\n  {'MODEL':<26} {'DONE':>5} {'F2':>5} {'HG REC':>7} {'HG PRE':>7} {'FN':>4} {'FP':>4} {'FP MT':>5} {'DIFF':>5}  {'BIAS':<11}")
+    print(f"  {'-'*26} {'-'*5} {'-'*5} {'-'*7} {'-'*7} {'-'*4} {'-'*4} {'-'*5} {'-'*5}  {'-'*11}")
 
     for s in scores:
         complete = f"{s['successful']}/{s['total']}"
         f2 = f"{s['gate_f2']:.0%}"
-        recall = f"{s['gate_recall']:.0%}"
-        prec = f"{s['gate_precision']:.0%}"
+        recall = f"{s['hard_gate_recall']:.0%}"
+        prec = f"{s['hard_gate_precision']:.0%}"
         fn = str(s["hard_gate_false_negatives"])
         fp = str(s["hard_gate_false_positives"])
-        dim_match = f"{s['dimension_match_rate']:.0%}"
+        dim_match = f"{s['fingerprint_match_rate']:.0%}"
         diff = f"{s['personality_differentiation_rate']:.0%}"
         bias = s["bias"]
-        print(f"  {s['model']:<26} {complete:>5} {f2:>5} {recall:>7} {prec:>6} {fn:>4} {fp:>4} {dim_match:>5} {diff:>5}  {bias:<11}")
+        print(f"  {s['model']:<26} {complete:>5} {f2:>5} {recall:>7} {prec:>7} {fn:>4} {fp:>4} {dim_match:>5} {diff:>5}  {bias:<11}")
 
     print(f"\n  F2 = F-beta score (beta=2): weights recall 4x over precision — the primary ranking metric")
-    print(f"  RECALL = gate recall: of gates that should fire, how many did? (1.0 = no missed gates)")
-    print(f"  PREC = gate precision: of gates that fired, how many were correct? (1.0 = no false alarms)")
+    print(f"  HG REC = hard gate recall: of gates that should fire, how many did? (1.0 = no missed gates)")
+    print(f"  HG PRE = hard gate precision: of gates that fired, how many were correct? (1.0 = no false alarms)")
     print(f"  FN = false negatives (missed gates — dangerous)")
     print(f"  FP = false positives (over-fired gates — conservative but wrong)")
-    print(f"  DIM = exact dimension-level match vs reference")
+    print(f"  FP MT = fingerprint match: exact dimension-level match vs reference")
     print(f"  DIFF = personality differentiation (% of dims where CO/CRO/Ops disagree)")
     print(f"  BIAS = error direction: calibrated | sleepy (misses risks) | jittery (over-triggers) | noisy (both)")
 
     # Per-dimension breakdown
     print(f"\n{'='*90}")
-    print(f"  PER-DIMENSION ACCURACY")
+    print(f"  PER-DIMENSION FINGERPRINT MATCH")
     print(f"{'='*90}")
 
     header = f"\n  {'DIMENSION':<28}"
@@ -259,7 +259,7 @@ def print_leaderboard(scores: list[dict]):
         label = DIMENSION_LABELS[dim]
         row = f"  {label:<28}"
         for s in scores:
-            pda = s["per_dimension_accuracy"].get(label, {})
+            pda = s["per_dimension_fingerprint_match"].get(label, {})
             if pda:
                 row += f" {pda['rate']:>11.0%}"
             else:
@@ -352,7 +352,7 @@ def main():
         scores.append(score)
         print(f"  {model_dir.name}: {score['successful']}/{score['total']} evals, "
               f"gate accuracy {score['hard_gate_accuracy']:.0%}, "
-              f"dim match {score['dimension_match_rate']:.0%}")
+              f"fingerprint match {score['fingerprint_match_rate']:.0%}")
 
     if not scores:
         print("No model results found in results/reference/")

@@ -117,3 +117,46 @@ Lab 04 writes `results/reference/leaderboard.json` (gitignored, verbose). The `s
 **Saving reference results:**
 - When a model run completes successfully (18/18 or close), copy the output to `results/reference/<model-slug>/` and commit it. This builds a library of baseline results for inter-model comparison.
 - Update `docs/adr/007-free-model-comparison.md` with the model name, success rate, and any observations.
+
+## Leaderboard Update Workflow
+
+When adding new model evaluation results to the public leaderboard:
+
+```bash
+# 1. Run the eval
+ARA_MODEL=<openrouter-id> python labs/lab-01-risk-fingerprinting.py --all --structured
+
+# 2. Copy results to reference directory (used by lab-04 scoring)
+mkdir -p results/reference/<model-slug>/
+cp results/<date>/lab-01-<model>-<timestamp>.json results/reference/<model-slug>/
+
+# 3. Score all models and regenerate results/reference/leaderboard.json
+python labs/lab-04-inter-model-comparison.py
+
+# 4. Generate individual run reports
+python labs/generate-report.py <run-id>    # get run-id from eval output or view-requests.py
+
+# 5. Update shared/ files (public site source of truth)
+#    - shared/leaderboard.json — add new model entry in rank order (by F2 score)
+#    - shared/models.json — add new model to registry with label and notes
+
+# 6. Archive the previous leaderboard
+#    - shared/archive/ contains dated snapshots of previous leaderboard.json versions
+#    - shared/archive/index.json is the browsable index of all snapshots
+#    - Add a new entry to index.json describing what changed
+```
+
+**Key files:**
+- `shared/leaderboard.json` — curated public leaderboard (source of truth for ara-eval-site)
+- `shared/models.json` — model registry with labels and notes
+- `shared/archive/index.json` — index of all historical leaderboard snapshots
+- `shared/archive/leaderboard-<date>-<label>.json` — frozen snapshots
+- `results/reference/leaderboard.json` — auto-generated verbose leaderboard (gitignored)
+- `results/reference/<model-slug>/` — raw lab-01 results per model (committed)
+
+**Metric naming conventions:**
+- `hard_gate_recall` / `hard_gate_precision` — specifically for A-level hard gates (Reg=A, Blast=A)
+- `fingerprint_match` — exact dimension-level match vs human reference fingerprint
+- `f2` — F-beta (beta=2), weights recall 4x over precision
+- `differentiation` — personality spread across CO/CRO/Ops
+- `bias` — calibrated | sleepy | jittery | noisy | broken
