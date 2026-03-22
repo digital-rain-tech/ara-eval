@@ -483,7 +483,7 @@ def evaluate_scenario(
 
     request_body = {
         "model": MODEL,
-        "max_tokens": 1024,
+        "max_tokens": 4096,
         "messages": [
             {"role": "system", "content": system},
             {"role": "user", "content": user_content},
