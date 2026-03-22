@@ -1,70 +1,84 @@
 # Model Evaluation Roadmap
 
-**Status:** Accepted
+**Status:** Accepted (updated 2026-03-22)
 **Date:** 2026-03-22
-**Context:** With 7 models tested (Opus subagent/manual, Sonnet, Haiku, Hunter Alpha, Healer Alpha, Arcee Trinity), we need to expand the leaderboard to answer key open questions. This ADR documents which models to test next and why.
+**Context:** Tracking which models have been tested, results, and what to test next. Updated after running Gemini 2.5 Flash Lite, Qwen3 235B, Grok 4.1 Fast, and DeepSeek v3.2 through lab-01.
 
-## Open Questions
+## Current Leaderboard (11 models, as of 2026-03-22)
 
-1. **Is the dimension-match cliff Opus-specific?** Opus scores 87–89% dimension match. Everything else clusters at 39–49%. Do other frontier models bridge this gap, or is it unique to Opus?
-2. **Is instruction-following the bottleneck for smaller models?** Haiku failed entirely on structured output compliance. Is this a small-model problem or a Haiku-specific one?
-3. **Do Chinese frontier models handle HK/PIPL scenarios differently?** The benchmark is HK-focused with heavy PIPL cross-border content. Chinese models may have different regulatory priors.
+| Rank | Model | Method | A-Gate Recall | Calibration | Bias |
+|------|-------|--------|--------------|-------------|------|
+| 1 | Claude Opus 4.6 | subagent | 100% | 87% | calibrated |
+| 2 | Gemini 2.5 Flash Lite | api | 100% | 60% | calibrated |
+| 3 | Qwen3 235B | api | 100% | 66% | calibrated |
+| 4 | Claude Opus 4.6 | manual | 87% | 89% | calibrated |
+| 5 | Claude Sonnet 4.6 | subagent | 92% | 39% | jittery |
+| 6 | Grok 4.1 Fast | api | 87% | 67% | noisy |
+| 7 | DeepSeek v3.2 | api | 80% | 61% | sleepy |
+| 8 | Hunter Alpha | api | 73% | 43% | noisy |
+| 9 | Healer Alpha | api | 60% | 49% | sleepy |
+| 10 | Arcee Trinity | api | 53% | 48% | sleepy |
+| 11 | Claude Haiku 4.5 | subagent | 7% | 6% | broken |
 
-## Priority 1 — Frontier Model Comparison (Budget: ~$10 total)
+## Questions Answered
 
-These answer question #1 and give us the three major commercial families + best open-weight.
+1. **Is the calibration cliff Opus-specific?** Partially answered. Gemini (60%), Qwen3 (66%), and Grok (67%) narrow the gap from the previous 43–49% cluster but don't close it. Opus manual (89%) still leads by 22+ points. The cliff is narrowing but Opus-level calibration remains unique.
 
-| Model | OpenRouter ID | Cost (per 1M input) | Rationale |
-|-------|--------------|---------------------|-----------|
-| **GPT-5.4** | `openai/gpt-5.4` | ~$2.50 | OpenAI flagship. 1M context, computer use. The obvious comparison to Opus. |
-| **Gemini 3.1 Pro** | `google/gemini-3.1-pro` | ~$2.00 | Led 13/16 benchmarks at release. 77.1% ARC-AGI-2 suggests strong reasoning. Best price-to-performance among closed frontier. |
-| **DeepSeek V3.2** | `deepseek/deepseek-v3.2` | ~$0.27 | Best available DeepSeek (V4 not yet released as of 2026-03-22). Strong reasoning, very cheap. |
+2. **Is instruction-following the bottleneck for smaller models?** Yes, for Haiku specifically. Qwen3 235B (a large but open-weight model) followed the structured output format perfectly with 18/18 completion. Haiku's failure is model-specific, not a size-class problem.
 
-**Note on DeepSeek V4:** Repeatedly rumored for early March 2026 but has not launched. Multiple release windows have passed. When it becomes available, it should be tested as a priority addition. Track at `openrouter.ai/deepseek`.
+3. **Do Chinese models handle HK/PIPL differently?** Qwen3 235B achieved perfect gate recall with the lowest differentiation (19%) — its personas almost always agree. This could mean genuine convergence or lack of engagement with stakeholder perspectives. More Chinese models needed to separate the signal.
 
-## Priority 2 — Chinese Frontier Models (Free or cheap)
+## Next Priority — Models Still Worth Testing
 
-These answer question #3. Chinese models may have materially different regulatory intuitions on PIPL/cross-border scenarios — the most technically demanding content in the benchmark.
+### Tier 1: Fill remaining frontier gaps
 
-| Model | OpenRouter ID | Cost | Rationale |
-|-------|--------------|------|-----------|
-| **GLM-5 (744B)** | Check OpenRouter | TBD | S-tier on multiple leaderboards. Top-3 Chatbot Arena ELO. Chinese training data likely includes PIPL context. |
-| **Kimi K2.5 (1T)** | Check OpenRouter | TBD | Also S-tier, 1T params. Strong contender for best open-source model globally. |
-| **Qwen 3.5 (397B)** | `qwen/qwen-3.5` or similar | Free | S-tier open source. Tests whether latest Qwen generation follows structured output format (Haiku couldn't). |
+| Model | OpenRouter ID | Cost | Rationale | Status |
+|-------|--------------|------|-----------|--------|
+| **GPT-5.4** | `openai/gpt-5.4` | ~$2.50/M in | Only major frontier family not yet tested. Does OpenAI match Opus on calibration? | **Not yet tested** |
+| **Gemini 3.1 Pro** | `google/gemini-3.1-pro` | ~$2.00/M in | We tested Flash Lite (60% calibration). Does the full Pro model do better? Led 13/16 benchmarks at release. | **Not yet tested** |
 
-## Priority 3 — Instruction-Following Hypothesis (Free)
+### Tier 2: Chinese frontier models (answer question #3 more fully)
 
-These answer question #2. If GPT-4o-mini and other small models also fail on structured output, the problem is model size. If they succeed, it's Haiku-specific.
+| Model | Rationale | Status |
+|-------|-----------|--------|
+| **GLM-5 (744B)** | S-tier leaderboards, top-3 Chatbot Arena ELO. Chinese training data likely includes PIPL context. | **Not yet tested** |
+| **Kimi K2.5 (1T)** | S-tier, 1T params. Another Chinese frontier contender. | **Not yet tested** |
+| **Qwen 3.5 (397B)** | Newer than the Qwen3 235B we tested. May improve calibration. | **Not yet tested** |
 
-| Model | OpenRouter ID | Cost | Rationale |
-|-------|--------------|------|-----------|
-| **Qwen3 Coder 480B** | Free on OpenRouter | $0 | Coding models are often strongest at structured JSON compliance. |
-| **Step 3.5 Flash** | Free on OpenRouter | $0 | S-tier open source, 256K context. Quick test. |
+### Tier 3: Free/cheap models to expand the middle tier
+
+| Model | Rationale | Status |
+|-------|-----------|--------|
+| **Step 3.5 Flash** | Free, S-tier open source. Quick test to fill the middle. | **Not yet tested** |
+| **DeepSeek V3.2 Speciale** | High-compute variant of V3.2 we already tested. Does more compute help? | **Not yet tested** |
+
+## Completed (already on leaderboard)
+
+| Model | When Tested | Key Finding |
+|-------|------------|-------------|
+| Claude Opus 4.6 (subagent) | 2026-03-21 | Perfect gate detection, 87% calibration |
+| Claude Opus 4.6 (manual) | 2026-03-21 | Best calibration (89%), missed 2 gates |
+| Hunter Alpha | 2026-03-21 | Best free API model at launch, noisy |
+| Healer Alpha | 2026-03-21 | No compelling advantage |
+| Arcee Trinity | 2026-03-21 | Stable baseline, sleepy bias |
+| Claude Sonnet 4.6 | 2026-03-22 | Strong gates (92% recall), poor calibration (39%) |
+| Claude Haiku 4.5 | 2026-03-22 | Instruction-following failure, F2 0.08 |
+| Gemini 2.5 Flash Lite | 2026-03-22 | Perfect gate recall, 60% calibration, fastest model (71s) |
+| Qwen3 235B | 2026-03-22 | Perfect gate recall, 66% calibration, lowest differentiation (19%) |
+| Grok 4.1 Fast | 2026-03-22 | Solid mid-tier, best API calibration (67%), noisy bias |
+| DeepSeek v3.2 | 2026-03-22 | Sleepy bias, 1 eval failure, 61% calibration |
 
 ## Not Recommended
 
 | Model | Why Skip |
 |-------|----------|
-| **Healer Alpha** | Already tested, no compelling advantage. |
-| **DeepSeek V4** | Not available as of 2026-03-22. Revisit when released. |
-| **GPT-5.4 Pro** | $30/M input is too expensive for 18 evals without clear justification. Test GPT-5.4 first. |
+| **Healer Alpha** | Already tested, no advantage. |
+| **DeepSeek V4** | Not available as of 2026-03-22. Multiple release windows passed. Revisit when released. |
+| **GPT-5.4 Pro** | $30/M input. Test GPT-5.4 standard first. |
 
-## Execution Plan
+## Key Remaining Question
 
-1. Run Priority 1 models through `lab-01` with `ARA_MODEL=<id>` override
-2. Score against reference fingerprints using existing pipeline
-3. Update `shared/leaderboard.json` and `shared/models.json`
-4. Write versioned commentary for the new snapshot on ara-eval-site
-5. If any Priority 1 model bridges the dimension-match gap, investigate why (rubric sensitivity? reasoning depth?)
-
-## Cost Estimate
-
-| Tier | Models | Evals | Est. Cost |
-|------|--------|-------|-----------|
-| Priority 1 | 3 | 54 (18 each) | ~$5–8 |
-| Priority 2 | 2–3 | 36–54 | ~$0–3 (mostly free) |
-| Priority 3 | 2 | 36 | $0 (free) |
-| **Total** | **7–8** | **126–144** | **~$5–11** |
+**Can any model close the calibration gap to Opus manual (89%)?** Grok at 67% is the closest API model. GPT-5.4 and Gemini 3.1 Pro are the most likely candidates to push higher. If neither breaks 75%, calibration may require qualitatively different reasoning that only Opus-tier models provide.
 
 ## References
 
@@ -72,4 +86,3 @@ These answer question #2. If GPT-4o-mini and other small models also fail on str
 - [OpenRouter Models](https://openrouter.ai/models)
 - [OpenRouter DeepSeek Models](https://openrouter.ai/deepseek)
 - [DeepSeek V4 Status (March 2026)](https://www.promptzone.com/xi_ji_5529a8f31595759f429/deepseek-v4-status-report-march-2026-timeline-and-technical-specs-2hib)
-- [GPT-5.4 vs Claude Opus 4.6 vs DeepSeek V4 vs Gemini 3.1](https://tech-insider.org/chatgpt-vs-claude-vs-deepseek-vs-gemini-2026/)
