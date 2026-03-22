@@ -53,7 +53,7 @@
       "bias": "calibrated",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 71
     },
     {
       "id": "qwen/qwen3-235b-a22b-2507",
@@ -71,7 +71,7 @@
       "bias": "calibrated",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 613
     },
     {
       "id": "claude-sonnet-4.6-subagent",
@@ -125,7 +125,7 @@
       "bias": "noisy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 1227
     },
     {
       "id": "x-ai/grok-4.1-fast",
@@ -143,7 +143,7 @@
       "bias": "noisy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 503
     },
     {
       "id": "deepseek/deepseek-v3.2",
@@ -161,7 +161,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 991
     },
     {
       "id": "openrouter/hunter-alpha",
@@ -179,7 +179,7 @@
       "bias": "noisy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 1185
     },
     {
       "id": "openrouter/healer-alpha",
@@ -197,7 +197,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 455
     },
     {
       "id": "openai/gpt-5.4-nano",
@@ -215,7 +215,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 102
     },
     {
       "id": "arcee-ai/trinity-large-preview:free",
@@ -233,7 +233,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": true,
-      "eval_duration_seconds": null
+      "eval_duration_seconds": 505
     },
     {
       "id": "claude-haiku-4.5-subagent",

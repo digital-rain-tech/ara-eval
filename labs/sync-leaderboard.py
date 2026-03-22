@@ -179,6 +179,9 @@ def main():
             "models": [],
         }
 
+    # Index existing shared entries by ID for field merging
+    existing_by_id = {m["id"]: m for m in shared.get("models", [])}
+
     # Build model entries from results
     synced_ids = set()
     models = []
@@ -189,6 +192,14 @@ def main():
             continue
         meta = MODEL_MAP[model_key]
         entry = build_model_entry(score, meta)
+
+        # Preserve fields from existing shared entry that results don't have
+        existing = existing_by_id.get(entry["id"])
+        if existing:
+            for field in ("eval_duration_seconds", "cost_per_eval"):
+                if entry.get(field) is None and existing.get(field) is not None:
+                    entry[field] = existing[field]
+
         models.append(entry)
         synced_ids.add(entry["id"])
 
