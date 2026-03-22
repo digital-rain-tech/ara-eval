@@ -2,36 +2,50 @@
   {
     "id": "arcee-ai/trinity-large-preview:free",
     "label": "Arcee Trinity",
-    "note": "default free model, 100% completion rate",
+    "note": "default free model, 100% completion rate, sleepy bias",
     "success_rate": "18/18",
     "is_default": true
   },
   {
     "id": "openrouter/hunter-alpha",
     "label": "Hunter Alpha",
-    "note": "best gate accuracy among API models",
+    "note": "best gate accuracy among free API models, noisy bias",
     "success_rate": "18/18",
     "is_default": false
   },
   {
     "id": "openrouter/healer-alpha",
     "label": "Healer Alpha",
-    "note": "highest dimension match among API models",
+    "note": "no compelling advantage over Hunter or Arcee, sleepy bias",
     "success_rate": "18/18",
     "is_default": false
   },
   {
     "id": "claude-opus-4.6-subagent",
     "label": "Claude Opus 4.6 (subagent)",
-    "note": "perfect gate detection, isolated subagent pipeline",
+    "note": "perfect gate detection, isolated subagent pipeline, calibrated",
     "success_rate": "18/18",
     "is_default": false
   },
   {
     "id": "claude-opus-4.6-manual",
     "label": "Claude Opus 4.6 (manual)",
-    "note": "expert analysis, highest dimension match",
+    "note": "expert analysis, highest dimension match (89%), calibrated",
     "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "claude-sonnet-4.6-subagent",
+    "label": "Claude Sonnet 4.6 (subagent)",
+    "note": "strong gate detection (F2 0.89), weak dimension calibration (39%), jittery bias",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
+    "id": "claude-haiku-4.5-subagent",
+    "label": "Claude Haiku 4.5 (subagent)",
+    "note": "instruction-following failure — invented own dimensions in 14/18 evals, 1 refusal, 1 cheat. F2 0.08.",
+    "success_rate": "17/18",
     "is_default": false
   }
 ]
