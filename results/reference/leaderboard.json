@@ -286,6 +286,63 @@
       "personality_differentiation_rate": 0.5952380952380952
     },
     {
+      "model": "gpt-5.4-nano",
+      "completion_rate": 1.0,
+      "successful": 18,
+      "total": 18,
+      "hard_gate_accuracy": 0.8055555555555556,
+      "hard_gate_recall": 0.5333333333333333,
+      "hard_gate_precision": 1.0,
+      "gate_f2": 0.5882352941176471,
+      "hard_gate_true_positives": 8,
+      "hard_gate_false_negatives": 7,
+      "hard_gate_false_positives": 0,
+      "hard_gate_total": 36,
+      "bias": "sleepy",
+      "fingerprint_match_rate": 0.5,
+      "fingerprint_matches": 63,
+      "fingerprint_total": 126,
+      "per_dimension_fingerprint_match": {
+        "Decision Reversibility": {
+          "matches": 17,
+          "total": 18,
+          "rate": 0.9444444444444444
+        },
+        "Failure Blast Radius": {
+          "matches": 13,
+          "total": 18,
+          "rate": 0.7222222222222222
+        },
+        "Regulatory Exposure": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        },
+        "Decision Time Pressure": {
+          "matches": 7,
+          "total": 18,
+          "rate": 0.3888888888888889
+        },
+        "Data Confidence": {
+          "matches": 4,
+          "total": 18,
+          "rate": 0.2222222222222222
+        },
+        "Accountability Chain": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        },
+        "Graceful Degradation": {
+          "matches": 6,
+          "total": 18,
+          "rate": 0.3333333333333333
+        }
+      },
+      "avg_personality_spread": 0.5238095238095238,
+      "personality_differentiation_rate": 0.5238095238095238
+    },
+    {
       "model": "arcee-trinity-free",
       "completion_rate": 1.0,
       "successful": 18,
