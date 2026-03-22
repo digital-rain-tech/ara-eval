@@ -136,9 +136,12 @@ python labs/lab-04-inter-model-comparison.py
 # 4. Generate individual run reports
 python labs/generate-report.py <run-id>    # get run-id from eval output or view-requests.py
 
-# 5. Update shared/ files (public site source of truth)
-#    - shared/leaderboard.json — add new model entry in rank order (by F2 score)
-#    - shared/models.json — add new model to registry with label and notes
+# 5. Sync results → shared/leaderboard.json (preserves entries not in results)
+python labs/sync-leaderboard.py                     # update shared/leaderboard.json
+python labs/sync-leaderboard.py --check             # CI: exits 1 if stale
+python labs/sync-leaderboard.py --dry-run           # preview without writing
+#    NOTE: New models need a MODEL_MAP entry in sync-leaderboard.py
+#    Models only in shared/ (e.g. subagent runs) are preserved automatically
 
 # 6. Update README.md leaderboard table (auto-generated from shared/leaderboard.json)
 python labs/update-readme-leaderboard.py
@@ -157,6 +160,7 @@ python labs/update-readme-leaderboard.py --check   # CI: exits 1 if stale
 - `shared/archive/leaderboard-<date>-<label>.json` — frozen snapshots
 - `results/reference/leaderboard.json` — auto-generated verbose leaderboard (gitignored)
 - `results/reference/<model-slug>/` — raw lab-01 results per model (committed)
+- `labs/sync-leaderboard.py` — syncs results/reference/leaderboard.json → shared/leaderboard.json
 
 **Metric naming conventions:**
 - `hard_gate_recall` / `hard_gate_precision` — specifically for A-level hard gates (Reg=A, Blast=A)
