@@ -2,20 +2,21 @@
   "last_updated": "2026-03-22",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
-    "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
+    "f2": "F-beta (beta=2): weights recall 4x over precision \u2014 penalises missed gates heavily",
     "hard_gate_recall": "Of hard gates (Reg=A, Blast=A) that should fire, how many did? (1.0 = no missed gates)",
     "hard_gate_precision": "Of hard gates that fired, how many were correct? (1.0 = no false alarms)",
     "false_negatives": "Missed a gate that should fire (dangerous)",
     "false_positives": "Fired a gate that shouldn't (conservative but wrong)",
     "fingerprint_match": "Exact dimension-level match vs reference fingerprint across all 7 dimensions",
     "differentiation": "% of dimensions where CO/CRO/Ops personalities disagree",
-    "bias": "Error bias direction: where FN >> FP the model under-detects risk (sleepy); where FP >> FN it over-triggers (jittery); balanced means errors go both ways; calibrated means few errors overall"
+    "bias": "Error bias direction: where FN >> FP the model under-detects risk (sleepy); where FP >> FN it over-triggers (jittery); balanced means errors go both ways; calibrated means few errors overall",
+    "eval_duration_seconds": "Wall-clock time to complete the full benchmark run (39 calls for API models, 18 for subagent/manual)"
   },
   "bias_labels": {
-    "calibrated": "Calibrated — few errors in either direction",
-    "sleepy": "Sleepy alarm — misses real risks (high FN, low FP)",
-    "jittery": "Jittery alarm — over-triggers on safe scenarios (high FP, low FN)",
-    "noisy": "Noisy — errors in both directions"
+    "calibrated": "Calibrated \u2014 few errors in either direction",
+    "sleepy": "Sleepy alarm \u2014 misses real risks (high FN, low FP)",
+    "jittery": "Jittery alarm \u2014 over-triggers on safe scenarios (high FP, low FN)",
+    "noisy": "Noisy \u2014 errors in both directions"
   },
   "models": [
     {
@@ -33,7 +34,8 @@
       "differentiation": 0.31,
       "bias": "calibrated",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": null
     },
     {
       "id": "google/gemini-2.5-flash-lite-preview-09-2025",
@@ -46,11 +48,12 @@
       "hard_gate_precision": 0.94,
       "false_negatives": 0,
       "false_positives": 1,
-      "fingerprint_match": 0.60,
+      "fingerprint_match": 0.6,
       "differentiation": 0.36,
       "bias": "calibrated",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": 71
     },
     {
       "id": "qwen/qwen3-235b-a22b-2507",
@@ -67,7 +70,8 @@
       "differentiation": 0.19,
       "bias": "calibrated",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": 613
     },
     {
       "id": "claude-opus-4.6-manual",
@@ -84,7 +88,8 @@
       "differentiation": 0.26,
       "bias": "calibrated",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": null
     },
     {
       "id": "claude-sonnet-4.6-subagent",
@@ -101,7 +106,8 @@
       "differentiation": 0.62,
       "bias": "jittery",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": null
     },
     {
       "id": "x-ai/grok-4.1-fast",
@@ -118,7 +124,8 @@
       "differentiation": 0.43,
       "bias": "noisy",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": 503
     },
     {
       "id": "deepseek/deepseek-v3.2",
@@ -127,7 +134,7 @@
       "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 1 eval failed (missing graceful_degradation).",
       "completion": "17/18",
       "f2": 0.82,
-      "hard_gate_recall": 0.80,
+      "hard_gate_recall": 0.8,
       "hard_gate_precision": 0.92,
       "false_negatives": 3,
       "false_positives": 1,
@@ -135,7 +142,8 @@
       "differentiation": 0.43,
       "bias": "sleepy",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": 991
     },
     {
       "id": "openrouter/hunter-alpha",
@@ -152,7 +160,8 @@
       "differentiation": 0.64,
       "bias": "noisy",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": 1185
     },
     {
       "id": "openrouter/healer-alpha",
@@ -161,15 +170,16 @@
       "method_note": "OpenRouter API via lab-01 pipeline",
       "completion": "18/18",
       "f2": 0.62,
-      "hard_gate_recall": 0.60,
+      "hard_gate_recall": 0.6,
       "hard_gate_precision": 0.75,
       "false_negatives": 6,
       "false_positives": 3,
       "fingerprint_match": 0.49,
-      "differentiation": 0.60,
+      "differentiation": 0.6,
       "bias": "sleepy",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": 455
     },
     {
       "id": "arcee-ai/trinity-large-preview:free",
@@ -179,31 +189,33 @@
       "completion": "18/18",
       "f2": 0.57,
       "hard_gate_recall": 0.53,
-      "hard_gate_precision": 0.80,
+      "hard_gate_precision": 0.8,
       "false_negatives": 7,
       "false_positives": 2,
       "fingerprint_match": 0.48,
       "differentiation": 0.69,
       "bias": "sleepy",
       "cost_per_eval": 0,
-      "is_default": true
+      "is_default": true,
+      "eval_duration_seconds": 505
     },
     {
       "id": "claude-haiku-4.5-subagent",
       "label": "Claude Haiku 4.5",
       "method": "subagent",
-      "method_note": "18 isolated subagent evaluations via Claude Code Agent tool — used wrong dimension names in 14/18 responses, 1 refusal, 1 cheat (read source files). Scored with non-compliant outputs treated as all-missed.",
+      "method_note": "18 isolated subagent evaluations via Claude Code Agent tool \u2014 used wrong dimension names in 14/18 responses, 1 refusal, 1 cheat (read source files). Scored with non-compliant outputs treated as all-missed.",
       "completion": "17/18",
       "f2": 0.08,
       "hard_gate_recall": 0.07,
-      "hard_gate_precision": 0.50,
+      "hard_gate_precision": 0.5,
       "false_negatives": 14,
       "false_positives": 1,
       "fingerprint_match": 0.06,
-      "differentiation": 0.10,
+      "differentiation": 0.1,
       "bias": "broken",
       "cost_per_eval": null,
-      "is_default": false
+      "is_default": false,
+      "eval_duration_seconds": null
     }
   ]
 }

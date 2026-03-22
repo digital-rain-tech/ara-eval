@@ -31,8 +31,8 @@ def generate_table(data: dict) -> str:
     last_updated = data["last_updated"]
 
     lines = []
-    lines.append(f"| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias |")
-    lines.append(f"|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|")
+    lines.append(f"| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Time |")
+    lines.append(f"|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|")
 
     for i, m in enumerate(models, 1):
         label = m["label"]
@@ -43,7 +43,15 @@ def generate_table(data: dict) -> str:
         fp_match = f"{m['fingerprint_match']:.0%}"
         diff = f"{m['differentiation']:.0%}"
         bias = m["bias"].capitalize()
-        lines.append(f"| {i} | {label} | {method} | {f2} | {hg_rec} | {hg_pre} | {fp_match} | {diff} | {bias} |")
+        dur = m.get("eval_duration_seconds")
+        if dur is not None:
+            if dur < 120:
+                time_str = f"{dur}s"
+            else:
+                time_str = f"{dur / 60:.1f}m"
+        else:
+            time_str = "—"
+        lines.append(f"| {i} | {label} | {method} | {f2} | {hg_rec} | {hg_pre} | {fp_match} | {diff} | {bias} | {time_str} |")
 
     lines.append("")
     lines.append(f"*{len(models)} models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: {last_updated}.*")
@@ -52,7 +60,8 @@ def generate_table(data: dict) -> str:
                  "**HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). "
                  "**FP Match** = fingerprint match (exact dimension-level match vs reference). "
                  "**Diff** = personality differentiation. "
-                 "**Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both).")
+                 "**Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). "
+                 "**Time** = wall-clock benchmark duration (39 calls).")
 
     return "\n".join(lines)
 
