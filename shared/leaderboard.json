@@ -128,6 +128,24 @@
       "eval_duration_seconds": 503
     },
     {
+      "id": "minimax/minimax-m2.7",
+      "label": "MiniMax M2.7",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. Required max_tokens bump to 4096.",
+      "completion": "18/18",
+      "f2": 0.87,
+      "hard_gate_recall": 0.87,
+      "hard_gate_precision": 0.87,
+      "false_negatives": 2,
+      "false_positives": 2,
+      "fingerprint_match": 0.68,
+      "differentiation": 0.36,
+      "bias": "noisy",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 1227
+    },
+    {
       "id": "deepseek/deepseek-v3.2",
       "label": "DeepSeek v3.2",
       "method": "api",

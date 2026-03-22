@@ -63,6 +63,13 @@
     "is_default": false
   },
   {
+    "id": "minimax/minimax-m2.7",
+    "label": "MiniMax M2.7",
+    "note": "tied with Grok at F2 0.87, noisy bias. Required max_tokens 4096 (truncated at 1024). Best fingerprint match (68%) among non-Opus models.",
+    "success_rate": "18/18",
+    "is_default": false
+  },
+  {
     "id": "x-ai/grok-4.1-fast",
     "label": "Grok 4.1 Fast",
     "note": "solid mid-tier (F2 0.87), noisy bias with errors in both directions. 39/39 completion.",
