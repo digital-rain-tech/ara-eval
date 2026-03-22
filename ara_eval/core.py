@@ -378,6 +378,9 @@ def extract_provider_info(data: dict) -> Dict[str, Optional[str]]:
 def extract_cost(data: dict) -> Optional[float]:
     """Extract cost from OpenRouter response. Returns 0.0 for free models."""
     usage = data.get("usage", {})
+    # OpenRouter uses "cost" in the usage block
+    if "cost" in usage:
+        return usage["cost"]
     if "total_cost" in usage:
         return usage["total_cost"]
     # Free models don't report cost — check the model ID
