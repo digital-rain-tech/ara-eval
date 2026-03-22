@@ -161,7 +161,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": 991
+      "eval_duration_seconds": 1277
     },
     {
       "id": "openrouter/hunter-alpha",
@@ -179,7 +179,7 @@
       "bias": "noisy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": 1185
+      "eval_duration_seconds": 1034
     },
     {
       "id": "openrouter/healer-alpha",
@@ -197,7 +197,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": 455
+      "eval_duration_seconds": 409
     },
     {
       "id": "openai/gpt-5.4-nano",
@@ -233,7 +233,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": true,
-      "eval_duration_seconds": 505
+      "eval_duration_seconds": 261
     },
     {
       "id": "claude-haiku-4.5-subagent",

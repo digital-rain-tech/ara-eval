@@ -133,24 +133,16 @@ cp results/<date>/lab-01-<model>-<timestamp>.json results/reference/<model-slug>
 # 3. Score all models and regenerate results/reference/leaderboard.json
 python labs/lab-04-inter-model-comparison.py
 
-# 4. Generate individual run reports
+# 4. Generate individual run reports (optional)
 python labs/generate-report.py <run-id>    # get run-id from eval output or view-requests.py
 
-# 5. Sync results → shared/leaderboard.json (preserves entries not in results)
-python labs/sync-leaderboard.py                     # update shared/leaderboard.json
-python labs/sync-leaderboard.py --check             # CI: exits 1 if stale
-python labs/sync-leaderboard.py --dry-run           # preview without writing
-#    NOTE: New models need a MODEL_MAP entry in sync-leaderboard.py
+# 5. Publish: updates shared/leaderboard.json AND README.md in one step
+python labs/publish-leaderboard.py            # update both files
+python labs/publish-leaderboard.py --check    # CI: exits 1 if either is stale
+python labs/publish-leaderboard.py --dry-run  # print shared/leaderboard.json to stdout
+#    NOTE: New models need a MODEL_MAP entry in publish-leaderboard.py
+#    Wall times are extracted from results/reference/<slug>/lab-01-*.json (_run.wall_time_ms)
 #    Models only in shared/ (e.g. subagent runs) are preserved automatically
-
-# 6. Update README.md leaderboard table (auto-generated from shared/leaderboard.json)
-python labs/update-readme-leaderboard.py
-python labs/update-readme-leaderboard.py --check   # CI: exits 1 if stale
-
-# 7. Archive the previous leaderboard
-#    - shared/archive/ contains dated snapshots of previous leaderboard.json versions
-#    - shared/archive/index.json is the browsable index of all snapshots
-#    - Add a new entry to index.json describing what changed
 ```
 
 **Key files:**
@@ -160,7 +152,7 @@ python labs/update-readme-leaderboard.py --check   # CI: exits 1 if stale
 - `shared/archive/leaderboard-<date>-<label>.json` — frozen snapshots
 - `results/reference/leaderboard.json` — auto-generated verbose leaderboard (gitignored)
 - `results/reference/<model-slug>/` — raw lab-01 results per model (committed)
-- `labs/sync-leaderboard.py` — syncs results/reference/leaderboard.json → shared/leaderboard.json
+- `labs/publish-leaderboard.py` — single script: results → shared/leaderboard.json + README.md
 
 **Metric naming conventions:**
 - `hard_gate_recall` / `hard_gate_precision` — specifically for A-level hard gates (Reg=A, Blast=A)

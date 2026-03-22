@@ -1,28 +1,37 @@
 #!/usr/bin/env python3
 """
-Sync results/reference/leaderboard.json → shared/leaderboard.json.
+Single script to publish the leaderboard from scored results.
 
-Reads scored results, maps them to the shared leaderboard format using
-MODEL_MAP for display labels and metadata, and writes the sorted output.
+Reads results/reference/leaderboard.json (scores) and results/reference/*/lab-01-*.json
+(raw results for wall time), then writes:
+  1. shared/leaderboard.json — source of truth for ara-eval-site
+  2. README.md — updates the table between LEADERBOARD markers
 
 Usage:
-    python labs/sync-leaderboard.py              # update shared/leaderboard.json
-    python labs/sync-leaderboard.py --check      # exit 1 if shared is stale
-    python labs/sync-leaderboard.py --dry-run    # print to stdout without writing
+    python labs/publish-leaderboard.py              # update both files
+    python labs/publish-leaderboard.py --check      # exit 1 if either is stale
+    python labs/publish-leaderboard.py --dry-run    # print shared/leaderboard.json to stdout
 
-After running, also run:
-    python labs/update-readme-leaderboard.py     # update README.md table
+New models need a MODEL_MAP entry below. Models in shared/leaderboard.json
+that aren't in results (e.g. subagent runs scored separately) are preserved.
 """
 
 from __future__ import annotations
 
+import glob
 import json
 import sys
+from datetime import date
 from pathlib import Path
 
 _root = Path(__file__).resolve().parent.parent
 RESULTS = _root / "results" / "reference" / "leaderboard.json"
+RESULTS_DIR = _root / "results" / "reference"
 SHARED = _root / "shared" / "leaderboard.json"
+README = _root / "README.md"
+
+START_MARKER = "<!-- LEADERBOARD:START -->"
+END_MARKER = "<!-- LEADERBOARD:END -->"
 
 # Map from results model ID → shared leaderboard metadata.
 # Models not listed here will be skipped with a warning.
@@ -121,7 +130,30 @@ MODEL_MAP: dict[str, dict] = {
 }
 
 
-def build_model_entry(score: dict, meta: dict) -> dict:
+def load_durations() -> dict[str, int]:
+    """Extract wall_time_ms from raw lab-01 result files in results/reference/*/."""
+    durations: dict[str, int] = {}
+    for model_dir in RESULTS_DIR.iterdir():
+        if not model_dir.is_dir():
+            continue
+        # Match both naming conventions: lab-01-*.json and *-lab-01.json
+        result_files = list(model_dir.glob("lab-01-*.json")) + list(model_dir.glob("*-lab-01.json"))
+        # Use the most recent file if multiple exist
+        for result_file in sorted(result_files, reverse=True):
+            try:
+                data = json.loads(result_file.read_text())
+                run = data.get("_run", {})
+                wall_ms = run.get("wall_time_ms")
+                if wall_ms is not None:
+                    model_slug = model_dir.name
+                    durations[model_slug] = round(wall_ms / 1000)
+                    break  # use most recent
+            except (json.JSONDecodeError, KeyError):
+                continue
+    return durations
+
+
+def build_model_entry(score: dict, meta: dict, duration_seconds: int | None) -> dict:
     """Convert a results score entry + metadata into a shared leaderboard entry."""
     successful = score.get("successful", 0)
     total = score.get("total", 0)
@@ -143,7 +175,7 @@ def build_model_entry(score: dict, meta: dict) -> dict:
         "bias": score.get("bias", "unknown"),
         "cost_per_eval": score.get("cost_per_eval", None),
         "is_default": meta["is_default"],
-        "eval_duration_seconds": score.get("eval_duration_seconds", None),
+        "eval_duration_seconds": duration_seconds,
     }
 
 
@@ -156,6 +188,44 @@ def sort_key(m: dict) -> tuple:
     )
 
 
+def generate_readme_table(data: dict) -> str:
+    """Generate the markdown leaderboard table for README.md."""
+    models = data["models"]
+    last_updated = data["last_updated"]
+
+    lines = []
+    lines.append("| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Time |")
+    lines.append("|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|")
+
+    for i, m in enumerate(models, 1):
+        f2 = f"**{m['f2']:.0%}**" if m["f2"] >= 0.95 else f"{m['f2']:.0%}"
+        hg_rec = f"**{m['hard_gate_recall']:.0%}**" if m["hard_gate_recall"] >= 1.0 else f"{m['hard_gate_recall']:.0%}"
+        hg_pre = f"**{m['hard_gate_precision']:.0%}**" if m["hard_gate_precision"] >= 1.0 else f"{m['hard_gate_precision']:.0%}"
+        fp_match = f"{m['fingerprint_match']:.0%}"
+        diff = f"{m['differentiation']:.0%}"
+        bias = m["bias"].capitalize()
+        dur = m.get("eval_duration_seconds")
+        if dur is not None:
+            time_str = f"{dur}s" if dur < 120 else f"{dur / 60:.1f}m"
+        else:
+            time_str = "\u2014"
+        lines.append(f"| {i} | {m['label']} | {m.get('method', 'api')} | {f2} | {hg_rec} | {hg_pre} | {fp_match} | {diff} | {bias} | {time_str} |")
+
+    lines.append("")
+    lines.append(f"*{len(models)} models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: {last_updated}.*")
+    lines.append("")
+    lines.append(
+        "**Metrics:** **F2** = F-beta (beta=2), weights recall 4x over precision. "
+        "**HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). "
+        "**FP Match** = fingerprint match (exact dimension-level match vs reference). "
+        "**Diff** = personality differentiation. "
+        "**Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). "
+        "**Time** = wall-clock benchmark duration (39 calls)."
+    )
+
+    return "\n".join(lines)
+
+
 def main():
     check_mode = "--check" in sys.argv
     dry_run = "--dry-run" in sys.argv
@@ -166,8 +236,9 @@ def main():
 
     results = json.loads(RESULTS.read_text())
     scores = results.get("scores", [])
+    durations = load_durations()
 
-    # Read existing shared to preserve header/metadata
+    # Read existing shared to preserve header/metadata and manually-added entries
     if SHARED.exists():
         shared = json.loads(SHARED.read_text())
     else:
@@ -179,9 +250,6 @@ def main():
             "models": [],
         }
 
-    # Index existing shared entries by ID for field merging
-    existing_by_id = {m["id"]: m for m in shared.get("models", [])}
-
     # Build model entries from results
     synced_ids = set()
     models = []
@@ -191,20 +259,12 @@ def main():
             print(f"Warning: no MODEL_MAP entry for '{model_key}', skipping", file=sys.stderr)
             continue
         meta = MODEL_MAP[model_key]
-        entry = build_model_entry(score, meta)
-
-        # Preserve fields from existing shared entry that results don't have
-        existing = existing_by_id.get(entry["id"])
-        if existing:
-            for field in ("eval_duration_seconds", "cost_per_eval"):
-                if entry.get(field) is None and existing.get(field) is not None:
-                    entry[field] = existing[field]
-
+        duration = durations.get(model_key)
+        entry = build_model_entry(score, meta, duration)
         models.append(entry)
         synced_ids.add(entry["id"])
 
-    # Preserve existing shared entries not in results (e.g. subagent/manual runs
-    # scored separately and added directly to shared/leaderboard.json)
+    # Preserve existing shared entries not in results (e.g. subagent/manual runs)
     for existing in shared.get("models", []):
         if existing["id"] not in synced_ids:
             print(f"Preserving existing entry: {existing['label']} ({existing['method']})", file=sys.stderr)
@@ -212,8 +272,6 @@ def main():
 
     models.sort(key=sort_key)
 
-    # Update shared
-    from datetime import date
     shared["last_updated"] = date.today().isoformat()
     shared["models"] = models
 
@@ -224,16 +282,39 @@ def main():
         return
 
     if check_mode:
+        stale = False
         current = SHARED.read_text() if SHARED.exists() else ""
         if current.strip() != output.strip():
-            print("shared/leaderboard.json is stale. Run: python labs/sync-leaderboard.py")
+            print("shared/leaderboard.json is stale.")
+            stale = True
+        readme_text = README.read_text()
+        table = generate_readme_table(shared)
+        before = readme_text.split(START_MARKER)[0]
+        after = readme_text.split(END_MARKER)[1]
+        new_readme = f"{before}{START_MARKER}\n{table}\n{END_MARKER}{after}"
+        if new_readme != readme_text:
+            print("README.md leaderboard is stale.")
+            stale = True
+        if stale:
+            print("Run: python labs/publish-leaderboard.py")
             sys.exit(1)
-        else:
-            print("shared/leaderboard.json is up to date.")
-            return
+        print("Leaderboard is up to date.")
+        return
 
+    # Write shared/leaderboard.json
     SHARED.write_text(output)
-    print(f"Updated {SHARED} with {len(models)} models.")
+    print(f"Updated {SHARED} ({len(models)} models)")
+
+    # Update README.md
+    readme_text = README.read_text()
+    if START_MARKER not in readme_text or END_MARKER not in readme_text:
+        print(f"WARNING: README.md missing {START_MARKER} / {END_MARKER} markers, skipping", file=sys.stderr)
+    else:
+        table = generate_readme_table(shared)
+        before = readme_text.split(START_MARKER)[0]
+        after = readme_text.split(END_MARKER)[1]
+        README.write_text(f"{before}{START_MARKER}\n{table}\n{END_MARKER}{after}")
+        print(f"Updated {README} leaderboard")
 
 
 if __name__ == "__main__":

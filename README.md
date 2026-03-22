@@ -61,17 +61,17 @@ How well do different judge models reproduce human-authored reference fingerprin
 | # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Time |
 |---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|
 | 1 | Claude Opus 4.6 | subagent | **100%** | **100%** | **100%** | 87% | 31% | Calibrated | — |
-| 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Calibrated | — |
-| 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Calibrated | — |
+| 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Calibrated | 71s |
+| 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Calibrated | 10.2m |
 | 4 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — |
 | 5 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 89% | 26% | Calibrated | — |
-| 6 | MiniMax M2.7 | api | 87% | 87% | 87% | 68% | 36% | Noisy | — |
-| 7 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | — |
-| 8 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | — |
-| 9 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy | — |
-| 10 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 49% | 60% | Sleepy | — |
-| 11 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 50% | 52% | Sleepy | — |
-| 12 | Arcee Trinity (free) | api | 57% | 53% | 80% | 48% | 69% | Sleepy | — |
+| 6 | MiniMax M2.7 | api | 87% | 87% | 87% | 68% | 36% | Noisy | 20.4m |
+| 7 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | 8.4m |
+| 8 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | 21.3m |
+| 9 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy | 17.2m |
+| 10 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 49% | 60% | Sleepy | 6.8m |
+| 11 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 50% | 52% | Sleepy | 102s |
+| 12 | Arcee Trinity (free) | api | 57% | 53% | 80% | 48% | 69% | Sleepy | 4.3m |
 | 13 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — |
 
 *13 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-03-22.*
