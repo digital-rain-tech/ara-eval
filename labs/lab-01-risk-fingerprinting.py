@@ -251,8 +251,11 @@ def main():
             print(f"    Reference fingerprint: {ref_str}")
             print(f"    Reference interpretation: {scenario.get('reference_interpretation', 'N/A')}")
 
-    # Finalize run record
+    # Finalize run record — accumulate wall time across retry sessions
     run_wall_ms = int((time.monotonic() - run_start) * 1000)
+    if prior_results:
+        prior_wall_ms = prior_results.get("_run", {}).get("wall_time_ms") or 0
+        run_wall_ms += prior_wall_ms
     update_run(
         db_conn, run_id,
         finished_at=datetime.now(timezone.utc).isoformat(),

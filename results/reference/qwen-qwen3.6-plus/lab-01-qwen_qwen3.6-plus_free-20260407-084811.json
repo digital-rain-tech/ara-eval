@@ -3175,7 +3175,7 @@
     "total_input_tokens": 42365,
     "total_output_tokens": 137807,
     "total_cost_usd": 0.016195,
-    "wall_time_ms": 88560,
+    "wall_time_ms": 3082493,
     "python_version": "3.10.12 (main, Feb  4 2025, 14:57:36) [GCC 11.4.0]",
     "retry_of": "results/2026-04-07/lab-01-qwen_qwen3.6-plus_free-20260407-084811.json"
   }

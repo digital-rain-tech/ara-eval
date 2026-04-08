@@ -197,7 +197,7 @@
       "bias": "sleepy",
       "cost_per_eval": null,
       "is_default": false,
-      "eval_duration_seconds": 89
+      "eval_duration_seconds": 3082
     },
     {
       "id": "openrouter/healer-alpha",
