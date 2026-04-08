@@ -12,6 +12,7 @@ Prerequisites:
 Usage:
     python labs/lab-01-risk-fingerprinting.py          # core scenarios only (6)
     python labs/lab-01-risk-fingerprinting.py --all     # all 13 scenarios
+    python labs/lab-01-risk-fingerprinting.py --retry results/2026-04-07/lab-01-*.json  # retry failed evals
 
 Output:
     results/lab-01-output.json — structured risk fingerprints per scenario x personality
@@ -60,11 +61,35 @@ def main():
     parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "generic"], help="Jurisdiction to use (default: hk)")
     parser.add_argument("--rubric", type=str, default="rubric.md", help="Rubric file to use (default: rubric.md)")
     parser.add_argument("--structured", action="store_true", help="Include structured context (subject/object/action) in prompts")
+    parser.add_argument("--retry", type=str, metavar="PATH", help="Retry failed/missing evals from a previous results JSON file")
     args = parser.parse_args()
 
     jurisdiction = args.jurisdiction
     rubric = args.rubric
     structured = args.structured
+
+    # --retry: load previous results and identify failed/missing evals
+    prior_results = None
+    prior_path = None
+    if args.retry:
+        prior_path = Path(args.retry)
+        if not prior_path.exists():
+            # Try as relative to results/
+            prior_path = _root / "results" / args.retry
+        if not prior_path.exists():
+            raise SystemExit(f"Retry file not found: {args.retry}")
+        with open(prior_path) as f:
+            prior_results = json.load(f)
+        prior_run = prior_results.get("_run", {})
+        # Inherit settings from prior run
+        if prior_run.get("jurisdiction"):
+            jurisdiction = prior_run["jurisdiction"]
+        if prior_run.get("rubric"):
+            rubric = prior_run["rubric"]
+        if prior_run.get("structured") is not None:
+            structured = prior_run["structured"]
+        if prior_run.get("scenario_set") == "all":
+            args.all = True
 
     # Load scenarios
     scenarios = load_scenarios(use_all=args.all)
@@ -76,10 +101,23 @@ def main():
     db_path = results_dir / "ara-eval.db"
     db_conn = init_db(db_path)
 
+    # Build skip set from prior results (successful evals to keep)
+    skip_set = set()  # (scenario_id, personality_id) pairs to skip
+    if prior_results:
+        for sid, sdata in prior_results.items():
+            if sid == "_run":
+                continue
+            evals = sdata.get("evaluations", {})
+            for pid, ev in evals.items():
+                if "fingerprint" in ev and "error" not in ev:
+                    skip_set.add((sid, pid))
+
     # Create run record
     run_id = str(uuid.uuid4())
     run_started = datetime.now(timezone.utc).isoformat()
     total_expected = len(scenarios) * len(PERSONALITIES)
+    retry_count = len(skip_set)
+    calls_to_make = total_expected - retry_count
 
     run_metadata = {
         "lab": "01-risk-fingerprinting",
@@ -88,6 +126,9 @@ def main():
         "scenario_set": scenario_set,
         "structured": structured,
     }
+    if prior_path:
+        run_metadata["retry_of"] = str(prior_path)
+        run_metadata["prior_successful"] = retry_count
 
     db_conn.execute(
         """INSERT INTO eval_runs
@@ -103,12 +144,15 @@ def main():
     print(f"Model: {MODEL}")
     structured_label = " | Structured: yes" if structured else ""
     print(f"Jurisdiction: {jurisdiction} | Rubric: {rubric} | Scenarios: {scenario_set}{structured_label}")
-    print(f"Scenarios: {len(scenarios)} × {len(PERSONALITIES)} personalities = {total_expected} calls\n")
+    if prior_results:
+        print(f"Retry mode: {retry_count} prior successes kept, {calls_to_make} calls to retry")
+    else:
+        print(f"Scenarios: {len(scenarios)} × {len(PERSONALITIES)} personalities = {total_expected} calls\n")
 
     # Init HTTP client with OpenRouter headers
     http_client = httpx.Client(headers=OPENROUTER_HEADERS, timeout=120.0)
 
-    # Run-level accumulators
+    # Run-level accumulators — seed from prior successes
     run_stats = {
         "run_id": run_id,
         "total": total_expected,
@@ -125,11 +169,35 @@ def main():
 
     for scenario in scenarios:
         sid = scenario["id"]
-        all_results[sid] = {"scenario": scenario, "evaluations": {}, "deltas": None}
+
+        # Seed from prior results if retrying
+        if prior_results and sid in prior_results:
+            all_results[sid] = prior_results[sid]
+            # Re-attach scenario in case it was updated
+            all_results[sid]["scenario"] = scenario
+        else:
+            all_results[sid] = {"scenario": scenario, "evaluations": {}, "deltas": None}
 
         personality_results = {}
 
         for personality_id, personality_meta in PERSONALITIES.items():
+            # Skip if we already have a successful result from prior run
+            if (sid, personality_id) in skip_set:
+                ev = all_results[sid]["evaluations"][personality_id]
+                # Reconstruct personality_results for delta computation
+                personality_results[personality_id] = {
+                    "parsed": {"dimensions": ev["fingerprint"]},
+                    "gating": ev["gating"],
+                }
+                run_stats["successful"] += 1
+                # Accumulate prior stats
+                run_stats["input_tokens"] += (ev.get("usage") or {}).get("input_tokens") or 0
+                run_stats["output_tokens"] += (ev.get("usage") or {}).get("output_tokens") or 0
+                run_stats["cost"] += ev.get("cost_usd") or 0.0
+                run_stats["duration_ms"] += ev.get("response_time_ms") or 0
+                print(f"\n  Skipping {sid} / {personality_meta['label']} (prior success)")
+                continue
+
             print(f"\nEvaluating {sid} as {personality_meta['label']}...")
 
             try:
@@ -169,7 +237,7 @@ def main():
                 run_stats["failed"] += 1
                 continue
 
-        # Compute personality deltas (only if we got results)
+        # Recompute personality deltas with all results (prior + new)
         if personality_results:
             deltas = personality_delta(personality_results)
             all_results[sid]["deltas"] = deltas
@@ -215,24 +283,30 @@ def main():
         "wall_time_ms": run_wall_ms,
         "python_version": sys.version,
     }
+    if prior_path:
+        all_results["_run"]["retry_of"] = str(prior_path)
 
-    # Save results — dated folder, timestamped file, plus a latest symlink
-    run_dir = get_run_dir(results_dir)
-    model_slug = MODEL.replace("/", "_").replace(":", "_")
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    output_filename = f"lab-01-{model_slug}-{timestamp}.json"
-    output_path = run_dir / output_filename
+    # Save results — overwrite prior file if retrying, otherwise new timestamped file
+    if prior_path:
+        output_path = prior_path.resolve()
+    else:
+        run_dir = get_run_dir(results_dir)
+        model_slug = MODEL.replace("/", "_").replace(":", "_")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        output_filename = f"lab-01-{model_slug}-{timestamp}.json"
+        output_path = run_dir / output_filename
+
     with open(output_path, "w") as f:
         json.dump(all_results, f, indent=2, default=str)
 
     # Symlink latest at results/ level for convenience
     latest_path = results_dir / "lab-01-output.json"
     latest_path.unlink(missing_ok=True)
-    latest_path.symlink_to(run_dir.name + "/" + output_filename)
+    latest_path.symlink_to(output_path.relative_to(results_dir.resolve()))
 
     print_run_summary(run_stats)
     print(f"\n  Results: {output_path}")
-    print(f"  Latest:  {latest_path} → {output_filename}")
+    print(f"  Latest:  {latest_path} → {output_path.name}")
     print(f"  DB log:  {db_path}")
 
     http_client.close()

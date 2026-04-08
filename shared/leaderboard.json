@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-03-22",
+  "last_updated": "2026-04-08",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
@@ -180,6 +180,24 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 1034
+    },
+    {
+      "id": "qwen/qwen3.6-plus",
+      "label": "Qwen3.6 Plus",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios",
+      "completion": "18/18",
+      "f2": 0.7,
+      "hard_gate_recall": 0.67,
+      "hard_gate_precision": 0.91,
+      "false_negatives": 5,
+      "false_positives": 1,
+      "fingerprint_match": 0.59,
+      "differentiation": 0.67,
+      "bias": "sleepy",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 89
     },
     {
       "id": "openrouter/healer-alpha",

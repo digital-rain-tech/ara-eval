@@ -127,6 +127,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios",
         "is_default": False,
     },
+    "qwen-qwen3.6-plus": {
+        "id": "qwen/qwen3.6-plus",
+        "label": "Qwen3.6 Plus",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios",
+        "is_default": False,
+    },
 }
 
 
