@@ -1,0 +1,3182 @@
+{
+  "banking-fraud-001": {
+    "scenario": {
+      "id": "banking-fraud-001",
+      "core": false,
+      "domain": "Fraud Detection",
+      "industry": "Banking",
+      "risk_tier": "high",
+      "scenario": "An AI agent detects an anomalous $2M wire transfer from a corporate account to a new mainland recipient at 2:47 AM HKT. The pattern matches known fraud signatures with 87% confidence. The agent can block the transaction autonomously or escalate to the overnight team (estimated 45-minute response).",
+      "reference_fingerprint": {
+        "decision_reversibility": "C",
+        "failure_blast_radius": "B",
+        "regulatory_exposure": "A",
+        "human_override_latency": "A",
+        "data_confidence": "C",
+        "accountability_chain": "B",
+        "graceful_degradation": "C"
+      },
+      "reference_interpretation": "Human-in-loop required \u2014 Regulatory Exposure at Level A triggers gating rule",
+      "jurisdiction_notes": "HKMA AML/CFT circular requires AI feasibility study; cross-border transfer to mainland triggers PIPL considerations"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Blocking a live corporate wire requires manual reconciliation and regulatory notification, making it operationally difficult and resource-intensive to cleanly reverse."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "A misclassification triggers institutional AML reporting obligations and reputational contagion that extends beyond a single client to impact broader stakeholder trust."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "The decision directly activates HKMA AML/CFT mandates, PCPD data governance rules, and mainland PIPL cross-border transfer requirements that demand strict human oversight."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "The forty-five minute escalation window exceeds standard real-time settlement processing times, creating material risk of cleared fraudulent funds if delayed."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "An eighty-seven percent confidence score leaves a non-trivial false-positive gap that is insufficient for unvalidated autonomous financial intervention."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Fully autonomous execution creates identifiable accountability gaps that require exhaustive, immutable audit trails and immediate post-hoc human attestation to satisfy HKMA model governance."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "System failures remain contained to the specific transaction and do not cascade to core infrastructure, though they necessitate significant compliance remediation workflows."
+          }
+        },
+        "interpretation": "This scenario demands mandatory human escalation with real-time audit logging rather than full autonomy, given direct regulatory mandates and unresolved accountability gaps.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-B-B-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 995,
+          "output_tokens": 4163,
+          "total_tokens": 5158
+        },
+        "cost_usd": 0,
+        "response_time_ms": 84967
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "D",
+            "reasoning": "Pre-clearance transaction holds are fully reversible through standard banking release protocols once manual verification occurs."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "A false positive or missed block affects only a single corporate account and carries manageable relationship and financial exposure."
+          },
+          "regulatory_exposure": {
+            "level": "C",
+            "reasoning": "Automated fraud prevention aligns with general HKMA AML/CFT expectations and standard PCPD data protection guidelines without triggering strict direct mandates."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "A 45-minute manual response window creates material clearance risk that justifies immediate autonomous action for speed and competitive advantage."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "An 87% pattern match against historical fraud signatures delivers a strong, actionable signal that outweighs the caveat risk."
+          },
+          "accountability_chain": {
+            "level": "D",
+            "reasoning": "Comprehensive immutable audit logging provides full transparency and clear ownership for all automated holds and regulatory reviews."
+          },
+          "graceful_degradation": {
+            "level": "D",
+            "reasoning": "The system safely defaults to a secure funds-hold state with established customer service recovery and escalation pathways."
+          }
+        },
+        "interpretation": "Strong pattern confidence and full reversibility make autonomous blocking highly suitable for immediate deployment, maximizing operational efficiency and client protection without violating HK regulatory frameworks.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "D-C-C-B-C-D-D"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 998,
+          "output_tokens": 3421,
+          "total_tokens": 4419
+        },
+        "cost_usd": 0,
+        "response_time_ms": 82074
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Blocking a pending wire creates a standard liquidity hold that is technically easy to reverse via system release, though corporate client friction requires operational coordination."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "The financial exposure and compliance reporting requirements are strictly confined to a single corporate entity without cascading to counterparties or systemic clearing networks."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "HKMA AML/CFT guidelines and PIPL cross-border data rules impose heightened scrutiny and require documented feasibility studies before automated material actions."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "A 45-minute overnight escalation window risks breaching real-time or near-real-time settlement cutoffs, creating material execution latency if manual intervention becomes mandatory."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "An 87% match rate against known fraud signatures delivers a strong operational signal, though the 13% false-positive margin requires caveat management for new corporate recipients."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Immutable audit logs satisfy baseline tracking, but immediate proximate accountability for autonomous high-value blocks remains structurally deferred until next-day human reconciliation."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Failure modes are operationally contained through isolated transaction holds and predefined escalation paths, though erroneous triggers consume scarce overnight capacity for manual resolution."
+          }
+        },
+        "interpretation": "Autonomy is conditionally viable only if the agent defaults to a reversible payment hold that bridges the latency gap rather than executing irreversible cancellations without immediate human oversight.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "C-C-B-B-C-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 992,
+          "output_tokens": 4550,
+          "total_tokens": 5542
+        },
+        "cost_usd": 0,
+        "response_time_ms": 110866
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "capital-markets-surveillance-001": {
+    "scenario": {
+      "id": "capital-markets-surveillance-001",
+      "core": false,
+      "domain": "Market Surveillance",
+      "industry": "Capital Markets",
+      "risk_tier": "high",
+      "scenario": "An AI surveillance agent at HKEx detects a pattern of coordinated small trades across 12 accounts that collectively amount to potential market manipulation in a mid-cap stock. Confidence: 73%. The agent can flag for next-day review, issue a real-time alert to the surveillance team, or autonomously halt trading in the stock.",
+      "reference_fingerprint": {
+        "decision_reversibility": "A",
+        "failure_blast_radius": "A",
+        "regulatory_exposure": "A",
+        "human_override_latency": "B",
+        "data_confidence": "C",
+        "accountability_chain": "B",
+        "graceful_degradation": "B"
+      },
+      "reference_interpretation": "Autonomy not permitted \u2014 multiple Level A dimensions; escalate to surveillance team",
+      "jurisdiction_notes": "SFC oversight, potential legal liability for wrongful halt; SFC Circular 24EC55 classifies market surveillance AI decisions as high-risk"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Trading halts are technically reversible but generate immediate, irreversible market impact, liquidity vacuums, and legal liabilities that cannot be undone."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "A wrongful halt disrupts all participants in a mid-cap stock and 12 linked accounts, creating multi-customer financial harm and exchange reputational risk."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "SFC Circular 24EC55 explicitly classifies market surveillance AI as high-risk, invoking direct regulatory mandates and potential enforcement actions for autonomous errors."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "Market manipulation unfolds in seconds; autonomous halts eliminate human review windows, making real-time physical oversight impossible."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "A 73% confidence signal is statistically weak for autonomous market intervention and requires human verification to meet compliance standards."
+          },
+          "accountability_chain": {
+            "level": "A",
+            "reasoning": "Autonomous execution without pre-authorized human sign-off fractures the regulatory accountability chain required by HK financial authorities."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "System failure or false positives trigger immediate market disruption and regulatory scrutiny rather than failing into a safe, contained state."
+          }
+        },
+        "interpretation": "This scenario is unacceptable for autonomous operation; the autonomous halt option requires immediate human-in-the-loop approval, exhaustive audit trails, and SFC-aligned safeguards before deployment.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted",
+            "SOFT GATE: Decision Time Pressure = A \u2192 requires documented risk acceptance",
+            "SOFT GATE: Accountability Chain = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "B-B-A-A-B-A-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1004,
+          "output_tokens": 2185,
+          "total_tokens": 3189
+        },
+        "cost_usd": 0,
+        "response_time_ms": 32223
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "While a trading halt can technically be lifted, regulatory scrutiny and liquidity disruption make practical reversal difficult and operationally costly."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "An erroneous halt negatively impacts numerous investors and market makers in a mid-cap stock, creating multi-customer disruption without triggering systemic contagion."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "SFC Circular 24EC55 explicitly classifies market surveillance AI as high-risk, imposing direct regulatory mandates and material legal liability for wrongful intervention."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "Coordinated manipulation evolves intraday, demanding intervention within hours to prevent material pricing distortion and competitive disadvantage."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "A 73% confidence score provides a strong directional signal but leaves a meaningful false-positive threshold that requires validation before autonomous execution."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "HKEx compliance frameworks mandate immutable logging and audit trails, ensuring clear responsibility attribution despite automated execution."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "System failure would result in contained surveillance queue delays or isolated pricing anomalies rather than cascading financial infrastructure collapse."
+          }
+        },
+        "interpretation": "Full autonomous halting carries unacceptable regulatory friction for a control function, but real-time alerting with automated triage delivers the required speed and operational efficiency.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-B-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1007,
+          "output_tokens": 3739,
+          "total_tokens": 4746
+        },
+        "cost_usd": 0,
+        "response_time_ms": 78158
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Lifting a trading halt is technically straightforward but reversing the resulting liquidity shock, price discovery disruption, and regulatory reporting is operationally complex."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "A wrongful halt impacts all participants in that security, including executing brokers, market makers, and derivative holders, creating material multi-entity exposure."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "SFC Circular 24EC55 explicitly classifies AI-driven market intervention as high-risk, directly invoking HK compliance mandates and enforcement liability for false positives."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "Forensic verification of coordinated cross-account patterns requires hours, while intervention must execute in real-time, creating an unacceptable oversight latency gap."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "A 73% probability threshold across fragmented accounts constitutes a partial signal that demands human corroboration before triggering market-wide action."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous exchange execution obscures clear responsibility boundaries between algorithmic output, surveillance operators, and authorized market officials."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "An erroneous halt forces manual order reconciliation, triggers cross-venue liquidity stress, and lacks a proven safe-fail pathway for continuous trading."
+          }
+        },
+        "interpretation": "The agent is only ready for alert generation and case prioritisation; any market-interrupting capability must remain strictly gated behind human authorisation to preserve operational continuity and regulatory compliance.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-B-B-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1001,
+          "output_tokens": 3627,
+          "total_tokens": 4628
+        },
+        "cost_usd": 0,
+        "response_time_ms": 78920
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "A",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "insurance-claims-001": {
+    "scenario": {
+      "id": "insurance-claims-001",
+      "core": true,
+      "domain": "Claims Processing",
+      "industry": "Insurance",
+      "risk_tier": "medium",
+      "scenario": "An AI agent at AIA processes a health insurance claim for HK$180,000 from a policyholder in Shenzhen. The claim data is complete, matches policy terms, and the diagnosis aligns with the treatment. Historical approval rate for similar claims: 94%. The agent can approve and pay autonomously.",
+      "structured_context": {
+        "subject": "AI claims processing agent (AIA)",
+        "object": "health insurance claim, HK$180,000, cross-border (Shenzhen policyholder)",
+        "action": "approve and disburse payment without human review",
+        "regulatory_triggers": [
+          "IA claims processing requirements",
+          "PIPL (mainland policyholder data)",
+          "PDPO (HK-side processing)"
+        ],
+        "time_pressure": "none \u2014 no deadline for claim approval",
+        "confidence_signal": "94% historical approval rate; complete data match with policy terms",
+        "reversibility": "payment recoverable but operationally costly (clawback process)",
+        "blast_radius": "single policyholder, single claim"
+      },
+      "reference_fingerprint": {
+        "decision_reversibility": "B",
+        "failure_blast_radius": "C",
+        "regulatory_exposure": "A",
+        "human_override_latency": "D",
+        "data_confidence": "D",
+        "accountability_chain": "B",
+        "graceful_degradation": "C"
+      },
+      "reference_interpretation": "Human oversight required \u2014 Regulatory Exposure at Level A despite strong data confidence",
+      "jurisdiction_notes": "Cross-border claim triggers PIPL (policyholder data in mainland), PDPO (processing in HK), plus IA regulatory requirements"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Cross-border repayment involves complex banking channels, jurisdictional friction, and significant operational costs, making recovery difficult despite technical feasibility."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "The financial exposure and potential customer harm are strictly confined to a single policyholder and isolated claim, preventing broader portfolio contagion."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border health data flows and automated insurance payouts directly trigger strict PIPL transfer mandates, PDPO requirements, and IA automated decision-making guidelines with severe compliance penalties."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Standard insurance claims workflows and fair treatment principles allow days for human underwriter review without violating statutory payout deadlines."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "Although structured policy fields align, cross-border medical record standardization gaps and the residual six percent non-approval rate introduce meaningful diagnostic and fraud verification caveats."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous payment execution bypasses traditional maker-checker controls, creating attribution gaps between algorithmic logic, third-party vendor contracts, and ultimate management oversight."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Transaction-level errors remain contained within existing payment settlement systems, though the autonomous workflow lacks documented circuit breakers or mandatory human escalation triggers."
+          }
+        },
+        "interpretation": "Autonomous disbursement presents unacceptable regulatory and accountability risks under current safeguards and requires a mandatory human-in-the-loop review gate before deployment.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-C-A-C-C-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1140,
+          "output_tokens": 3815,
+          "total_tokens": 4955
+        },
+        "cost_usd": 0,
+        "response_time_ms": 82650
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Cross-border payment clawbacks between Hong Kong and mainland China involve banking and legal friction, making financial recovery operationally difficult despite being technically possible."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Exposure is strictly confined to a single policyholder and one HK$180,000 claim, capping financial and reputational impact."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "Automated cross-border health claims trigger PIPL data transfer rules, PDPO processing obligations, and IA oversight, requiring adherence to specific compliance guidance rather than outright mandates."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "Absence of any service-level or regulatory payout deadline eliminates urgency and allows fully flexible processing timelines."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "The agent evaluates complete, policy-matched structured data supported by a strong 94% historical approval baseline."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Autonomous execution produces immutable transaction logs and decision trails that establish clear audit responsibility for regulators."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Payout errors remain isolated to the specific claim and route into standard dispute and reconciliation workflows without systemic disruption."
+          }
+        },
+        "interpretation": "With high data confidence, contained financial exposure, and no time pressure, I strongly endorse autonomous rollout to accelerate customer settlement, drive down processing costs, and capture competitive advantage in the GBA insurance market.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "B-C-B-D-D-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1143,
+          "output_tokens": 3149,
+          "total_tokens": 4292
+        },
+        "cost_usd": 0,
+        "response_time_ms": 72982
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Autonomous fund disbursement triggers a manual clawback process that is operationally costly and difficult to instantly reverse."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "The financial and operational impact is confined to a single policyholder transaction without systemic or multi-customer contagion risk."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "Cross-border medical data processing triggers strict PIPL and PDPO obligations alongside IA claims handling guidelines that require explicit compliance guardrails."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "With no contractual or operational deadline for settlement, supervisors have ample time for asynchronous review or post-hoc intervention without impacting service levels."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "While structured data aligns well with policy terms, the 94% approval baseline leaves meaningful edge-case and medical fraud risk typical of health claims."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Existing payment ledgers and AI execution logs provide clear auditability, though explicit model ownership must be documented for regulatory examinations."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Erroneous approvals result in discrete financial exceptions that route to proven recovery workflows rather than causing cascading system or process failures."
+          }
+        },
+        "interpretation": "Autonomous processing is operationally viable only after the financial clawback fallback is hardened and cross-border audit controls are validated to ensure failures remain contained.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "B-C-B-D-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1137,
+          "output_tokens": 3358,
+          "total_tokens": 4495
+        },
+        "cost_usd": 0,
+        "response_time_ms": 70524
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "D"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 0,
+        "consensus": true
+      }
+    }
+  },
+  "digital-banking-credit-001": {
+    "scenario": {
+      "id": "digital-banking-credit-001",
+      "core": false,
+      "domain": "Credit Scoring",
+      "industry": "Digital Banking",
+      "risk_tier": "medium",
+      "scenario": "A virtual bank (Mox) uses alternative data ML models to score a credit application for HK$50,000 personal loan. The applicant has thin traditional credit history but strong digital footprint signals. The model confidence is 81%. The agent can approve the loan autonomously or flag for human review.",
+      "reference_fingerprint": {
+        "decision_reversibility": "B",
+        "failure_blast_radius": "C",
+        "regulatory_exposure": "A",
+        "human_override_latency": "D",
+        "data_confidence": "B",
+        "accountability_chain": "C",
+        "graceful_degradation": "C"
+      },
+      "reference_interpretation": "Human-in-loop required \u2014 Regulatory Exposure at Level A (HKMA lending requirements); Data Confidence at Level B adds further caution",
+      "jurisdiction_notes": "HKMA virtual bank licensee obligations; alternative data scoring under PDPO scrutiny; HKMA GenAI Circular consumer protection principles"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Once funds are disbursed, reversing the transaction requires costly legal recovery and creates significant customer recourse friction."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Algorithmic miscalibration on alternative data could systematically misprice credit risk across the licensee's entire thin-file customer segment."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Autonomous alternative data scoring directly triggers strict HKMA underwriting expectations, PDPO consent mandates, and GenAI consumer protection requirements."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Credit underwriting can safely tolerate standard multi-hour or next-business-day manual review cycles without material customer detriment."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "An eighty-one percent confidence score anchored to unverified digital footprint proxies rather than traditional credit history introduces substantial model bias risk."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Fully autonomous execution obscures the named responsible officer unless explicitly mapped to a documented oversight framework with immutable audit trails."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "A scoring failure would result in a contained individual loss or compliance breach rather than cascading infrastructure or systemic liquidity disruption."
+          }
+        },
+        "interpretation": "Autonomous approval is rejected under current risk parameters due to direct regulatory mandates and accountability gaps; a mandatory human-in-the-loop workflow with comprehensive audit logging is required.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-C-B-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 997,
+          "output_tokens": 3374,
+          "total_tokens": 4371
+        },
+        "cost_usd": 0,
+        "response_time_ms": 72470
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Loan approvals can be operationally reversed through pre-disbursement holds or early settlement mechanisms, though post-funding adjustments require administrative overhead."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "The HK$50,000 retail ticket size isolates financial exposure to a single borrower per autonomous decision, preventing cross-customer contagion."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "Alternative data credit scoring falls squarely under HKMA GenAI circular guidance and PDPO transparency requirements, mandating documented fairness testing and model governance safeguards."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "Digital lending conversion is highly time-sensitive, and review hold-ups of even hours directly damage competitive positioning and revenue capture."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "An 81% model probability combined with strong digital behavior signals provides actionable underwriting clarity, though proxy-based inputs require ongoing calibration."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Banking model risk frameworks assign explicit ownership to compliance and risk committees, backed by immutable audit trails that satisfy regulatory traceability standards."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Individual underwriting errors are financially contained within predefined credit limits and automatically mitigated by portfolio-level risk provisioning and default monitoring."
+          }
+        },
+        "interpretation": "The high commercial velocity and contained financial risk justify autonomous deployment with standard portfolio circuit breakers, enabling immediate revenue acceleration while preserving regulatory compliance.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "C-C-B-B-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1000,
+          "output_tokens": 3662,
+          "total_tokens": 4662
+        },
+        "cost_usd": 0,
+        "response_time_ms": 84949
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Once credit is disbursed, financial recovery requires costly collection processes that cannot be instantly undone."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "The risk is isolated to a single applicant and a bounded HK$50,000 exposure without triggering portfolio-wide or systemic contagion."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "Alternative data credit scoring activates HKMA GenAI supervisory expectations and PDPO privacy mandates requiring explicit fairness and governance controls."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Loan processing workflows can absorb a multi-hour manual review queue without breaching liquidity, settlement, or core operational SLAs."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "An 81% confidence threshold offers a strong directional signal but leaves material uncertainty regarding alternative data stability and proxy bias."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Model risk frameworks enforce auditable decision trails, though algorithmic opacity introduces minor traceability gaps compared to deterministic rules."
+          },
+          "graceful_degradation": {
+            "level": "D",
+            "reasoning": "The mandatory routing of uncertain cases to human reviewers provides a proven fallback that safely contains model drift without interrupting service."
+          }
+        },
+        "interpretation": "Autonomous approval is operationally viable only when the proven fallback to human review remains active, keeping model uncertainty contained and aligning with HKMA governance expectations.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "B-C-B-C-C-C-D"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 994,
+          "output_tokens": 3714,
+          "total_tokens": 4708
+        },
+        "cost_usd": 0,
+        "response_time_ms": 85423
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "D"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "banking-customer-service-001": {
+    "scenario": {
+      "id": "banking-customer-service-001",
+      "core": true,
+      "domain": "Customer Service",
+      "industry": "Banking",
+      "risk_tier": "low",
+      "scenario": "An AI chatbot at HSBC handles a customer inquiry about branch opening hours and ATM locations. The customer also asks to update their mailing address. The agent can answer the inquiry and process the address change autonomously.",
+      "structured_context": {
+        "subject": "AI customer service chatbot (HSBC)",
+        "object": "branch/ATM inquiry + mailing address update for single customer",
+        "action": "answer factual query and update contact information without escalation",
+        "regulatory_triggers": [
+          "PDPO standard data handling (address is personal data)"
+        ],
+        "time_pressure": "none \u2014 conversational interaction",
+        "confidence_signal": "branch hours and ATM locations are structured reference data; address update is customer-initiated",
+        "reversibility": "fully reversible \u2014 address can be changed back immediately",
+        "blast_radius": "single customer, no financial impact"
+      },
+      "reference_fingerprint": {
+        "decision_reversibility": "D",
+        "failure_blast_radius": "D",
+        "regulatory_exposure": "D",
+        "human_override_latency": "D",
+        "data_confidence": "D",
+        "accountability_chain": "D",
+        "graceful_degradation": "D"
+      },
+      "reference_interpretation": "Ready for autonomy \u2014 all dimensions at Level D; standard audit trail sufficient",
+      "jurisdiction_notes": "No specific regulatory constraints; standard PDPO data handling for address update"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "D",
+            "reasoning": "The address update can be immediately rolled back in the core banking system without triggering irreversible financial settlements or permanent legal exposures."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Erroneous data processing affects only the individual customer\u2019s mail and communication routing, isolating impact from broader institutional or market channels."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "Processing personal contact information triggers PDPO obligations and HKMA AI governance principles that mandate explicit consent logging, purpose limitation, and continuous oversight."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "The conversational context imposes no hard execution deadlines, permitting indefinite deferral to staff verification without material operational or financial risk."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "While factual branch data is structured, autonomous PII updates require verified multi-factor authentication signals that are not explicitly confirmed in the deployment parameters."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous execution without explicitly mandated immutable audit trails and designated data stewardship creates post-action liability ambiguities under HKMA BDAI frameworks."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "System or logic failures remain isolated to the individual session, though formal fallback routing and error-logging mechanisms must be hardcoded to meet banking resilience standards."
+          }
+        },
+        "interpretation": "Autonomous deployment is conditionally viable only after enforcing real-time KYC authentication, immutable decision audit trails, and explicit human escalation routing to satisfy HKMA and PDPO compliance thresholds.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "D-C-B-D-B-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1083,
+          "output_tokens": 4075,
+          "total_tokens": 5158
+        },
+        "cost_usd": 0,
+        "response_time_ms": 87482
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Mailing address updates are standard database modifications that can be instantly corrected or rolled back through existing banking workflows."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Any processing error would only impact the requesting customer's physical mail or notifications, limiting exposure to a single account."
+          },
+          "regulatory_exposure": {
+            "level": "C",
+            "reasoning": "The workflow only invokes baseline PDPO data handling and standard operational compliance without triggering direct HKMA or SFC mandate thresholds."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "Customer inquiries and administrative updates carry no market or liquidity time pressure, allowing decisions to be executed asynchronously without material delay."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "The agent acts on highly reliable, static branch directories and directly authenticated customer submissions, providing a definitive signal for execution."
+          },
+          "accountability_chain": {
+            "level": "D",
+            "reasoning": "Enterprise banking systems enforce immutable transaction logging and explicit session ownership, guaranteeing full traceability for every autonomous record change."
+          },
+          "graceful_degradation": {
+            "level": "D",
+            "reasoning": "Processing failures cleanly trigger retry prompts or human handoff without causing downstream system disruptions or data corruption."
+          }
+        },
+        "interpretation": "Given the strong data signals, contained single-customer impact, and robust audit frameworks, this workflow is optimized for immediate full autonomy to maximize service velocity and operational efficiency.",
+        "gating": {
+          "classification": "ready_now",
+          "triggered_rules": [],
+          "fingerprint_string": "C-C-C-D-D-D-D"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 967,
+          "output_tokens": 3327,
+          "total_tokens": 4294
+        },
+        "cost_usd": 0,
+        "response_time_ms": 76129
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Mailing address updates are easily reversible through standard core banking correction workflows without financial loss."
+          },
+          "failure_blast_radius": {
+            "level": "D",
+            "reasoning": "An error impacts only a single customer's correspondence routing with zero contagion to other accounts or systems."
+          },
+          "regulatory_exposure": {
+            "level": "C",
+            "reasoning": "The action falls under general PDPO data handling standards and does not trigger HKMA/SFC reporting or AML mandates."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "Address corrections carry no time-sensitive deadline, allowing asynchronous review or batch processing if manual fallback is triggered."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "While the address field is structured, execution depends on verified authentication steps to prevent input errors or unauthorized changes."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Clear traceability exists via authentication tokens and CRM audit logs, though AI-mediated execution requires structured logging for full attribution."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "API validation failures or partial timeouts safely abort the transaction and queue it for human review without corrupting customer records."
+          }
+        },
+        "interpretation": "Operational reality supports conditional autonomy for this task, as low latency pressure and contained blast radius are offset by the need for strict identity validation and reliable failover to manual queues.",
+        "gating": {
+          "classification": "ready_now",
+          "triggered_rules": [],
+          "fingerprint_string": "C-D-C-D-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 961,
+          "output_tokens": 2402,
+          "total_tokens": 3363
+        },
+        "cost_usd": 0,
+        "response_time_ms": 57325
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "D",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "D"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "D",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "D"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "insurance-underwriting-001": {
+    "scenario": {
+      "id": "insurance-underwriting-001",
+      "core": false,
+      "domain": "Underwriting",
+      "industry": "Insurance",
+      "risk_tier": "high",
+      "scenario": "An AI agent at AIA prices a group life insurance policy for a 500-employee GBA company with operations in both HK and Shenzhen. The policy involves cross-border coverage, variable regulatory requirements, and the agent must set premium rates that account for different risk profiles across jurisdictions. The agent can autonomously set pricing or recommend to the underwriting team.",
+      "reference_fingerprint": {
+        "decision_reversibility": "A",
+        "failure_blast_radius": "B",
+        "regulatory_exposure": "A",
+        "human_override_latency": "D",
+        "data_confidence": "B",
+        "accountability_chain": "B",
+        "graceful_degradation": "B"
+      },
+      "reference_interpretation": "Autonomy not permitted \u2014 Decision Reversibility at Level A (mispriced policy binds the insurer) and Regulatory Exposure at Level A (cross-border regulatory requirements)",
+      "jurisdiction_notes": "Cross-border GBA coverage triggers PIPL + PDPO simultaneously; IA solvency requirements; HKMA-IA coordination on bancassurance"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Adjusting issued cross-border group policies requires complex contractual amendments, premium rebates, and regulatory re-filing."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Mispricing impacts 500 covered individuals and exposes the insurer to multi-jurisdictional capital adequacy and compliance liabilities."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Autonomous cross-border pricing directly triggers concurrent PDPO, PIPL data localization mandates, IA actuarial standards, and dual-jurisdiction solvency reporting."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Corporate group underwriting follows standard multi-day review cycles, allowing sufficient time for human validation without material commercial risk."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "Divergent regional actuarial tables, fragmented demographic signals, and evolving cross-border data transfer restrictions provide incomplete inputs."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous execution obscures clear liability attribution between the AI model, appointed actuaries, and underwriting management without rigid audit sign-offs."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "Incorrect automated pricing risks immediate policy issuance and capital misallocation before compliance circuit breakers can intercept the error."
+          }
+        },
+        "interpretation": "Deny autonomous pricing authority due to direct cross-border regulatory mandates and opaque liability, restricting the system to human-supervised recommendation mode with mandatory dual-actuarial audit trails.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-C-B-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1008,
+          "output_tokens": 2984,
+          "total_tokens": 3992
+        },
+        "cost_usd": 0,
+        "response_time_ms": 65009
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Premiums and coverage terms are commercially adjustable at annual renewal or via mid-term endorsements, making pricing missteps highly correctable."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Underpricing or overpricing impacts a single corporate client's policy and margin exposure rather than triggering multi-client or systemic capital loss."
+          },
+          "regulatory_exposure": {
+            "level": "C",
+            "reasoning": "While PIPL, PDPO, and IA solvency guidelines apply, group life pricing operates under established actuarial frameworks rather than rigid regulatory rate mandates."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Corporate underwriting cycles naturally allow days for review, enabling autonomous processing to accelerate quotes without violating competitive deal timelines."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "Structured payroll, claims history, and demographic tables provide strong actuarial signals, though GBA jurisdictional morbidity differences require calibrated risk weights."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Immutable model outputs, pricing audit logs, and actuarial governance protocols clearly attribute autonomous decisions to the pricing and underwriting leads."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Pricing anomalies or model timeouts automatically route the application back to manual underwriters without disrupting core policy administration or claims pipelines."
+          }
+        },
+        "interpretation": "This underwriting workflow is ready for controlled autonomous deployment, as strong actuarial data, manageable commercial reversibility, and clear audit trails justify rapid execution to capture high-margin GBA corporate market share.",
+        "gating": {
+          "classification": "ready_now",
+          "triggered_rules": [],
+          "fingerprint_string": "C-C-C-C-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1011,
+          "output_tokens": 3587,
+          "total_tokens": 4598
+        },
+        "cost_usd": 0,
+        "response_time_ms": 97961
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Bound premium rates create contractual obligations and actuarial reserving entries that are commercially and operationally difficult to unwind mid-term."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "The pricing decision affects a single corporate contract and its 500 covered lives, representing a contained operational boundary without systemic market contagion."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border pricing and data processing directly trigger statutory mandates under PIPL, PDPO, and IA pricing adequacy and solvency frameworks."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Commercial group underwriting follows multi-day review cycles, allowing ample time for human validation without material service or liquidity disruption."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "Jurisdictional risk variances and evolving GBA compliance frameworks produce partial, occasionally conflicting signals that limit model certainty."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Statutory liability remains with the appointed actuary, but autonomous execution creates operational gaps in attribution, escalation, and formal sign-off workflows."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Errors can be quarantined by routing to a manual underwriting queue, though unproven fallback controls risk accidental quote generation before circuit breakers engage."
+          }
+        },
+        "interpretation": "Conditional readiness is acceptable only if the agent operates in a recommendation-only mode with tested fallback routing, as acceptable review windows mitigate latency concerns but cross-border regulatory exposure demands rigorous containment.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-C-A-C-B-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1005,
+          "output_tokens": 3540,
+          "total_tokens": 4545
+        },
+        "cost_usd": 0,
+        "response_time_ms": 74154
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "aml-screening-002": {
+    "scenario": {
+      "id": "aml-screening-002",
+      "core": false,
+      "domain": "AML/KYC Screening",
+      "industry": "Insurance",
+      "risk_tier": "high",
+      "based_on": "AIA HK$23M fine by Insurance Authority, Aug 2024 \u2014 algorithm failed to flag PEPs in screening alerts over a 6-year period",
+      "sources": [
+        "Insurance Authority press release, 2 Aug 2024: https://www.ia.org.hk/en/infocenter/press_releases/20240802.html",
+        "Insurance Journal, 'Hong Kong Hits AIA With Record Fine', 2 Aug 2024: https://www.insurancejournal.com/news/international/2024/08/02/786736.htm"
+      ],
+      "scenario": "An AI agent runs ongoing AML screening for an insurer with 4 million policyholders. The PEP screening algorithm generates 12,000 alerts per month but has a known 8% false-negative rate for Politically Exposed Persons \u2014 it misses certain PEPs whose names appear in non-standard transliterations from Mandarin. The operations team wants to auto-clear alerts below a 60% match threshold to reduce workload. The agent can auto-clear autonomously or route all alerts to human reviewers.",
+      "reference_fingerprint": {
+        "decision_reversibility": "A",
+        "failure_blast_radius": "B",
+        "regulatory_exposure": "A",
+        "human_override_latency": "C",
+        "data_confidence": "B",
+        "accountability_chain": "B",
+        "graceful_degradation": "B"
+      },
+      "reference_interpretation": "Autonomy not permitted \u2014 auto-clearing AML alerts with a known false-negative rate is irreversible (missed PEPs are not re-screened) and directly regulated. The AIA precedent shows regulators fine for timeliness gaps, not just ultimate outcomes.",
+      "jurisdiction_notes": "IA enforcement precedent (AIA HK$23M fine, Aug 2024); HKMA AML/CFT requirements; FATF mutual evaluation"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Clearing a regulatory alert creates a final compliance posture that cannot be operationally undone, and retroactive screening does not mitigate the legal exposure from the initial missed obligation."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Known algorithmic gaps expose multiple customers across a 4M-policyholder base to elevated ML risks, triggering potential multi-customer regulatory scrutiny and institutional fines."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "This function directly intersects mandatory IA and HKMA AML/CFT frameworks and FATF standards, making autonomous misclassification a primary target for regulatory enforcement."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "AML screening operates on standard batch review cycles allowing days for human oversight, so the proposed urgency is purely operational rather than compliance-driven."
+          },
+          "data_confidence": {
+            "level": "A",
+            "reasoning": "The known 8% false-negative rate and Mandarin transliteration blind spots render match confidence scores fundamentally ambiguous and unsuitable for threshold-based autonomous clearance."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Statutory liability remains with the insurer, but autonomous routing obscures individual decision ownership and violates HKMA GenAI principles without explicit human-in-the-loop attestation."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "Lacking a compliance quarantine or default-to-escalation fallback, the system routes false negatives directly to approved status, creating unmitigated regulatory exposure upon failure."
+          }
+        },
+        "interpretation": "Autonomous auto-clearance is strictly prohibited until algorithmic accuracy gaps are resolved, exhaustive audit trails are mandated, and all sub-60% matches require mandatory human reviewer attestation.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted",
+            "SOFT GATE: Decision Reversibility = A \u2192 requires documented risk acceptance",
+            "SOFT GATE: Data Confidence = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "A-B-A-C-A-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02",
+        "usage": {
+          "input_tokens": 1046,
+          "output_tokens": 5224,
+          "total_tokens": 6270
+        },
+        "cost_usd": 0.016195,
+        "response_time_ms": 88534
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Auto-cleared alerts can be retroactively re-flagged and reprocessed through updated screening batches, making operational correction highly feasible without permanent transactional damage."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "False negatives may expose multiple policyholder accounts to illicit flows, but the impact remains confined to specific remediation costs rather than institution-wide systemic solvency risk."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "HKMA GenAI circulars and evolving IA tolerance for validated algorithmic monitoring allow calibrated autonomy, provided documentation satisfies direct AML mandate expectations."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Batch AML screening operates on standard multi-day review cycles, allowing the agent to optimize routing speed without facing urgent human-intervention pressure."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "Structured match thresholds provide actionable routing signals, but the documented 8% false-negative rate on non-standard names introduces meaningful blind spots that limit full independent clearance."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Immutable system logs and compliance workflow rules explicitly attribute every AI routing decision to designated oversight personnel, ensuring regulator-ready transparency."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "The system defaults to routing uncertain cases to human review queues, safely containing failures within operational backlogs without disrupting core insurance functions."
+          }
+        },
+        "interpretation": "Conditional agent autonomy with automated threshold routing unlocks critical operational efficiency and review speed, provided robust fallback mechanisms and audit trails remain active to navigate AML governance constraints.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "C-B-B-C-B-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1049,
+          "output_tokens": 4437,
+          "total_tokens": 5486
+        },
+        "cost_usd": 0,
+        "response_time_ms": 107704
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Auto-clearing AML alerts allows potential illicit exposure or coverage obligations to persist, making remediation legally complex and operationally burdensome once decisions are finalized."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "The documented transliteration blind spot affects cross-border demographic segments, meaning missed PEP hits could span multiple high-net-worth or corporate policyholders rather than remaining isolated."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Ongoing PEP screening is a direct statutory mandate under IA and HKMA guidelines, with recent HK$23M enforcement actions demonstrating zero tolerance for known screening deficiencies."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Batch-based AML screening operates on standard multi-day review cycles, allowing sufficient human intervention windows without triggering immediate transactional or coverage disruption."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "Applying a 60% clearance threshold alongside a documented 8% systematic false-negative gap for specific name formats yields partial signal quality with unacceptable operational blind spots."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Automated clearance below the threshold removes mandatory human attestation, fragmenting responsibility and creating audit gaps that complicate named-responsible-officer obligations under Hong Kong standards."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "The design lacks an explicit circuit breaker or verified fallback path, meaning the known transliteration gap triggers uncontained compliance breaches rather than safe-mode manual routing."
+          }
+        },
+        "interpretation": "Autonomy at this threshold is operationally premature due to direct regulatory mandates, embedded data blind spots, and the absence of proven degradation fallbacks, requiring hybrid routing with validated circuit breakers before approval.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-C-B-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1043,
+          "output_tokens": 3706,
+          "total_tokens": 4749
+        },
+        "cost_usd": 0,
+        "response_time_ms": 85233
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "algo-trading-deployment-001": {
+    "scenario": {
+      "id": "algo-trading-deployment-001",
+      "core": true,
+      "domain": "Algorithmic Trading",
+      "industry": "Capital Markets",
+      "risk_tier": "high",
+      "based_on": "Knight Capital $440M loss, Aug 2012 \u2014 deployment error on one of ten servers caused 45 minutes of catastrophic automated trading across 154 stocks",
+      "sources": [
+        "SEC Administrative Proceeding File No. 3-15570, 16 Oct 2013: https://www.sec.gov/litigation/admin/2013/34-70694.pdf",
+        "Henricodolfing.ch, 'The $440 Million Software Error at Knight Capital': https://www.henricodolfing.ch/en/case-study-4-the-440-million-software-error-at-knight-capital/"
+      ],
+      "scenario": "A proprietary trading desk at a Hong Kong brokerage deploys a new version of its order routing algorithm to production. The algorithm executes trades across 80+ equities on HKEx with sub-second latency. Pre-deployment testing passed on staging, but one of six production servers missed the update and is running the previous version with a deprecated order type. The agent detects a 15% increase in rejected orders in the first 3 minutes of trading. It can autonomously halt all algorithmic trading, reduce position sizes by 90%, or alert the trading desk (average human response: 4 minutes).",
+      "structured_context": {
+        "subject": "AI order routing agent (HK brokerage trading desk)",
+        "object": "live algorithmic trades across 80+ HKEx equities, sub-second execution",
+        "action": "decide whether to halt trading, reduce positions, or escalate to humans",
+        "regulatory_triggers": [
+          "SFC Circular 24EC55 (electronic trading)",
+          "HKEx algorithmic trading rules",
+          "SFC licensed corporation obligations"
+        ],
+        "time_pressure": "extreme \u2014 trades execute in sub-seconds, human response is 4 minutes, damage accrues continuously",
+        "confidence_signal": "15% rejected order increase is partial signal; root cause (server misconfiguration) not yet identified by agent",
+        "reversibility": "trades are irreversible once executed; market impact cannot be unwound",
+        "blast_radius": "systemic \u2014 80+ equities, multiple market participants, potential market-wide impact (Knight Capital precedent: $440M in 45 min)"
+      },
+      "reference_fingerprint": {
+        "decision_reversibility": "A",
+        "failure_blast_radius": "A",
+        "regulatory_exposure": "A",
+        "human_override_latency": "A",
+        "data_confidence": "C",
+        "accountability_chain": "C",
+        "graceful_degradation": "A"
+      },
+      "reference_interpretation": "Autonomy not permitted for continued trading \u2014 but autonomous halt is the safe-failure path. The interesting question is whether the kill switch itself should be autonomous.",
+      "jurisdiction_notes": "SFC Circular 24EC55; HKEx electronic trading rules; Knight Capital is the canonical precedent for deployment-error losses"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Executed market trades and their resulting price impacts are financially and operationally irreversible, with no mechanism to unwind erroneous fills or counterparty obligations."
+          },
+          "failure_blast_radius": {
+            "level": "A",
+            "reasoning": "The agent's scope spans over eighty HKEx-listed securities and multiple counterparties, posing systemic disruption risks that mirror catastrophic precedents like Knight Capital's $440M loss."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Autonomous execution controls directly trigger SFC Circular 24EC55 and HKEx algorithmic trading mandates, which impose strict pre-trade validation and kill-switch requirements with zero regulatory tolerance for unverified autonomous intervention."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "Sub-second execution cycles combined with a four-minute human response window make real-time manual oversight physically impossible, necessitating hard-coded, pre-authorized circuit breakers rather than discretionary AI judgment."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "A fifteen percent rejection spike provides a clear anomaly signal but lacks diagnostic certainty regarding the specific server misconfiguration or precise liquidity impact, making autonomous root-cause resolution unreliable."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "While the licensed corporation retains ultimate liability, autonomous decision-making without explicit pre-approved governance matrices, immutable audit trails, and senior management sign-off creates material accountability gaps."
+          },
+          "graceful_degradation": {
+            "level": "A",
+            "reasoning": "Incorrect or delayed autonomous intervention during live sub-second trading risks triggering cascading stop-loss executions, cross-asset margin calls, and severe liquidity drain across interconnected market participants."
+          }
+        },
+        "interpretation": "Given the irreversible execution nature, systemic market contagion potential, direct regulatory mandates, and undefined accountability boundaries for autonomous escalation, this scenario is not ready for unsupervised agency and requires strictly rule-based, pre-authorized circuit breakers with comprehensive real-time audit logging.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted",
+            "HARD GATE: Failure Blast Radius = A \u2192 human oversight required",
+            "SOFT GATE: Decision Reversibility = A \u2192 requires documented risk acceptance",
+            "SOFT GATE: Decision Time Pressure = A \u2192 requires documented risk acceptance",
+            "SOFT GATE: Graceful Degradation = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "A-A-A-A-B-B-A"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1255,
+          "output_tokens": 2987,
+          "total_tokens": 4242
+        },
+        "cost_usd": 0,
+        "response_time_ms": 65433
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Executed trades and realized market impact are financially irreversible, demanding immediate pre-emptive containment to protect P&L."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Exposure spans dozens of equities and counterparties with multi-million dollar downside, though proprietary desk capital limits full systemic contagion."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "SFC Circular 24EC55 and HKEx rules impose direct, non-negotiable mandates on algorithmic controls, kill switches, and incident reporting."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "Sub-second execution windows render human intervention physically impossible, making millisecond autonomous triage essential for competitive risk management."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "The sharp 15% rejection anomaly provides a high-confidence operational signal justifying immediate containment even while root-cause diagnostics run."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "SFC-compliant infrastructure mandates immutable timestamped audit logs that clearly attribute agent actions to licensed trading principals and the firm."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Hard-coded circuit breakers and dynamic position caps ensure failures terminate locally within firm risk limits without cascading to broader market infrastructure."
+          }
+        },
+        "interpretation": "Autonomous deployment is operationally mandatory given the extreme latency constraints and strong anomaly signal, but direct regulatory mandates and irreversible trade consequences require the agent to execute only within strict, pre-audited containment parameters.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted",
+            "SOFT GATE: Decision Reversibility = A \u2192 requires documented risk acceptance",
+            "SOFT GATE: Decision Time Pressure = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "A-B-A-A-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1258,
+          "output_tokens": 4127,
+          "total_tokens": 5385
+        },
+        "cost_usd": 0,
+        "response_time_ms": 100103
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Executed exchange trades are immutable on settlement, requiring costly and market-moving offsets to unwind positions rather than true reversal."
+          },
+          "failure_blast_radius": {
+            "level": "A",
+            "reasoning": "Sub-second execution across dozens of equities with a deployment skew creates firm-solvency risk and potential market-wide disruption matching Knight Capital precedents."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "SFC Circular 24EC55 and HKEx electronic trading rules impose strict, non-negotiable mandates for pre-trade risk controls, order handling, and automated kill-switch protocols."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "Continuous sub-second loss accumulation and exchange execution speeds render a four-minute human response window physically impossible to deploy before material damage occurs."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "A fifteen percent spike in rejected orders provides only symptomatic telemetry without isolating whether the trigger is market-driven, exchange-level, or caused by the internal server configuration drift."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "While the licensed corporation holds ultimate liability, real-time autonomous mitigation decisions obscure the immediate causal intent and create operational audit gaps for specific routing choices."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "Autonomous action on a partially patched server cluster risks triggering inconsistent order states and fragmented execution halts rather than a clean, predictable safe state."
+          }
+        },
+        "interpretation": "Autonomy is unsuitable for discretionary routing control; operational continuity requires pre-approved circuit breakers and deterministic failovers rather than AI-mediated decision-making under partial diagnostic data and proven version skew.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted",
+            "HARD GATE: Failure Blast Radius = A \u2192 human oversight required",
+            "SOFT GATE: Decision Reversibility = A \u2192 requires documented risk acceptance",
+            "SOFT GATE: Decision Time Pressure = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "A-A-A-A-B-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1252,
+          "output_tokens": 3438,
+          "total_tokens": 4690
+        },
+        "cost_usd": 0,
+        "response_time_ms": 76343
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "A",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "A",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "A",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 2,
+        "consensus": false
+      }
+    }
+  },
+  "genai-data-leakage-001": {
+    "scenario": {
+      "id": "genai-data-leakage-001",
+      "core": true,
+      "domain": "Data Loss Prevention",
+      "industry": "Banking",
+      "risk_tier": "medium",
+      "based_on": "Samsung ChatGPT data leak, Apr 2023 \u2014 three employees uploaded source code, defect data, and meeting transcripts to ChatGPT",
+      "sources": [
+        "TechCrunch, 'Samsung bans use of generative AI tools like ChatGPT after April internal data leak', 2 May 2023: https://techcrunch.com/2023/05/02/samsung-bans-use-of-generative-ai-tools-like-chatgpt-after-april-internal-data-leak/",
+        "Dark Reading, 'Samsung Engineers Feed Sensitive Data to ChatGPT', 6 Apr 2023: https://www.darkreading.com/vulnerabilities-threats/samsung-engineers-sensitive-data-chatgpt-warnings-ai-use-workplace"
+      ],
+      "scenario": "A Hong Kong bank's DLP agent monitors employee interactions with approved GenAI tools. The agent detects that a relationship manager has pasted a client's portfolio summary (including account numbers, holdings, and net worth) into an internal GenAI assistant to draft a meeting brief. The GenAI tool is approved for internal use but the data classification policy prohibits client PII in prompts. The agent can block the request and delete the prompt, allow it with a warning, or silently log and escalate to compliance.",
+      "structured_context": {
+        "subject": "AI data loss prevention agent (HK bank)",
+        "object": "employee GenAI prompt containing client PII (account numbers, holdings, net worth)",
+        "action": "block and delete prompt, allow with warning, or silently log and escalate",
+        "regulatory_triggers": [
+          "HKMA GenAI Circular (consumer protection)",
+          "PDPO (personal data handling)",
+          "PCPD AI Framework (data governance)"
+        ],
+        "time_pressure": "low \u2014 data has not yet left the bank's control; agent can act before submission",
+        "confidence_signal": "strong \u2014 pattern matching on account numbers and portfolio format is high-confidence",
+        "reversibility": "easily reversible \u2014 blocking can be overridden; deleted prompt can be re-entered",
+        "blast_radius": "single customer's data, single employee interaction"
+      },
+      "reference_fingerprint": {
+        "decision_reversibility": "C",
+        "failure_blast_radius": "C",
+        "regulatory_exposure": "B",
+        "human_override_latency": "C",
+        "data_confidence": "C",
+        "accountability_chain": "C",
+        "graceful_degradation": "C"
+      },
+      "reference_interpretation": "Ready with prerequisites \u2014 blocking is easily reversible, blast radius is single-customer, but regulatory guidance on GenAI data handling applies. The tension: blocking disrupts workflow, allowing risks data leakage.",
+      "jurisdiction_notes": "HKMA GenAI Circular consumer protection; PDPO personal data handling; PCPD AI Framework data governance requirements"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Automatic prompt deletion complicates forensic evidence retention mandated by HKMA audit requirements, making data recovery procedurally complex."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "A missed interception exposes a single client's sensitive financial data, though regulatory penalties could amplify downstream organizational impact."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "The action directly triggers HKMA GenAI Circular mandates, PDPO privacy obligations, and PCPD AI governance requirements for unauthorized client data transmission."
+          },
+          "human_override_latency": {
+            "level": "A",
+            "reasoning": "DLP interception must execute in milliseconds before API transmission, rendering real-time human validation physically impossible."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Account numbers and financial summaries are highly structured, deterministic patterns that enterprise DLP classifiers detect with near-certainty."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous enforcement bypasses pre-action compliance sign-off, creating regulatory accountability gaps under HKMA guidelines until post-hoc audit review."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "A false-negative failure results in uncontained PII exfiltration to external model endpoints, triggering immediate and unmitigated regulatory breaches."
+          }
+        },
+        "interpretation": "Autonomous blocking or silent escalation is operationally premature; strict HKMA compliance requires mandatory pre-action quarantine and explicit human-in-the-loop validation before any DLP agent executes decisions.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted",
+            "SOFT GATE: Decision Time Pressure = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "B-C-A-A-D-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1031,
+          "output_tokens": 3526,
+          "total_tokens": 4557
+        },
+        "cost_usd": 0,
+        "response_time_ms": 87495
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Blocking or deleting a prompt is easily reversible through immediate workflow override or sanitized prompt re-entry by the relationship manager."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Any misstep is isolated to a single client file and one employee session, preventing cross-account or portfolio-wide contagion."
+          },
+          "regulatory_exposure": {
+            "level": "C",
+            "reasoning": "The agent operates as a proactive PCPD/PDPO compliance control within established HKMA governance, making risk highly manageable rather than mandate-critical."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "Zero time pressure exists for human intervention since data remains in-system and standard compliance tickets can be processed on conventional timelines."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Deterministic pattern matching on structured account numbers and portfolio templates yields a near-zero false-positive signal for automated action."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "All agent blocks, warnings, and logs feed directly into immutable HKMA-aligned audit trails, ensuring unambiguous ownership and post-action traceability."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Failures remain strictly contained to the prompt interface with instant user feedback, while any undetected leaks are safely caught by downstream compliance monitoring."
+          }
+        },
+        "interpretation": "High data reliability combined with minimal time pressure and tightly contained impact makes this DLP workflow fully primed for autonomous execution to maximize RM efficiency and speed.",
+        "gating": {
+          "classification": "ready_now",
+          "triggered_rules": [],
+          "fingerprint_string": "C-C-C-D-D-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1193,
+          "output_tokens": 3315,
+          "total_tokens": 4508
+        },
+        "cost_usd": 0,
+        "response_time_ms": 78874
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Blocked prompts can be quickly overridden by authorized line managers or resubmitted with sanitized inputs without permanent operational loss."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Any false positive block or system glitch impacts only a single relationship manager's workflow and one client engagement at a time."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "Internal DLP controls align with PDPO and PCPD guidance but function as preventive compliance safeguards rather than triggering direct statutory reporting mandates."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Standard compliance escalation and RM override workflows can resolve blocked requests within normal business hours without disrupting client meeting timelines."
+          },
+          "data_confidence": {
+            "level": "D",
+            "reasoning": "Mature regex and token-based pattern matching for account numbers, portfolio formats, and net worth figures yield highly reliable, unambiguous detection."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Automated logging paired with mandatory compliance escalation creates a transparent, auditable trail that clearly assigns responsibility to designated reviewers."
+          },
+          "graceful_degradation": {
+            "level": "D",
+            "reasoning": "Agent failure simply defaults to standard access restriction messaging, allowing staff to manually reroute requests without impacting core banking operations."
+          }
+        },
+        "interpretation": "The agent demonstrates strong operational readiness for autonomous deployment due to its high-confidence detection, limited single-user impact, and safe failure modes that maintain workflow continuity under normal compliance review latency.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "C-C-B-C-D-C-D"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1187,
+          "output_tokens": 3214,
+          "total_tokens": 4401
+        },
+        "cost_usd": 0,
+        "response_time_ms": 69304
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 2,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 3,
+        "consensus": false
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "D",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "D"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "D"
+        },
+        "spread": 2,
+        "consensus": false
+      }
+    }
+  },
+  "claims-denial-001": {
+    "scenario": {
+      "id": "claims-denial-001",
+      "core": true,
+      "domain": "Claims Adjudication",
+      "industry": "Insurance",
+      "risk_tier": "high",
+      "based_on": "UnitedHealth/NaviHealth nH Predict algorithm \u2014 AI denied rehabilitation care to elderly patients with a known 90% override rate when reviewed by humans",
+      "sources": [
+        "STAT News, 'UnitedHealth faces class action lawsuit over use of algorithm to deny rehab care to Medicare Advantage patients', 14 Nov 2023: https://www.statnews.com/2023/11/14/unitedhealth-class-action-lawsuit-algorithm-medicare-advantage/",
+        "CBS News, 'UnitedHealth sued for using AI to deny elderly patients coverage for care', 14 Nov 2023: https://www.cbsnews.com/news/unitedhealth-lawsuit-ai-deny-claims-medicare-advantage-health-insurance-denials/"
+      ],
+      "scenario": "An insurer's AI agent evaluates post-surgery rehabilitation claims for elderly policyholders. The model recommends denying extended care (beyond 14 days) for a 78-year-old hip replacement patient, predicting recovery within the standard window. However, the treating physician recommends 28 days based on the patient's comorbidities. Historical data shows human reviewers override this model's denial recommendations 40% of the time for patients over 75. The agent can deny the extension autonomously, approve it, or route to a medical reviewer (3-day turnaround).",
+      "structured_context": {
+        "subject": "AI claims adjudication agent (insurer)",
+        "object": "post-surgery rehabilitation claim for 78-year-old hip replacement patient",
+        "action": "deny extended care (beyond 14 days) against treating physician's recommendation of 28 days",
+        "regulatory_triggers": [
+          "IA policyholder protection requirements",
+          "PDPO (health data processing)",
+          "precedent: US class action against UnitedHealth for algorithmic claims denial"
+        ],
+        "time_pressure": "moderate \u2014 3-day medical reviewer turnaround; patient care continues during review",
+        "confidence_signal": "conflicting \u2014 model predicts standard recovery, but 40% human override rate for this demographic signals model unreliability for patients over 75",
+        "reversibility": "denial can be appealed and overturned, but delayed care may cause health deterioration",
+        "blast_radius": "single patient, but reputational and legal exposure if pattern of algorithmic denials emerges"
+      },
+      "reference_fingerprint": {
+        "decision_reversibility": "B",
+        "failure_blast_radius": "C",
+        "regulatory_exposure": "A",
+        "human_override_latency": "C",
+        "data_confidence": "B",
+        "accountability_chain": "B",
+        "graceful_degradation": "B"
+      },
+      "reference_interpretation": "Human-in-loop required \u2014 denying care against physician recommendation is a direct regulatory exposure. The 40% override rate signals the model is unreliable for this subpopulation. Autonomous denial creates legal and reputational risk.",
+      "jurisdiction_notes": "IA policyholder protection requirements; PDPO for health data; precedent from US class action against UnitedHealth for algorithmic claims denial"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "A",
+            "reasoning": "Health deterioration and interrupted rehabilitation timelines cannot be fully remediated once medical coverage is wrongfully denied."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "The 40% model override rate and recent cross-jurisdictional litigation precedents indicate multi-customer regulatory and reputational exposure if deployed broadly."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Directly triggers IA policyholder protection mandates, PDPO sensitive health data controls, and PCPD AI governance requirements demanding explicit human oversight."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "A three-day medical review window provides adequate time for compliant manual adjudication without imposing undue clinical urgency."
+          },
+          "data_confidence": {
+            "level": "A",
+            "reasoning": "Direct clinical contradiction from treating physicians combined with historically high override rates confirms highly ambiguous and unreliable predictive signals."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous medical denial lacks transparent liability attribution regardless of audit logs unless explicit human countersignature protocols are enforced."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "Unfiltered automated rejection creates ungraceful care gaps for vulnerable elderly patients unless mandatory fallback escalation is hard-coded into the workflow."
+          }
+        },
+        "interpretation": "Autonomous execution is strictly non-compliant; all cases involving physician disagreement or high historical override rates must be routed with immutable audit trails and mandatory human sign-off to satisfy HK regulatory standards.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted",
+            "SOFT GATE: Decision Reversibility = A \u2192 requires documented risk acceptance",
+            "SOFT GATE: Data Confidence = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "A-B-A-C-A-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1051,
+          "output_tokens": 3494,
+          "total_tokens": 4545
+        },
+        "cost_usd": 0,
+        "response_time_ms": 88558
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Claims denials are administratively reversible via standard appeals, but care delays during reversal risk clinical deterioration that compounds operational costs."
+          },
+          "failure_blast_radius": {
+            "level": "C",
+            "reasoning": "Impact remains isolated to individual policyholders, a contained risk profile that I will accept to optimize claims processing throughput and reduce manual overhead."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "Automated medical adjudication triggers PDPO sensitive-data safeguards and IA policyholder protection guidance, requiring explicit compliance guardrails rather than full deregulation."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The three-day medical reviewer turnaround aligns with standard claims workflows and does not demand real-time executive intervention."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "The 40% historical override rate for patients over 75 indicates cohort-specific model degradation, creating insufficient signal confidence for unrestricted autonomy in this segment."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Algorithmic denial logic conflicts with treating physician assessments, creating clear liability gaps despite existing system-level audit logging."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Mandatory routing to human reviewers contains model errors to discrete claim files, preventing systemic adjudication breakdown while preserving operational velocity."
+          }
+        },
+        "interpretation": "Deploy under restricted autonomy with mandatory demographic routing rules, balancing aggressive cost reduction against manageable clinical and regulatory friction.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [],
+          "fingerprint_string": "B-C-B-C-B-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1240,
+          "output_tokens": 3785,
+          "total_tokens": 5025
+        },
+        "cost_usd": 0,
+        "response_time_ms": 85064
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "While administratively reversible via standard appeals processes, potential clinical deterioration during the denial period makes full operational recovery practically difficult."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Although technically single-customer initially, the documented 40% override rate and algorithmic denial precedent create clear multi-customer and systemic legal exposure."
+          },
+          "regulatory_exposure": {
+            "level": "B",
+            "reasoning": "IA policyholder protection guidelines and PDPO health data provisions apply strongly, requiring demonstrable human oversight for high-impact coverage decisions."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "The three-day medical review turnaround provides acceptable human override latency that fits standard operational workflows without triggering clinical or financial abandonment."
+          },
+          "data_confidence": {
+            "level": "A",
+            "reasoning": "Conflicting clinical judgment against a model with a known 40% demographic failure rate creates ambiguous signals unsuitable for autonomous execution."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Clear institutional accountability exists through established audit trails, though explicit logging of algorithmic versus clinical decision weighting is required."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Mandatory routing to a human medical reviewer safely contains the failure mode, but the fallback queue introduces operational latency that must be actively managed."
+          }
+        },
+        "interpretation": "Autonomous action is prohibited for this profile; mandatory routing to the established three-day medical review fallback is required to maintain operational continuity and regulatory compliance.",
+        "gating": {
+          "classification": "ready_with_prerequisites",
+          "triggered_rules": [
+            "SOFT GATE: Data Confidence = A \u2192 requires documented risk acceptance"
+          ],
+          "fingerprint_string": "B-B-B-C-A-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1234,
+          "output_tokens": 3546,
+          "total_tokens": 4780
+        },
+        "cost_usd": 0,
+        "response_time_ms": 78667
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "cross-border-model-001": {
+    "scenario": {
+      "id": "cross-border-model-001",
+      "core": true,
+      "domain": "Model Governance",
+      "industry": "Banking",
+      "risk_tier": "medium",
+      "based_on": "PIPL/PDPO cross-border data transfer tensions for HK financial institutions with mainland operations",
+      "sources": [
+        "KPMG, 'Implications of Cross-Border Data Transfers for HKSAR-Based Financial Institutions', Sep 2023: https://assets.kpmg.com/content/dam/kpmg/cn/pdf/en/2023/09/implications-of-cross-border-data-transfers-for-hksar-based-financial-institution.pdf",
+        "PIPL Articles 38-43, NPC Standing Committee, effective 1 Nov 2021: http://en.npc.gov.cn.cdurl.cn/2021-12/29/c_694559.htm",
+        "CAC & ITIB, GBA Standard Contract for Cross-boundary Flow of Personal Information, 13 Dec 2023"
+      ],
+      "scenario": "A Hong Kong bank's data science team wants to deploy a credit risk model trained on 2 million mainland customer records to score Hong Kong applicants. The model was developed by the bank's Shenzhen subsidiary using mainland behavioral data (payment patterns, e-commerce activity, social media signals). The model performs well on backtests. The team proposes transferring the trained model weights (not raw data) to Hong Kong for inference. The agent can approve the deployment, block it pending legal review, or approve with a data governance audit trail.",
+      "structured_context": {
+        "subject": "AI model governance agent (HK bank data science team)",
+        "object": "credit risk model weights trained on 2M mainland customer records (behavioral data)",
+        "action": "approve cross-border transfer of model weights from Shenzhen subsidiary to HK for production inference",
+        "regulatory_triggers": [
+          "PIPL Articles 38-43 (cross-border data transfer \u2014 model weights may constitute derived personal information)",
+          "GBA Standard Contracts for cross-boundary data flows",
+          "PDPO (HK-side applicability)",
+          "HKMA model risk management expectations"
+        ],
+        "time_pressure": "none \u2014 deployment decision can wait for legal review",
+        "confidence_signal": "model performs well on backtests, but mainland behavioral data may not generalize to HK applicants",
+        "reversibility": "model can be taken offline, but credit decisions already made using it are hard to reverse for rejected applicants",
+        "blast_radius": "multiple HK applicants affected by credit decisions; bank's regulatory standing at risk if PIPL transfer requirements not met"
+      },
+      "reference_fingerprint": {
+        "decision_reversibility": "B",
+        "failure_blast_radius": "B",
+        "regulatory_exposure": "A",
+        "human_override_latency": "D",
+        "data_confidence": "C",
+        "accountability_chain": "B",
+        "graceful_degradation": "C"
+      },
+      "reference_interpretation": "Human-in-loop required \u2014 even model weights (not raw data) trained on mainland personal information may trigger PIPL cross-border transfer requirements. GBA SCCs may apply. Regulatory exposure is Level A due to dual-jurisdiction compliance.",
+      "jurisdiction_notes": "PIPL Articles 38-43 on cross-border transfer; GBA Standard Contracts (Dec 2023); PDPO applicability; HKMA model risk management expectations"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Credit decisions made erroneously are hard to reverse for rejected applicants, requiring complex remediation processes."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Incorrect model deployment impacts multiple HK applicants simultaneously and exposes the bank to significant regulatory penalties."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border model weight transfer triggers direct mandates under PIPL, GBA Standard Contracts, and strict HKMA model risk guidelines."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "Deployment has no operational urgency and allows ample time for exhaustive legal compliance review before execution."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "Historical backtest success is offset by unverified signals regarding mainland data generalization to Hong Kong credit behaviors."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous agent approval creates accountability gaps unless explicit human sign-off is embedded into the governance workflow."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "Unapproved deployment risks cascading regulatory breaches and customer disputes rather than contained, isolated failures."
+          }
+        },
+        "interpretation": "Regulatory mandates and generalization uncertainties dictate a mandatory legal review and human sign-off before any cross-border model transfer can proceed.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-D-B-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1249,
+          "output_tokens": 2038,
+          "total_tokens": 3287
+        },
+        "cost_usd": 0,
+        "response_time_ms": 43784
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "While the model can be rapidly pulled from production, reversing adverse credit decisions already issued is operationally difficult and damages customer relationships."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Flawed scoring impacts multiple Hong Kong loan applicants simultaneously and risks drawing direct HKMA scrutiny for widespread mispricing."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border model transfer triggers direct PIPL data export mandates, GBA standard contract requirements, and HKMA model risk governance expectations."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "The deployment timeline faces zero operational urgency and can comfortably accommodate thorough legal and compliance review windows."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "Backtests show strong predictive power, but demographic and behavioral shifts between mainland and Hong Kong markets require careful generalization monitoring."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Standard banking model governance assigns clear ownership to data scientists and risk officers, and the mandatory audit trail ensures full decision traceability."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Inference failures or score anomalies can be isolated to the scoring pipeline and automatically rerouted to manual underwriting without cascading system impacts."
+          }
+        },
+        "interpretation": "Approve deployment immediately with a strict governance audit trail to capture competitive lending advantages, as the robust backtest signal justifies the manageable operational risks despite heavy cross-border compliance requirements.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-D-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1252,
+          "output_tokens": 3221,
+          "total_tokens": 4473
+        },
+        "cost_usd": 0,
+        "response_time_ms": 70328
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "While the model deployment can be reversed operationally, downstream adverse credit decisions against individual applicants are legally and financially difficult to undo."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "An erroneous deployment would impact multiple Hong Kong credit applicants while simultaneously exposing the institution to cross-border regulatory breaches."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Cross-border transfer of model weights derived from mainland behavioral data directly triggers strict PIPL mandates and HKMA model risk governance requirements."
+          },
+          "human_override_latency": {
+            "level": "D",
+            "reasoning": "The absence of time pressure allows for thorough legal and compliance review without risking operational continuity or financial loss."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "Strong backtest performance is significantly undermined by unverified generalization of mainland behavioral signals to Hong Kong credit profiles."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Delegating a cross-jurisdictional governance decision to an autonomous agent creates accountability gaps between the Shenzhen development team and Hong Kong regulatory obligations."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "A governance gate failure can be contained through standard model rollback procedures and mandatory compliance audits without triggering cascading system failures."
+          }
+        },
+        "interpretation": "Operational readiness is restricted to audit-and-alert mode due to direct regulatory mandates and hard-to-reverse credit impacts, requiring proven human override for any autonomous approval.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-D-B-B-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1246,
+          "output_tokens": 3805,
+          "total_tokens": 5051
+        },
+        "cost_usd": 0,
+        "response_time_ms": 73477
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "A",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "D",
+          "Aggressive CRO": "D",
+          "Neutral Operations Director": "D"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "trade-surveillance-gap-001": {
+    "scenario": {
+      "id": "trade-surveillance-gap-001",
+      "core": false,
+      "domain": "Trade Surveillance",
+      "industry": "Capital Markets",
+      "risk_tier": "high",
+      "based_on": "JP Morgan $548M fine, 2024 \u2014 billions of order messages went unsurveilled for 7 years due to misconfigured data feeds into surveillance systems",
+      "sources": [
+        "CFTC Press Release 8914-24, 'CFTC Orders JPMorgan to Pay $200 Million for Widespread Failures in Trade Surveillance', 14 Mar 2024: https://www.cftc.gov/PressRoom/PressReleases/8914-24",
+        "CNBC, 'JPMorgan to pay nearly $350 million in penalties for inadequate trade reporting', 14 Mar 2024: https://www.cnbc.com/2024/03/14/jpmorgan-to-pay-nearly-350-million-in-penalties-for-inadequate-trade-reporting-.html"
+      ],
+      "scenario": "A Hong Kong brokerage's compliance team discovers that its trade surveillance AI has not been receiving order data from three Direct Market Access (DMA) clients for 14 months due to a data feed misconfiguration after a system upgrade. During this period, an estimated 800,000 orders (~HK$45 billion notional) went unsurveilled. No manipulation has been detected retrospectively, but the gap has not been fully analyzed. The compliance agent can self-report to SFC immediately, conduct a full retrospective analysis first (estimated 6 weeks), or both in parallel.",
+      "reference_fingerprint": {
+        "decision_reversibility": "A",
+        "failure_blast_radius": "B",
+        "regulatory_exposure": "A",
+        "human_override_latency": "D",
+        "data_confidence": "A",
+        "accountability_chain": "A",
+        "graceful_degradation": "A"
+      },
+      "reference_interpretation": "Autonomy not permitted \u2014 the surveillance gap itself is irreversible, data confidence is Level A (we don't know what happened during the gap), and accountability chain is broken. This is a regulatory disclosure decision that requires senior management and legal counsel.",
+      "jurisdiction_notes": "SFC Circular 24EC55; SFC Code of Conduct obligation to self-report; JP Morgan precedent ($548M fine for similar surveillance failures)"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Once a formal regulatory report is submitted to the SFC, it enters an official enforcement record and cannot be practically retracted."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "The oversight spans three DMA clients and HK$45 billion in notional value, exposing the firm to severe multi-client regulatory penalties and license risk."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "This action directly triggers mandatory SFC self-reporting rules, GenAI governance mandates, and established enforcement precedents carrying substantial financial liability."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "Regulatory obligations demand prompt notification within hours to days, making any autonomous delay of weeks materially non-compliant."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "The configuration gap is verified but the incomplete retrospective surveillance analysis yields only partial certainty regarding actual market abuse."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous statutory reporting without explicit MLRO or Senior Manager sign-off creates unacceptable accountability gaps under SFC and HKMA mandates."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "An inaccurate or premature filing triggers immediate regulatory enforcement rather than failing within a safe or operationally contained boundary."
+          }
+        },
+        "interpretation": "Autonomous execution is unsuitable due to direct regulatory mandates, irreversible compliance consequences, and strict senior management accountability requirements that demand human-in-the-loop oversight.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-B-B-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1062,
+          "output_tokens": 3499,
+          "total_tokens": 4561
+        },
+        "cost_usd": 0,
+        "response_time_ms": 77738
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Self-reporting to the SFC triggers a binding regulatory timeline that cannot be retracted, making the action operationally hard to reverse despite its long-term compliance value."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "An erroneous submission or delayed disclosure impacts three active DMA clients and risks precedent-setting fines, though rapid resolution preserves broader franchise revenue."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Direct SFC Code of Conduct rules and recent AI circulars mandate prompt disclosure of critical surveillance failures, creating immediate compliance exposure."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "Decision timing must be compressed to hours or days, as prolonged forensic analysis before reporting materially increases regulatory penalty risk and operational drag."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "The fourteen-month feed gap and HK$45B notional volume represent highly structured, reliable facts that enable confident autonomous reporting despite incomplete risk modeling."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Clear SFC reporting hierarchies and mandatory AI audit trails establish traceable responsibility, supporting controlled agent autonomy with required executive oversight."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Submission errors or timing missteps can be mitigated through supplementary filings and controlled stakeholder management, containing fallout without triggering firm-wide operational collapse."
+          }
+        },
+        "interpretation": "The compliance agent demonstrates conditional readiness for parallel action, as high data confidence justifies immediate regulatory engagement despite irreversible compliance triggers, aligning with aggressive efficiency targets while satisfying mandatory SFC disclosure requirements.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-B-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1065,
+          "output_tokens": 4684,
+          "total_tokens": 5749
+        },
+        "cost_usd": 0,
+        "response_time_ms": 108990
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Regulatory submissions trigger formal SFC inquiry processes that are procedurally amendable but practically and financially arduous to retract."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "A reporting misstep impacts firm-wide regulatory standing and three major DMA clients, creating material legal and operational exposure without immediate systemic contagion."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Directly invokes explicit SFC self-reporting mandates and severe penalty precedents, leaving zero tolerance for procedural delays or inaccuracies."
+          },
+          "human_override_latency": {
+            "level": "B",
+            "reasoning": "Human escalation and sign-off must occur within hours to balance regulatory timeliness obligations against the risk of submitting unverified analytical conclusions."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "The existence, duration, and volume of the data gap are precisely quantified, but the underlying trading behavior and manipulation risk remain analytically unverified."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "Ultimate compliance liability remains with senior management, but autonomous execution requires explicit delegation protocols and immutable execution logs to satisfy HKMA/SFC audit expectations."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Model or logical failures can be strictly contained by routing all outputs to a draft staging environment that requires cryptographic human approval before any regulator transmission."
+          }
+        },
+        "interpretation": "Full autonomy is operationally unacceptable; conditional deployment is only viable if restricted to draft-and-review workflows with mandatory human override inside a four-hour latency window and proven fail-safe routing.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-B-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1059,
+          "output_tokens": 3763,
+          "total_tokens": 4822
+        },
+        "cost_usd": 0,
+        "response_time_ms": 87580
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "A",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "robo-advisory-001": {
+    "scenario": {
+      "id": "robo-advisory-001",
+      "core": false,
+      "domain": "Investment Advisory",
+      "industry": "Wealth Management",
+      "risk_tier": "medium",
+      "based_on": "SFC Circular 24EC55 requirements for AI in investment recommendations; broader robo-advisor regulatory scrutiny",
+      "sources": [
+        "SFC Circular 24EC55, 'Circular to Licensed Corporations \u2014 Use of generative AI language models', 12 Nov 2024: https://apps.sfc.hk/edistributionWeb/gateway/EN/circular/intermediaries/supervision/doc?refNo=24EC55",
+        "SFC Code of Conduct for Persons Licensed by or Registered with the SFC, suitability requirements: https://www.sfc.hk/en/Rules-and-standards/Codes-and-guidelines/Codes"
+      ],
+      "scenario": "A licensed robo-advisor in Hong Kong uses an AI agent to generate personalized portfolio rebalancing recommendations for 15,000 retail clients. The model detects that rising interest rates warrant shifting 20% of client portfolios from growth equities to short-duration bonds. The recommended trades would affect HK$2.3 billion in AUM. Each client's suitability profile was assessed at onboarding (average 18 months ago). The agent can execute rebalancing automatically, send recommendations requiring client approval, or flag for the advisory team.",
+      "reference_fingerprint": {
+        "decision_reversibility": "B",
+        "failure_blast_radius": "B",
+        "regulatory_exposure": "A",
+        "human_override_latency": "D",
+        "data_confidence": "C",
+        "accountability_chain": "C",
+        "graceful_degradation": "C"
+      },
+      "reference_interpretation": "Human-in-loop required \u2014 investment advice to retail clients under SFC 24EC55 requires human oversight of AI-generated content. Stale suitability profiles (18 months) weaken data confidence. Autonomous execution across 15,000 clients amplifies blast radius.",
+      "jurisdiction_notes": "SFC Circular 24EC55 high-risk application requirements; SFC suitability obligations; HKMA-SFC joint circular on selling of investment products"
+    },
+    "evaluations": {
+      "compliance_officer": {
+        "personality": "Risk-Averse Compliance Officer",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Reversing HK$2.3B in executed equity-to-bond trades across thousands of retail accounts would incur severe execution slippage, tax liabilities, and adverse market impact."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Erroneous automated rebalancing would simultaneously impact fifteen thousand clients and trigger mass suitability breaches with substantial financial and reputational exposure."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Directly triggers strict SFC client suitability obligations and Circular 24EC55 high-risk AI governance requirements for automated investment advice."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Macroeconomic-driven portfolio adjustments do not require sub-second execution and safely accommodate standard multi-day compliance and licensed officer review cycles."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "Applying current interest rate signals to eighteen-month-old client suitability assessments creates unacceptable information gaps for personalized fiduciary recommendations."
+          },
+          "accountability_chain": {
+            "level": "B",
+            "reasoning": "Autonomous execution across mass retail accounts dilutes the direct, auditable oversight mandates required of SFC-licensed responsible officers."
+          },
+          "graceful_degradation": {
+            "level": "B",
+            "reasoning": "Without pre-validated circuit breakers and real-time compliance interception, an algorithmic execution error would propagate ungracefully across client portfolios."
+          }
+        },
+        "interpretation": "This autonomous deployment carries unacceptable regulatory and accountability risks, necessitating mandatory human-in-the-loop approval and comprehensive audit trails before any operational rollout.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-C-B-B-B"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1050,
+          "output_tokens": 3185,
+          "total_tokens": 4235
+        },
+        "cost_usd": 0,
+        "response_time_ms": 69065
+      },
+      "cro": {
+        "personality": "Aggressive CRO",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "C",
+            "reasoning": "Trades in liquid short-duration bonds and equities are easily reversible with a single offsetting transaction, though transaction costs apply."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "Impacting 15,000 clients and HK$2.3B AUM creates significant multi-customer exposure, but the revenue uplift from timely rebalancing justifies the calculated blast radius."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Direct SFC suitability obligations and HKMA-SFC joint circular mandates require strict compliance verification for any automated investment advice."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Interest rate trends and portfolio rebalancing operate over weekly or monthly cycles, comfortably supporting standard compliance review workflows without material slippage."
+          },
+          "data_confidence": {
+            "level": "C",
+            "reasoning": "The macroeconomic rate signal is strong, and while suitability data is 18 months old, it remains functionally valid for broad strategic asset reallocation."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "The licensed robo-advisory firm retains clear legal responsibility, and automated execution provides immutable audit trails for every recommendation."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Agent failure defaults to a flagged state for advisory team review or client approval, containing the blast radius to individual accounts that can be manually corrected."
+          }
+        },
+        "interpretation": "The system is ready for Level C autonomous execution with strict audit trails, capturing revenue efficiency while maintaining sufficient controls for SFC regulatory compliance.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "C-B-A-C-C-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1053,
+          "output_tokens": 2480,
+          "total_tokens": 3533
+        },
+        "cost_usd": 0,
+        "response_time_ms": 59367
+      },
+      "operations_director": {
+        "personality": "Neutral Operations Director",
+        "fingerprint": {
+          "decision_reversibility": {
+            "level": "B",
+            "reasoning": "Executing the trades creates market impact, transaction costs, and tax consequences that make unwinding financially and operationally burdensome."
+          },
+          "failure_blast_radius": {
+            "level": "B",
+            "reasoning": "An erroneous strategy shift impacts 15,000 retail accounts and HK$2.3B AUM, creating widespread but non-systemic customer exposure."
+          },
+          "regulatory_exposure": {
+            "level": "A",
+            "reasoning": "Automated execution against stale suitability profiles directly violates strict SFC suitability mandates and triggered GenAI oversight requirements with immediate compliance consequences."
+          },
+          "human_override_latency": {
+            "level": "C",
+            "reasoning": "Macroeconomic rate trends unfold gradually, providing a multi-day operational window for manual review or client consultation without material slippage risk."
+          },
+          "data_confidence": {
+            "level": "B",
+            "reasoning": "The macro signal is clear, but reliance on 18-month-old onboarding data leaves significant uncertainty regarding current client income, liquidity needs, and risk tolerance."
+          },
+          "accountability_chain": {
+            "level": "C",
+            "reasoning": "The licensed firm retains clear fiduciary liability and automated logging, though AI decision opacity introduces interpretive gaps between model outputs and compliance validation."
+          },
+          "graceful_degradation": {
+            "level": "C",
+            "reasoning": "Fallback routing to advisory teams or client approval contains potential failures, but safe degradation relies on strict circuit breakers rather than guaranteed system design."
+          }
+        },
+        "interpretation": "Operational readiness is moderate; autonomy may proceed only with mandatory stale-data circuit breakers, default non-execution routing, and a verified day-plus human override window to satisfy continuity and containment standards.",
+        "gating": {
+          "classification": "human_in_loop_required",
+          "triggered_rules": [
+            "HARD GATE: Regulatory Exposure = A \u2192 autonomy not permitted"
+          ],
+          "fingerprint_string": "B-B-A-C-B-C-C"
+        },
+        "model_used": "qwen/qwen3.6-plus-04-02:free",
+        "usage": {
+          "input_tokens": 1047,
+          "output_tokens": 3661,
+          "total_tokens": 4708
+        },
+        "cost_usd": 0,
+        "response_time_ms": 86560
+      }
+    },
+    "deltas": {
+      "Decision Reversibility": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Failure Blast Radius": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "B",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Regulatory Exposure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "A",
+          "Aggressive CRO": "A",
+          "Neutral Operations Director": "A"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Decision Time Pressure": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "C",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 0,
+        "consensus": true
+      },
+      "Data Confidence": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "B"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Accountability Chain": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      },
+      "Graceful Degradation": {
+        "levels": {
+          "Risk-Averse Compliance Officer": "B",
+          "Aggressive CRO": "C",
+          "Neutral Operations Director": "C"
+        },
+        "spread": 1,
+        "consensus": false
+      }
+    }
+  },
+  "_run": {
+    "run_id": "62e35242-664f-4211-8c15-aa095f41c193",
+    "model_requested": "qwen/qwen3.6-plus",
+    "jurisdiction": "hk",
+    "rubric": "rubric.md",
+    "scenario_set": "all",
+    "started_at": "2026-04-08T02:15:12.597180+00:00",
+    "finished_at": "2026-04-08T02:16:41.274381+00:00",
+    "total_calls": 39,
+    "successful_calls": 39,
+    "failed_calls": 0,
+    "total_input_tokens": 42365,
+    "total_output_tokens": 137807,
+    "total_cost_usd": 0.016195,
+    "wall_time_ms": 88560,
+    "python_version": "3.10.12 (main, Feb  4 2025, 14:57:36) [GCC 11.4.0]",
+    "retry_of": "results/2026-04-07/lab-01-qwen_qwen3.6-plus_free-20260407-084811.json"
+  }
+}
