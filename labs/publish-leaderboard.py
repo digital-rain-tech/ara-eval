@@ -131,7 +131,7 @@ MODEL_MAP: dict[str, dict] = {
         "id": "qwen/qwen3.6-plus",
         "label": "Qwen3.6 Plus",
         "method": "api",
-        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios; wall time inflated by free-tier rate limiting — not directly comparable to other models",
         "is_default": False,
     },
 }
