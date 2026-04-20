@@ -1,0 +1,1 @@
+../../../photocritic-site/supabase/migrations/001_initial_schema.sql

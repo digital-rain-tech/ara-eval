@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
-  // Allow importing files outside web/ (shared prompts, scenarios)
   serverExternalPackages: ["better-sqlite3"],
+  turbopack: {
+    root: path.resolve(process.cwd(), ".."),
+  },
 };
 
 export default nextConfig;

@@ -1,0 +1,1 @@
+../../../photocritic-site/supabase/migrations/002_ai_provider_requests.sql

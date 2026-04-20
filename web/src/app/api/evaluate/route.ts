@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
   const totalCalls = personalityIds.length;
 
   // Create run
-  const runId = createRun(model, 1, personalityIds.length, totalCalls, {
+  const runId = await createRun(model, 1, personalityIds.length, totalCalls, {
     lab: "web-evaluate",
     scenario_id: scenario.id,
     jurisdiction,
@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
         model,
       );
 
-      logRequest({
+      await logRequest({
         runId,
         requestId,
         scenarioId: scenario.id,
@@ -116,7 +116,7 @@ export async function POST(request: NextRequest) {
     } catch (e) {
       const errorMsg = e instanceof Error ? e.message : String(e);
 
-      logRequest({
+      await logRequest({
         runId,
         requestId,
         scenarioId: scenario.id,
@@ -141,7 +141,7 @@ export async function POST(request: NextRequest) {
   }
 
   // Update run
-  updateRun(runId, {
+  await updateRun(runId, {
     finished_at: new Date().toISOString(),
     successful_calls: successCount,
     failed_calls: failCount,

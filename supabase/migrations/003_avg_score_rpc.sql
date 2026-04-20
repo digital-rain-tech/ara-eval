@@ -1,0 +1,1 @@
+../../../photocritic-site/supabase/migrations/003_avg_score_rpc.sql
