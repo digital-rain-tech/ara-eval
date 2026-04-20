@@ -50,6 +50,19 @@
 
 ---
 
+## Security notes
+
+**Access control on `/api/requests` and `/api/runs`:** these routes return `raw_request`, `raw_response`, `parsed_result`, and other fields that may contain scenario text or sensitive evaluation content.
+
+- **Supabase path (deployed):** the DB driver uses `createServerClient()` from `supabase-server.ts`, which is cookie-aware. Queries run as the current authenticated user (anonymous or Google-authed). Postgres RLS policies installed in Task 4 (`auth.uid() = user_id`) ensure users only ever receive their own rows. An unauthenticated request (no cookies) has `auth.uid() = null`, which fails every policy — result is an empty array, not a leak.
+- **SQLite path (local only):** this path is single-user on a developer's machine. No network exposure. No additional access control needed.
+
+No admin/diagnostic endpoint is being added in this migration. If one is needed later (e.g., an instructor dashboard), it goes through a separate role check and is out of scope here.
+
+**Environment variable validation:** every Supabase client helper (`supabase-server.ts`, `supabase-client.ts`) throws explicitly on first use if required env vars are missing, rather than passing `undefined` to the SDK. This surfaces config errors at server startup (for routes that touch the client) or on first client-side hydration, not deep inside a query call.
+
+---
+
 ## Task 1: Prerequisites (user-side setup, no code)
 
 **Files:** none — operational setup only.
@@ -417,6 +430,17 @@ import { createServerClient as createSSRClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+function requireEnv(name: string): string {
+  const v = process.env[name];
+  if (!v) {
+    throw new Error(
+      `Missing required environment variable: ${name}. ` +
+        `Set it in .env.local (or Vercel project settings) before starting the app.`,
+    );
+  }
+  return v;
+}
+
 /**
  * Cookie-aware Supabase client for API routes and server components.
  * Reads/writes the auth session cookie so RLS policies (auth.uid()) work.
@@ -425,8 +449,8 @@ export async function createServerClient(): Promise<SupabaseClient> {
   const cookieStore = await cookies();
 
   return createSSRClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    requireEnv("NEXT_PUBLIC_SUPABASE_URL"),
+    requireEnv("NEXT_PUBLIC_SUPABASE_ANON_KEY"),
     {
       cookies: {
         getAll() {
@@ -489,10 +513,14 @@ export function getBrowserClient(): SupabaseClient {
     );
   }
   if (!_instance) {
-    _instance = createSSRBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    );
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    if (!url || !key) {
+      throw new Error(
+        "Supabase browser client requires NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to be set.",
+      );
+    }
+    _instance = createSSRBrowserClient(url, key);
   }
   return _instance;
 }
