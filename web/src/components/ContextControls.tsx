@@ -1,6 +1,8 @@
 "use client";
 
 import ModelSelector from "./ModelSelector";
+import HelpTip from "./HelpTip";
+import { HELP } from "@/lib/help-content";
 
 interface ContextControlsProps {
   personality: string;
@@ -62,7 +64,10 @@ export default function ContextControls({
 
         {/* Jurisdiction */}
         <div className="flex items-center gap-1 text-sm">
-          <label className="text-gray-500">Grounding:</label>
+          <label className="flex items-center gap-1 text-gray-500">
+            Grounding:
+            <HelpTip content={HELP.groundingLevel} side="bottom" align="start" />
+          </label>
           {JURISDICTION_OPTIONS.map((j) => (
             <button
               key={j.id}
@@ -80,7 +85,10 @@ export default function ContextControls({
 
         {/* Rubric */}
         <div className="flex items-center gap-1.5 text-sm">
-          <label className="text-gray-500">Rubric:</label>
+          <label className="flex items-center gap-1 text-gray-500">
+            Rubric:
+            <HelpTip content={HELP.rubric} side="bottom" align="start" />
+          </label>
           <select
             value={rubric}
             onChange={(e) => onRubricChange(e.target.value)}

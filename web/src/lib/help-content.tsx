@@ -260,6 +260,31 @@ export const HELP = {
     ),
   } as Record<string, React.ReactNode>,
 
+  rubric: (
+    <div>
+      <p className="font-semibold text-gray-200">Rubric Detail</p>
+      <p className="mt-1 text-gray-400">
+        How much scoring guidance is baked into the judge&apos;s system prompt.
+      </p>
+      <Row
+        label="Full"
+        desc="Per-level behavioral anchors for all 7 dimensions — highest consistency, most tokens."
+      />
+      <Row
+        label="Compact"
+        desc="Dimension names and descriptions only; anchors removed — balanced tradeoff."
+      />
+      <Row
+        label="Bare"
+        desc="Minimal scaffold; model uses its own priors — fewest tokens, least deterministic."
+      />
+      <p className="mt-2 text-gray-400">
+        The grounding level dominates token count. Rubric choice matters most
+        when comparing models with weak instruction-following.
+      </p>
+    </div>
+  ),
+
   agentMode: (
     <div>
       <p className="font-semibold text-gray-200">Agent Mode</p>

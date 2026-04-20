@@ -156,7 +156,16 @@ export default function PromptInspector({
   return (
     <div className="h-full overflow-y-auto">
       <div className="mb-2 text-sm text-gray-600">
-        {totalLines} lines &middot; click to expand
+        {totalLines} lines total &middot;{" "}
+        {sectionOrder.map(({ key, section }, i) => (
+          <span key={key}>
+            <span className={SECTION_META[key].accent}>
+              {SECTION_META[key].label.split(" ")[0]}
+            </span>{" "}
+            {lineCount(section.text)}L
+            {i < sectionOrder.length - 1 ? " · " : ""}
+          </span>
+        ))}
       </div>
       <div className="divide-y divide-gray-800/50">
         {sectionOrder.map(({ key, section }) => (
