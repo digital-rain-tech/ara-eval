@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { TESTED_MODELS, DEFAULT_MODEL } from "@/lib/constants";
+import HelpTip from "./HelpTip";
+import { HELP } from "@/lib/help-content";
 
 interface ModelSelectorProps {
   value: string;
@@ -38,8 +40,9 @@ export default function ModelSelector({
 
   return (
     <div className="space-y-1">
-      <label htmlFor="model-select" className="block text-sm font-medium text-gray-400">
+      <label htmlFor="model-select" className="flex items-center gap-1.5 text-sm font-medium text-gray-400">
         Model
+        <HelpTip content={HELP.model} side="top" align="start" />
       </label>
       <div className="flex items-center gap-2">
         <select

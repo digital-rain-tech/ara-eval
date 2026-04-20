@@ -1,6 +1,8 @@
 "use client";
 
 import type { GatingClassification } from "@/lib/constants";
+import HelpTip from "./HelpTip";
+import { HELP } from "@/lib/help-content";
 
 interface GatingVerdictProps {
   classification: GatingClassification;
@@ -38,13 +40,19 @@ export default function GatingVerdict({
 
   return (
     <div className={`rounded-lg border ${style.bg} p-4`}>
-      <div className="mb-2 flex items-center justify-between">
-        <span className={`text-lg font-bold ${style.text}`}>
-          {style.label}
+      <div className="mb-2 flex items-center justify-between gap-2">
+        <span className="flex items-center gap-2">
+          <span className={`text-lg font-bold ${style.text}`}>
+            {style.label}
+          </span>
+          <HelpTip content={HELP.gatingVerdict[classification]} side="bottom" align="start" />
         </span>
-        <code className="font-mono text-sm text-gray-400">
-          {fingerprintString}
-        </code>
+        <span className="flex items-center gap-1.5">
+          <code className="font-mono text-sm text-gray-400">
+            {fingerprintString}
+          </code>
+          <HelpTip content={HELP.fingerprintString} side="bottom" align="end" />
+        </span>
       </div>
       {triggeredRules.length > 0 && (
         <ul className="mt-2 space-y-1">

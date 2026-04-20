@@ -9,6 +9,8 @@ import PersonalityDelta from "@/components/PersonalityDelta";
 import DimensionReasoning from "@/components/DimensionReasoning";
 import PromptInspector from "@/components/PromptInspector";
 import ModelSelector from "@/components/ModelSelector";
+import HelpTip from "@/components/HelpTip";
+import { HELP } from "@/lib/help-content";
 import type {
   Scenario,
   EvaluationResult,
@@ -195,8 +197,9 @@ export default function EvaluatePage() {
       {/* Jurisdiction tabs */}
       <div className="shrink-0 border-b border-gray-800 bg-gray-900/50">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-1 px-4 py-2">
-          <span className="mr-2 text-sm font-medium text-gray-500">
+          <span className="mr-2 flex items-center gap-1.5 text-sm font-medium text-gray-500">
             Grounding Level:
+            <HelpTip content={HELP.groundingLevel} side="bottom" align="start" />
           </span>
           {JURISDICTION_TABS.map((tab) => (
             <button
@@ -259,15 +262,14 @@ export default function EvaluatePage() {
             onSubmit={handleEvaluate}
             loading={loading}
             onScenarioSelect={loadReference}
+            modelSelector={
+              <ModelSelector
+                value={model}
+                defaultModel={defaultModel}
+                onChange={setModel}
+              />
+            }
           />
-
-          <div className="mt-4">
-            <ModelSelector
-              value={model}
-              defaultModel={defaultModel}
-              onChange={setModel}
-            />
-          </div>
 
           {/* Loading indicator */}
           {loading && (
@@ -334,8 +336,9 @@ export default function EvaluatePage() {
               {/* ── Details zone ── */}
               <div className="space-y-6 border-t border-gray-800 pt-6">
                 <div>
-                  <h3 className="mb-2 text-sm font-medium text-gray-500">
+                  <h3 className="mb-2 flex items-center gap-1.5 text-sm font-medium text-gray-500">
                     Stakeholder Disagreements
+                    <HelpTip content={HELP.personalityDelta} align="start" />
                   </h3>
                   <PersonalityDelta results={matrixResults} />
                 </div>

@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import type { Scenario } from "@/lib/constants";
+import HelpTip from "./HelpTip";
+import { HELP } from "@/lib/help-content";
 
 type InputMode =
   | "preloaded"
@@ -34,6 +36,7 @@ interface ScenarioInputProps {
   onSubmit: (scenario: Scenario, structured: boolean) => void;
   loading: boolean;
   onScenarioSelect?: (scenarioId: string) => void;
+  modelSelector?: ReactNode;
 }
 
 export default function ScenarioInput({
@@ -41,6 +44,7 @@ export default function ScenarioInput({
   onSubmit,
   loading,
   onScenarioSelect,
+  modelSelector,
 }: ScenarioInputProps) {
   const [mode, setMode] = useState<InputMode>("preloaded");
   const [selectedId, setSelectedId] = useState<string>("");
@@ -137,8 +141,9 @@ export default function ScenarioInput({
     <div className="space-y-4">
       {/* Mode selector */}
       <div>
-        <label className="mb-1 block text-sm font-medium text-gray-400">
+        <label className="mb-1 flex items-center gap-1.5 text-sm font-medium text-gray-400">
           Input Mode
+          <HelpTip content={HELP.inputMode} side="bottom" align="start" />
         </label>
         <select
           value={mode}
@@ -300,6 +305,9 @@ export default function ScenarioInput({
           </div>
         </div>
       )}
+
+      {/* Model selector — injected above submit */}
+      {modelSelector}
 
       {/* Submit */}
       <button

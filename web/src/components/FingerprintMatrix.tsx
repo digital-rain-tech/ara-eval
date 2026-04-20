@@ -8,6 +8,8 @@ import {
   type DimensionResult,
   type Level,
 } from "@/lib/constants";
+import HelpTip from "./HelpTip";
+import { HELP } from "@/lib/help-content";
 
 interface PersonalityResult {
   label: string;
@@ -64,7 +66,12 @@ export default function FingerprintMatrix({
           {DIMENSIONS.map((dim) => (
             <tr key={dim} className="border-b border-gray-800">
               <td className="py-2 pr-4 text-gray-300">
-                {DIMENSION_LABELS[dim]}
+                <span className="flex items-center gap-1.5">
+                  {DIMENSION_LABELS[dim]}
+                  {HELP.dimensions[dim] && (
+                    <HelpTip content={HELP.dimensions[dim]} align="start" />
+                  )}
+                </span>
               </td>
               {personalityIds.map((pid) => (
                 <td key={pid} className="px-2 py-2 text-center">

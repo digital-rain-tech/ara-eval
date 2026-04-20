@@ -9,6 +9,8 @@ import ChallengeBanner from "@/components/ChallengeBanner";
 import ChatMessages, { type ChatMessage } from "@/components/ChatMessages";
 import ChatInput from "@/components/ChatInput";
 import ModelSelector from "@/components/ModelSelector";
+import HelpTip from "@/components/HelpTip";
+import { HELP } from "@/lib/help-content";
 import type {
   Scenario,
   PersonalityMeta,
@@ -393,13 +395,13 @@ function ChatPageContent() {
   }
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden">
+    <div className="flex min-h-screen flex-col lg:h-screen lg:overflow-hidden">
       <Nav />
 
       {/* Split pane — fills remaining height */}
-      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-0 overflow-hidden">
-        {/* Left pane — Prompt Inspector */}
-        <div className="flex w-2/5 flex-col border-r border-gray-800 p-4 overflow-hidden">
+      <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-1 lg:flex-row lg:overflow-hidden">
+        {/* Left pane — Prompt Inspector (second on mobile) */}
+        <div className="order-2 flex w-full flex-col border-t border-gray-800 p-4 lg:order-1 lg:w-2/5 lg:overflow-hidden lg:border-r lg:border-t-0">
           <h2 className="mb-3 shrink-0 text-sm font-medium text-gray-400">
             {mode === "agent" ? "Agent System Prompt" : "Judge System Prompt"}
             <span className="ml-2 text-sm text-gray-600">
@@ -421,8 +423,8 @@ function ChatPageContent() {
           </div>
         </div>
 
-        {/* Right pane — Chat */}
-        <div className="flex w-3/5 flex-col overflow-hidden">
+        {/* Right pane — Chat (first on mobile) */}
+        <div className="order-1 flex w-full flex-col lg:order-2 lg:w-3/5 lg:overflow-hidden">
           <div className="shrink-0 space-y-3 p-4 pb-0">
             {/* Mode toggle */}
             <div className="flex items-center gap-4">
@@ -448,6 +450,11 @@ function ChatPageContent() {
                   Judge Mode
                 </button>
               </div>
+              <HelpTip
+                content={mode === "agent" ? HELP.agentMode : HELP.judgeMode}
+                side="bottom"
+                align="start"
+              />
               <span className="text-sm text-gray-600">
                 {mode === "agent"
                   ? "Red-team the agent\u2019s guardrails"
@@ -458,20 +465,22 @@ function ChatPageContent() {
             {/* Agent mode: scenario selector + challenge banner */}
             {mode === "agent" && (
               <>
-                <div className="flex items-center gap-3">
-                  <label className="text-sm text-gray-500">Scenario:</label>
-                  <select
-                    value={selectedScenarioId}
-                    onChange={(e) => handleScenarioSelect(e.target.value)}
-                    className="flex-1 rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-300"
-                  >
-                    <option value="">Select a scenario...</option>
-                    {scenarios.map((s) => (
-                      <option key={s.id} value={s.id}>
-                        {s.id} — {s.domain} ({s.industry})
-                      </option>
-                    ))}
-                  </select>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-3">
+                    <label className="shrink-0 text-sm text-gray-500">Scenario:</label>
+                    <select
+                      value={selectedScenarioId}
+                      onChange={(e) => handleScenarioSelect(e.target.value)}
+                      className="flex-1 rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-300"
+                    >
+                      <option value="">Select a scenario...</option>
+                      {scenarios.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.id} — {s.domain} ({s.industry})
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   <ModelSelector
                     value={model}
                     defaultModel={defaultModel}
