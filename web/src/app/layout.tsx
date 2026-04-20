@@ -20,7 +20,7 @@ export default function RootLayout({
           <a href="/" className="text-sm font-semibold text-gray-200">
             ARA-Eval
           </a>
-          <AuthButton />
+          {process.env.NEXT_PUBLIC_SUPABASE_URL && <AuthButton />}
         </header>
         {children}
       </body>

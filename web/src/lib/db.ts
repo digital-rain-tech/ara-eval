@@ -11,17 +11,15 @@ const useSupabase = Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 type Driver = typeof import("./db-supabase");
 
-let _driver: Driver | null = null;
+let _driverPromise: Promise<Driver> | null = null;
 
-async function getDriver(): Promise<Driver> {
-  if (_driver) return _driver;
-  if (useSupabase) {
-    _driver = await import("./db-supabase");
-  } else {
-    const sqlite = await import("./db-sqlite");
-    _driver = sqlite as unknown as Driver;
+function getDriver(): Promise<Driver> {
+  if (!_driverPromise) {
+    _driverPromise = useSupabase
+      ? import("./db-supabase")
+      : import("./db-sqlite").then((m) => m as unknown as Driver);
   }
-  return _driver;
+  return _driverPromise;
 }
 
 export async function createRun(
