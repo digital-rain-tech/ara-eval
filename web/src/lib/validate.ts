@@ -2,20 +2,18 @@
  * Server-side validation helpers for API routes.
  */
 
-import { TESTED_MODELS } from "./constants";
 import { getPersonalities, getJurisdictions } from "./prompts";
 
 const VALID_RUBRICS = new Set(["rubric.md", "rubric-compact.md", "rubric-bare.md"]);
 
 /**
- * Validate a model ID. Accepts tested models and any model ending with :free.
+ * Validate a model ID. Only free models (:free suffix) are allowed to run evals.
  * Returns null if valid, error message if invalid.
  */
 export function validateModel(model: string): string | null {
   if (!model) return "Model ID is required";
-  if (TESTED_MODELS.some((m) => m.id === model)) return null;
   if (model.endsWith(":free")) return null;
-  return `Model '${model}' is not in the tested model list and is not a free model. Only free models (:free suffix) or tested models are allowed.`;
+  return `Only free models are allowed. Use a model with the ':free' suffix (e.g. arcee-ai/trinity-large-preview:free).`;
 }
 
 /**

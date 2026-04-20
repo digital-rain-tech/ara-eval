@@ -1,53 +1,35 @@
-FROM node:20-alpine AS base
-
-# Install dependencies for better-sqlite3 native compilation
+FROM node:22-alpine AS deps
 RUN apk add --no-cache python3 make g++
+WORKDIR /app/web
+COPY web/package.json web/package-lock.json ./
+RUN npm ci
 
+FROM node:22-alpine AS builder
 WORKDIR /app
-
-# Copy shared data files (read by the web app at runtime)
 COPY shared/ ./shared/
 COPY prompts/ ./prompts/
 COPY scenarios/ ./scenarios/
-
-# Copy web app
-COPY web/package.json web/package-lock.json ./web/
-
+COPY web/ ./web/
+COPY --from=deps /app/web/node_modules ./web/node_modules
 WORKDIR /app/web
-RUN npm ci
-
-COPY web/ .
-
-# Build Next.js
 RUN npm run build
 
-# Production image
-FROM node:20-alpine AS runner
-
-RUN apk add --no-cache python3 make g++
-
+FROM node:22-alpine AS runner
 WORKDIR /app
+COPY --from=builder /app/shared/ ./shared/
+COPY --from=builder /app/prompts/ ./prompts/
+COPY --from=builder /app/scenarios/ ./scenarios/
+# Standalone server (includes node_modules for serverExternalPackages like better-sqlite3)
+COPY --from=builder /app/web/.next/standalone/ ./web/
+# Static assets must be copied separately with standalone output
+COPY --from=builder /app/web/.next/static/ ./web/.next/static/
 
-# Copy shared data
-COPY --from=base /app/shared/ ./shared/
-COPY --from=base /app/prompts/ ./prompts/
-COPY --from=base /app/scenarios/ ./scenarios/
-
-# Copy built web app
-COPY --from=base /app/web/package.json /app/web/package-lock.json ./web/
-COPY --from=base /app/web/.next ./web/.next
-COPY --from=base /app/web/node_modules ./web/node_modules
-COPY --from=base /app/web/next.config.ts ./web/next.config.ts
-COPY --from=base /app/web/postcss.config.mjs ./web/postcss.config.mjs
-
-# Create results directory for SQLite persistence
 RUN mkdir -p /app/results
-
-WORKDIR /app/web
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 
+WORKDIR /app/web
 EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["node", "server.js"]

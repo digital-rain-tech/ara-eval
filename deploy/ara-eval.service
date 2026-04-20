@@ -1,0 +1,15 @@
+[Unit]
+Description=ARA-Eval Web App
+After=docker.service network-online.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/oasis/projects/ara-eval
+ExecStart=/usr/bin/docker compose up -d --build
+ExecStop=/usr/bin/docker compose down
+
+[Install]
+WantedBy=multi-user.target

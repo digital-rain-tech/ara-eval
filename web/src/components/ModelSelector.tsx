@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TESTED_MODELS } from "@/lib/constants";
+import { TESTED_MODELS, DEFAULT_MODEL } from "@/lib/constants";
 
 interface ModelSelectorProps {
   value: string;
@@ -14,8 +14,8 @@ export default function ModelSelector({
   defaultModel,
   onChange,
 }: ModelSelectorProps) {
-  const isCustom =
-    value !== "" && !TESTED_MODELS.some((m) => m.id === value);
+  const freeModel = TESTED_MODELS.find((m) => m.id === DEFAULT_MODEL)!;
+  const isCustom = value !== "" && value !== DEFAULT_MODEL;
   const [showCustom, setShowCustom] = useState(isCustom);
   const [customValue, setCustomValue] = useState(isCustom ? value : "");
 
@@ -45,12 +45,10 @@ export default function ModelSelector({
         onChange={(e) => handleSelect(e.target.value)}
         className="rounded border border-gray-700 bg-gray-800 px-2 py-0.5 text-sm text-gray-300"
       >
-        {TESTED_MODELS.map((m) => (
-          <option key={m.id} value={m.id}>
-            {m.label} — {m.note}
-          </option>
-        ))}
-        <option value="__custom__">Custom...</option>
+        <option value={freeModel.id}>
+          {freeModel.label} — {freeModel.note}
+        </option>
+        <option value="__custom__">Custom free model...</option>
       </select>
       {showCustom && (
         <input

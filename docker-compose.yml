@@ -1,0 +1,12 @@
+services:
+  ara-eval:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    ports:
+      - "127.0.0.1:3003:3000"
+    volumes:
+      - ./data:/app/results
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: unless-stopped
