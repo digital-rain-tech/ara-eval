@@ -189,42 +189,35 @@ export default function EvaluatePage() {
   }
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden">
+    <div className="flex min-h-screen flex-col lg:h-screen lg:overflow-hidden">
       <Nav />
 
       {/* Jurisdiction tabs */}
       <div className="shrink-0 border-b border-gray-800 bg-gray-900/50">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2">
-          <div className="flex items-center gap-1">
-            <span className="mr-3 text-sm font-medium text-gray-500">
-              Grounding Level:
-            </span>
-            {JURISDICTION_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setJurisdiction(tab.id)}
-                className={`rounded px-3 py-1.5 text-sm transition-colors ${
-                  jurisdiction === tab.id
-                    ? "bg-amber-800/40 text-amber-300"
-                    : "text-gray-400 hover:text-gray-200"
-                }`}
-              >
-                {tab.short}
-              </button>
-            ))}
-          </div>
-          <ModelSelector
-            value={model}
-            defaultModel={defaultModel}
-            onChange={setModel}
-          />
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-1 px-4 py-2">
+          <span className="mr-2 text-sm font-medium text-gray-500">
+            Grounding Level:
+          </span>
+          {JURISDICTION_TABS.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setJurisdiction(tab.id)}
+              className={`rounded px-3 py-1.5 text-sm transition-colors ${
+                jurisdiction === tab.id
+                  ? "bg-amber-800/40 text-amber-300"
+                  : "text-gray-400 hover:text-gray-200"
+              }`}
+            >
+              {tab.short}
+            </button>
+          ))}
         </div>
       </div>
 
       {/* Split pane */}
-      <div className="mx-auto flex w-full max-w-7xl flex-1 gap-0 overflow-hidden">
-        {/* Left pane — Prompt Inspector */}
-        <div className="flex w-2/5 flex-col border-r border-gray-800 p-4 overflow-hidden">
+      <div className="mx-auto flex w-full max-w-7xl flex-col lg:flex-1 lg:flex-row lg:overflow-hidden">
+        {/* Left pane — Prompt Inspector (second on mobile) */}
+        <div className="order-2 flex w-full flex-col border-t border-gray-800 p-4 lg:order-1 lg:w-2/5 lg:overflow-hidden lg:border-r lg:border-t-0">
           <h2 className="mb-3 text-sm font-medium text-gray-400">
             System Prompt
             <span className="ml-2 text-sm text-gray-600">
@@ -252,8 +245,8 @@ export default function EvaluatePage() {
           </div>
         </div>
 
-        {/* Right pane — Input & Results (scrolls independently) */}
-        <div className="w-3/5 overflow-y-auto p-4">
+        {/* Right pane — Input & Results (first on mobile) */}
+        <div className="order-1 w-full p-4 lg:order-2 lg:w-3/5 lg:overflow-y-auto">
           <h2 className="mb-3 text-sm font-medium text-gray-400">
             Scenario & Results
             <span className="ml-2 text-sm text-gray-600">
@@ -267,6 +260,14 @@ export default function EvaluatePage() {
             loading={loading}
             onScenarioSelect={loadReference}
           />
+
+          <div className="mt-4">
+            <ModelSelector
+              value={model}
+              defaultModel={defaultModel}
+              onChange={setModel}
+            />
+          </div>
 
           {/* Loading indicator */}
           {loading && (

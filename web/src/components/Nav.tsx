@@ -15,9 +15,9 @@ export default function Nav() {
   const pathname = usePathname();
 
   return (
-    <nav className="border-b border-gray-800 bg-gray-900">
-      <div className="mx-auto flex max-w-7xl items-center px-4 py-3">
-        <Link href="/" className="mr-8 text-lg font-bold text-gray-100">
+    <nav className="border-b border-gray-800 bg-gray-900 overflow-x-auto">
+      <div className="mx-auto flex min-w-max max-w-7xl items-center px-4 py-3">
+        <Link href="/" className="mr-8 text-lg font-bold text-gray-100 shrink-0">
           ARA-Eval
         </Link>
         <div className="flex gap-1">

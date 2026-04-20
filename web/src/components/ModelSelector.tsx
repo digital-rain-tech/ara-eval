@@ -37,37 +37,39 @@ export default function ModelSelector({
   };
 
   return (
-    <div className="flex items-center gap-2 text-sm text-gray-500">
-      <label htmlFor="model-select">Model:</label>
-      <select
-        id="model-select"
-        value={showCustom ? "__custom__" : value}
-        onChange={(e) => handleSelect(e.target.value)}
-        className="rounded border border-gray-700 bg-gray-800 px-2 py-0.5 text-sm text-gray-300"
-      >
-        <option value={freeModel.id}>
-          {freeModel.label} — {freeModel.note}
-        </option>
-        <option value="__custom__">Custom free model...</option>
-      </select>
+    <div className="space-y-1">
+      <label htmlFor="model-select" className="block text-sm font-medium text-gray-400">
+        Model
+      </label>
+      <div className="flex items-center gap-2">
+        <select
+          id="model-select"
+          value={showCustom ? "__custom__" : value}
+          onChange={(e) => handleSelect(e.target.value)}
+          className="flex-1 rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200"
+        >
+          <option value={freeModel.id}>{freeModel.label} — {freeModel.note}</option>
+          <option value="__custom__">Custom free model...</option>
+        </select>
+        {value !== defaultModel && (
+          <button
+            onClick={() => {
+              setShowCustom(false);
+              onChange(defaultModel);
+            }}
+            className="text-sm text-gray-600 hover:text-gray-400"
+          >
+            reset
+          </button>
+        )}
+      </div>
       {showCustom && (
         <input
           value={customValue}
           onChange={(e) => handleCustomChange(e.target.value)}
           placeholder="e.g., meta-llama/llama-3.3-70b-instruct:free"
-          className="w-64 rounded border border-gray-700 bg-gray-800 px-2 py-0.5 font-mono text-sm text-gray-300 placeholder-gray-600"
+          className="w-full rounded border border-gray-700 bg-gray-800 px-3 py-2 font-mono text-sm text-gray-300 placeholder-gray-600"
         />
-      )}
-      {value !== defaultModel && (
-        <button
-          onClick={() => {
-            setShowCustom(false);
-            onChange(defaultModel);
-          }}
-          className="text-gray-600 hover:text-gray-400"
-        >
-          reset
-        </button>
       )}
     </div>
   );
