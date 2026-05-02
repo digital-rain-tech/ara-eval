@@ -120,6 +120,20 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline",
         "is_default": True,
     },
+    "nvidia_nemotron-3-nano-omni-30b-a3b-reasoning_free": {
+        "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+        "label": "Nvidia Nemotron 3 Nano Omni 30B",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, 17/18 calls completed",
+        "is_default": False,
+    },
+    "poolside_laguna-xs.2_free": {
+        "id": "poolside/laguna-xs.2:free",
+        "label": "Poolside Laguna XS 2",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, 18/18 calls completed",
+        "is_default": False,
+    },
     "gpt-5.4-nano": {
         "id": "openai/gpt-5.4-nano",
         "label": "GPT-5.4 Nano",

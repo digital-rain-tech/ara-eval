@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-08",
+  "last_updated": "2026-05-02",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
@@ -182,6 +182,24 @@
       "eval_duration_seconds": 1034
     },
     {
+      "id": "poolside/laguna-xs.2:free",
+      "label": "Poolside Laguna XS 2",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, 18/18 calls completed",
+      "completion": "18/18",
+      "f2": 0.73,
+      "hard_gate_recall": 0.73,
+      "hard_gate_precision": 0.73,
+      "false_negatives": 4,
+      "false_positives": 4,
+      "fingerprint_match": 0.48,
+      "differentiation": 0.57,
+      "bias": "noisy",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 126
+    },
+    {
       "id": "qwen/qwen3.6-plus",
       "label": "Qwen3.6 Plus",
       "method": "api",
@@ -252,6 +270,24 @@
       "cost_per_eval": null,
       "is_default": true,
       "eval_duration_seconds": 261
+    },
+    {
+      "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
+      "label": "Nvidia Nemotron 3 Nano Omni 30B",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, 17/18 calls completed",
+      "completion": "17/18",
+      "f2": 0.4,
+      "hard_gate_recall": 0.36,
+      "hard_gate_precision": 0.71,
+      "false_negatives": 9,
+      "false_positives": 2,
+      "fingerprint_match": 0.34,
+      "differentiation": 0.62,
+      "bias": "sleepy",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 138
     },
     {
       "id": "claude-haiku-4.5-subagent",

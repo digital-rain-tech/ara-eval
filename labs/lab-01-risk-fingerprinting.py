@@ -167,6 +167,24 @@ def main():
     all_results = {}
     run_start = time.monotonic()
 
+    # For partial saves
+    output_path = None
+
+    def save_partial():
+        if output_path:
+            with open(output_path, "w") as f:
+                json.dump(all_results, f, indent=2, default=str)
+
+    # Set output path early for partial saves
+    if prior_path:
+        output_path = prior_path.resolve()
+    else:
+        run_dir = get_run_dir(results_dir)
+        model_slug = MODEL.replace("/", "_").replace(":", "_")
+        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
+        output_filename = f"lab-01-{model_slug}-{timestamp}.json"
+        output_path = run_dir / output_filename
+
     for scenario in scenarios:
         sid = scenario["id"]
 
@@ -251,6 +269,8 @@ def main():
             print(f"    Reference fingerprint: {ref_str}")
             print(f"    Reference interpretation: {scenario.get('reference_interpretation', 'N/A')}")
 
+        save_partial()
+
     # Finalize run record — accumulate wall time across retry sessions
     run_wall_ms = int((time.monotonic() - run_start) * 1000)
     if prior_results:
@@ -289,16 +309,7 @@ def main():
     if prior_path:
         all_results["_run"]["retry_of"] = str(prior_path)
 
-    # Save results — overwrite prior file if retrying, otherwise new timestamped file
-    if prior_path:
-        output_path = prior_path.resolve()
-    else:
-        run_dir = get_run_dir(results_dir)
-        model_slug = MODEL.replace("/", "_").replace(":", "_")
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-        output_filename = f"lab-01-{model_slug}-{timestamp}.json"
-        output_path = run_dir / output_filename
-
+    # Final save with _run metadata
     with open(output_path, "w") as f:
         json.dump(all_results, f, indent=2, default=str)
 
