@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-02",
+  "last_updated": "2026-05-08",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
@@ -74,6 +74,24 @@
       "eval_duration_seconds": 613
     },
     {
+      "id": "tencent/hy3-preview:free",
+      "label": "Tencent Hunyuan T1",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 37/39 calls completed (2 read timeouts). Very verbose (~9.5k tokens/response), required removing max_tokens cap.",
+      "completion": "18/18",
+      "f2": 0.95,
+      "hard_gate_recall": 1.0,
+      "hard_gate_precision": 0.79,
+      "false_negatives": 0,
+      "false_positives": 4,
+      "fingerprint_match": 0.66,
+      "differentiation": 0.33,
+      "bias": "jittery",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 10913
+    },
+    {
       "id": "claude-sonnet-4.6-subagent",
       "label": "Claude Sonnet 4.6",
       "method": "subagent",
@@ -144,6 +162,24 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 503
+    },
+    {
+      "id": "baidu/cobuddy:free",
+      "label": "Baidu CoBuddy",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+      "completion": "18/18",
+      "f2": 0.83,
+      "hard_gate_recall": 0.8,
+      "hard_gate_precision": 1.0,
+      "false_negatives": 3,
+      "false_positives": 0,
+      "fingerprint_match": 0.61,
+      "differentiation": 0.5,
+      "bias": "sleepy",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 1362
     },
     {
       "id": "deepseek/deepseek-v3.2",

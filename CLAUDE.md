@@ -11,7 +11,8 @@ Focused on Hong Kong financial services regulation (HKMA, SFC, PCPD, PIPL).
 ## Commands
 
 ```bash
-# Setup
+# Setup (use the project venv — system Python is PEP 668 locked)
+source venv/bin/activate   # or use venv/bin/python directly
 pip install -r requirements.txt -r requirements-dev.txt
 pip install -e .   # installs ara_eval package in dev mode
 # Add OPENROUTER_API_KEY to .env.local

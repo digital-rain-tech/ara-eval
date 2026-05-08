@@ -148,6 +148,20 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios; wall time inflated by free-tier rate limiting — not directly comparable to other models",
         "is_default": False,
     },
+    "baidu-cobuddy": {
+        "id": "baidu/cobuddy:free",
+        "label": "Baidu CoBuddy",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+        "is_default": False,
+    },
+    "tencent-hy3-preview": {
+        "id": "tencent/hy3-preview:free",
+        "label": "Tencent Hunyuan T1",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 37/39 calls completed (2 read timeouts). Very verbose (~9.5k tokens/response), required removing max_tokens cap.",
+        "is_default": False,
+    },
 }
 
 

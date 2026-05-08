@@ -58,6 +58,63 @@
       "personality_differentiation_rate": 0.30952380952380953
     },
     {
+      "model": "tencent-hy3-preview",
+      "completion_rate": 1.0,
+      "successful": 18,
+      "total": 18,
+      "hard_gate_accuracy": 0.8888888888888888,
+      "hard_gate_recall": 1.0,
+      "hard_gate_precision": 0.7894736842105263,
+      "gate_f2": 0.949367088607595,
+      "hard_gate_true_positives": 15,
+      "hard_gate_false_negatives": 0,
+      "hard_gate_false_positives": 4,
+      "hard_gate_total": 36,
+      "bias": "jittery",
+      "fingerprint_match_rate": 0.6587301587301587,
+      "fingerprint_matches": 83,
+      "fingerprint_total": 126,
+      "per_dimension_fingerprint_match": {
+        "Decision Reversibility": {
+          "matches": 17,
+          "total": 18,
+          "rate": 0.9444444444444444
+        },
+        "Failure Blast Radius": {
+          "matches": 15,
+          "total": 18,
+          "rate": 0.8333333333333334
+        },
+        "Regulatory Exposure": {
+          "matches": 12,
+          "total": 18,
+          "rate": 0.6666666666666666
+        },
+        "Decision Time Pressure": {
+          "matches": 13,
+          "total": 18,
+          "rate": 0.7222222222222222
+        },
+        "Data Confidence": {
+          "matches": 7,
+          "total": 18,
+          "rate": 0.3888888888888889
+        },
+        "Accountability Chain": {
+          "matches": 6,
+          "total": 18,
+          "rate": 0.3333333333333333
+        },
+        "Graceful Degradation": {
+          "matches": 13,
+          "total": 18,
+          "rate": 0.7222222222222222
+        }
+      },
+      "avg_personality_spread": 0.4523809523809524,
+      "personality_differentiation_rate": 0.3333333333333333
+    },
+    {
       "model": "claude-opus-analysis",
       "completion_rate": 1.0,
       "successful": 18,
@@ -170,6 +227,63 @@
       },
       "avg_personality_spread": 0.38095238095238093,
       "personality_differentiation_rate": 0.35714285714285715
+    },
+    {
+      "model": "baidu-cobuddy",
+      "completion_rate": 1.0,
+      "successful": 18,
+      "total": 18,
+      "hard_gate_accuracy": 0.9166666666666666,
+      "hard_gate_recall": 0.8,
+      "hard_gate_precision": 1.0,
+      "gate_f2": 0.8333333333333334,
+      "hard_gate_true_positives": 12,
+      "hard_gate_false_negatives": 3,
+      "hard_gate_false_positives": 0,
+      "hard_gate_total": 36,
+      "bias": "sleepy",
+      "fingerprint_match_rate": 0.6111111111111112,
+      "fingerprint_matches": 77,
+      "fingerprint_total": 126,
+      "per_dimension_fingerprint_match": {
+        "Decision Reversibility": {
+          "matches": 14,
+          "total": 18,
+          "rate": 0.7777777777777778
+        },
+        "Failure Blast Radius": {
+          "matches": 15,
+          "total": 18,
+          "rate": 0.8333333333333334
+        },
+        "Regulatory Exposure": {
+          "matches": 12,
+          "total": 18,
+          "rate": 0.6666666666666666
+        },
+        "Decision Time Pressure": {
+          "matches": 14,
+          "total": 18,
+          "rate": 0.7777777777777778
+        },
+        "Data Confidence": {
+          "matches": 5,
+          "total": 18,
+          "rate": 0.2777777777777778
+        },
+        "Accountability Chain": {
+          "matches": 9,
+          "total": 18,
+          "rate": 0.5
+        },
+        "Graceful Degradation": {
+          "matches": 8,
+          "total": 18,
+          "rate": 0.4444444444444444
+        }
+      },
+      "avg_personality_spread": 0.5,
+      "personality_differentiation_rate": 0.5
     },
     {
       "model": "openrouter-hunter-alpha",
