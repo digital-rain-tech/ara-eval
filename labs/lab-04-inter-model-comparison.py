@@ -68,12 +68,12 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
     total_evals = 0
     successful_evals = 0
 
-    # Hard gate tracking
-    hard_gate_correct = 0  # true positives + true negatives
-    hard_gate_total = 0
-    hard_gate_true_pos = 0   # correctly detected a gate
-    hard_gate_false_neg = 0  # missed a gate that should fire
-    hard_gate_false_pos = 0  # fired a gate that shouldn't
+    # Hard gate tracking — total is always the full denominator (all scenarios * personalities * gates)
+    # Non-responses count as missed gates (FN) for recall, no effect on precision
+    hard_gate_total = len(HARD_GATE_DIMS) * sum(len(PERSONALITIES) for _ in gold)
+    hard_gate_true_pos = 0
+    hard_gate_false_neg = 0
+    hard_gate_false_pos = 0
 
     # Dimension-level match
     dim_matches = 0
@@ -93,7 +93,12 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
             total_evals += 1
             fp = get_eval_fingerprint(data, sid, pid)
             if fp is None:
+                # Non-response: all gates that should fire count as missed (FN)
+                for gate_dim, gate_level in HARD_GATE_DIMS.items():
+                    if ref_fp.get(gate_dim) == gate_level:
+                        hard_gate_false_neg += 1
                 continue
+
             successful_evals += 1
             personality_fps[pid] = fp
 
@@ -107,9 +112,9 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
                 eval_fires = eval_level == gate_level
 
                 if ref_fires == eval_fires:
-                    hard_gate_correct += 1
                     if ref_fires:
                         hard_gate_true_pos += 1
+                    # else: true negative — no counter needed
                 elif ref_fires and not eval_fires:
                     hard_gate_false_neg += 1
                 elif not ref_fires and eval_fires:
@@ -147,7 +152,8 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
                     personality_spreads.append(max(levels) - min(levels))
 
     completion_rate = successful_evals / total_evals if total_evals else 0
-    hard_gate_accuracy = hard_gate_correct / hard_gate_total if hard_gate_total else 0
+    true_neg = hard_gate_total - hard_gate_true_pos - hard_gate_false_neg - hard_gate_false_pos
+    hard_gate_accuracy = (hard_gate_true_pos + true_neg) / hard_gate_total if hard_gate_total else 0
     dim_match_rate = dim_matches / dim_total if dim_total else 0
     avg_personality_spread = sum(personality_spreads) / len(personality_spreads) if personality_spreads else 0
     nonzero_spreads = sum(1 for s in personality_spreads if s > 0)
