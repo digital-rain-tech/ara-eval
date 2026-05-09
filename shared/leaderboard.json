@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-08",
+  "last_updated": "2026-05-09",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
@@ -90,6 +90,24 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 10913
+    },
+    {
+      "id": "poolside/laguna-m.1:free",
+      "label": "Poolside Laguna M.1",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+      "completion": "18/18",
+      "f2": 0.92,
+      "hard_gate_recall": 0.93,
+      "hard_gate_precision": 0.88,
+      "false_negatives": 1,
+      "false_positives": 2,
+      "fingerprint_match": 0.63,
+      "differentiation": 0.38,
+      "bias": "jittery",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 1020
     },
     {
       "id": "claude-sonnet-4.6-subagent",
@@ -198,6 +216,24 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 1277
+    },
+    {
+      "id": "inclusionai/ring-2.6-1t:free",
+      "label": "InclusionAI Ring 2.6 1T",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+      "completion": "18/18",
+      "f2": 0.75,
+      "hard_gate_recall": 0.73,
+      "hard_gate_precision": 0.85,
+      "false_negatives": 4,
+      "false_positives": 2,
+      "fingerprint_match": 0.64,
+      "differentiation": 0.4,
+      "bias": "sleepy",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 952
     },
     {
       "id": "openrouter/hunter-alpha",

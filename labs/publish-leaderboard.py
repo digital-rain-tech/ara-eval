@@ -162,6 +162,20 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 37/39 calls completed (2 read timeouts). Very verbose (~9.5k tokens/response), required removing max_tokens cap.",
         "is_default": False,
     },
+    "inclusionai-ring-2.6-1t": {
+        "id": "inclusionai/ring-2.6-1t:free",
+        "label": "InclusionAI Ring 2.6 1T",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+        "is_default": False,
+    },
+    "poolside-laguna-m.1": {
+        "id": "poolside/laguna-m.1:free",
+        "label": "Poolside Laguna M.1",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+        "is_default": False,
+    },
 }
 
 
