@@ -120,6 +120,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline",
         "is_default": True,
     },
+    "google-gemma-4-26b-a4b-it-free": {
+        "id": "google/gemma-4-26b-a4b-it:free",
+        "label": "Gemma 4 26B A4B",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, 8/18 calls completed (heavy rate limiting)",
+        "is_default": False,
+    },
     "nvidia_nemotron-3-nano-omni-30b-a3b-reasoning_free": {
         "id": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
         "label": "Nvidia Nemotron 3 Nano Omni 30B",

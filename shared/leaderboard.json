@@ -74,6 +74,24 @@
       "eval_duration_seconds": 613
     },
     {
+      "id": "google/gemma-4-26b-a4b-it:free",
+      "label": "Gemma 4 26B A4B",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, 8/18 calls completed (heavy rate limiting)",
+      "completion": "8/18",
+      "f2": 0.97,
+      "hard_gate_recall": 1.0,
+      "hard_gate_precision": 0.86,
+      "false_negatives": 0,
+      "false_positives": 1,
+      "fingerprint_match": 0.55,
+      "differentiation": 0.5,
+      "bias": "calibrated",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 3436
+    },
+    {
       "id": "tencent/hy3-preview:free",
       "label": "Tencent Hunyuan T1",
       "method": "api",

@@ -58,6 +58,63 @@
       "personality_differentiation_rate": 0.30952380952380953
     },
     {
+      "model": "google-gemma-4-26b-a4b-it-free",
+      "completion_rate": 0.4444444444444444,
+      "successful": 8,
+      "total": 18,
+      "hard_gate_accuracy": 0.9375,
+      "hard_gate_recall": 1.0,
+      "hard_gate_precision": 0.8571428571428571,
+      "gate_f2": 0.9677419354838709,
+      "hard_gate_true_positives": 6,
+      "hard_gate_false_negatives": 0,
+      "hard_gate_false_positives": 1,
+      "hard_gate_total": 16,
+      "bias": "calibrated",
+      "fingerprint_match_rate": 0.5535714285714286,
+      "fingerprint_matches": 31,
+      "fingerprint_total": 56,
+      "per_dimension_fingerprint_match": {
+        "Decision Reversibility": {
+          "matches": 6,
+          "total": 8,
+          "rate": 0.75
+        },
+        "Failure Blast Radius": {
+          "matches": 6,
+          "total": 8,
+          "rate": 0.75
+        },
+        "Regulatory Exposure": {
+          "matches": 5,
+          "total": 8,
+          "rate": 0.625
+        },
+        "Decision Time Pressure": {
+          "matches": 5,
+          "total": 8,
+          "rate": 0.625
+        },
+        "Data Confidence": {
+          "matches": 3,
+          "total": 8,
+          "rate": 0.375
+        },
+        "Accountability Chain": {
+          "matches": 2,
+          "total": 8,
+          "rate": 0.25
+        },
+        "Graceful Degradation": {
+          "matches": 4,
+          "total": 8,
+          "rate": 0.5
+        }
+      },
+      "avg_personality_spread": 0.5,
+      "personality_differentiation_rate": 0.5
+    },
+    {
       "model": "tencent-hy3-preview",
       "completion_rate": 1.0,
       "successful": 18,
