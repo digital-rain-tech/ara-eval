@@ -92,6 +92,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. Required max_tokens bump to 4096.",
         "is_default": False,
     },
+    "deepseek-v4-flash": {
+        "id": "deepseek/deepseek-v4-flash",
+        "label": "DeepSeek V4 Flash",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 38/39 calls successful (1 timeout retry).",
+        "is_default": False,
+    },
     "deepseek-v3.2": {
         "id": "deepseek/deepseek-v3.2",
         "label": "DeepSeek v3.2",

@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-09",
+  "last_updated": "2026-05-10",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
@@ -216,6 +216,24 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 1277
+    },
+    {
+      "id": "deepseek/deepseek-v4-flash",
+      "label": "DeepSeek V4 Flash",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 38/39 calls successful (1 timeout retry).",
+      "completion": "17/18",
+      "f2": 0.79,
+      "hard_gate_recall": 0.8,
+      "hard_gate_precision": 0.75,
+      "false_negatives": 3,
+      "false_positives": 4,
+      "fingerprint_match": 0.59,
+      "differentiation": 0.5,
+      "bias": "noisy",
+      "cost_per_eval": null,
+      "is_default": false,
+      "eval_duration_seconds": 2411
     },
     {
       "id": "inclusionai/ring-2.6-1t:free",
