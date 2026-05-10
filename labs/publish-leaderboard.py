@@ -281,8 +281,8 @@ def generate_readme_table(data: dict) -> str:
     last_updated = data["last_updated"]
 
     lines = []
-    lines.append("| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Cost | Time |")
-    lines.append("|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|-----:|")
+    lines.append("| # | Model | Method | Risk Detection | HG Recall | HG Precision | FP Match | Diff | Bias | Cost | Time |")
+    lines.append("|---|-------|--------|---------------:|----------:|-------------:|--------:|-----:|------|-----:|-----:|")
 
     for i, m in enumerate(models, 1):
         f2 = f"**{m['f2']:.0%}**" if m["f2"] >= 0.95 else f"{m['f2']:.0%}"
@@ -304,7 +304,7 @@ def generate_readme_table(data: dict) -> str:
     lines.append(f"*{len(models)} models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: {last_updated}.*")
     lines.append("")
     lines.append(
-        "**Metrics:** **F2** = F-beta (beta=2), weights recall 4x over precision. "
+        "**Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. "
         "**HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). "
         "**FP Match** = fingerprint match (exact dimension-level match vs reference). "
         "**Diff** = personality differentiation. "

@@ -2,7 +2,7 @@
   "last_updated": "2026-05-29",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
-    "f2": "F-beta (beta=2): weights recall 4x over precision — penalises missed gates heavily",
+    "f2": "Risk Detection — F2 (F-beta, beta=2): weights recall 4x over precision — penalises missed risk gates heavily",
     "hard_gate_recall": "Of hard gates (Reg=A, Blast=A) that should fire, how many did? (1.0 = no missed gates)",
     "hard_gate_precision": "Of hard gates that fired, how many were correct? (1.0 = no false alarms)",
     "false_negatives": "Missed a gate that should fire (dangerous)",
