@@ -92,6 +92,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. Required max_tokens bump to 4096.",
         "is_default": False,
     },
+    "gemini-3.1-flash-lite-preview": {
+        "id": "google/gemini-3.1-flash-lite-preview",
+        "label": "Gemini 3.1 Flash Lite",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 39/39 calls successful (1 dimension name retry).",
+        "is_default": False,
+    },
     "claude-haiku-4.5-api": {
         "id": "anthropic/claude-haiku-4.5",
         "label": "Claude Haiku 4.5 (api)",
