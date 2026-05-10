@@ -68,7 +68,7 @@ MODEL_MAP: dict[str, dict] = {
         "id": "google/gemini-2.5-flash-lite-preview-09-2025",
         "label": "Gemini 2.5 Flash Lite",
         "method": "api",
-        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 6 core scenarios only (18 calls). $0.10/M input, $0.40/M output — cost not tracked for this run.",
         "is_default": False,
     },
     "qwen3-235b": {
@@ -281,8 +281,8 @@ def generate_readme_table(data: dict) -> str:
     last_updated = data["last_updated"]
 
     lines = []
-    lines.append("| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Time |")
-    lines.append("|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|")
+    lines.append("| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Cost | Time |")
+    lines.append("|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|-----:|")
 
     for i, m in enumerate(models, 1):
         f2 = f"**{m['f2']:.0%}**" if m["f2"] >= 0.95 else f"{m['f2']:.0%}"
@@ -291,12 +291,14 @@ def generate_readme_table(data: dict) -> str:
         fp_match = f"{m['fingerprint_match']:.0%}"
         diff = f"{m['differentiation']:.0%}"
         bias = m["bias"].capitalize()
+        cost = m.get("cost_per_eval")
+        cost_str = f"${cost:.3f}" if cost else "\u2014"
         dur = m.get("eval_duration_seconds")
         if dur is not None:
             time_str = f"{dur}s" if dur < 120 else f"{dur / 60:.1f}m"
         else:
             time_str = "\u2014"
-        lines.append(f"| {i} | {m['label']} | {m.get('method', 'api')} | {f2} | {hg_rec} | {hg_pre} | {fp_match} | {diff} | {bias} | {time_str} |")
+        lines.append(f"| {i} | {m['label']} | {m.get('method', 'api')} | {f2} | {hg_rec} | {hg_pre} | {fp_match} | {diff} | {bias} | {cost_str} | {time_str} |")
 
     lines.append("")
     lines.append(f"*{len(models)} models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: {last_updated}.*")
@@ -307,6 +309,7 @@ def generate_readme_table(data: dict) -> str:
         "**FP Match** = fingerprint match (exact dimension-level match vs reference). "
         "**Diff** = personality differentiation. "
         "**Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). "
+        "**Cost** = total OpenRouter cost per full eval run (39 calls). "
         "**Time** = wall-clock benchmark duration (39 calls)."
     )
 

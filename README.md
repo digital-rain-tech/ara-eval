@@ -58,37 +58,37 @@ See [`docs/models.md`](docs/models.md) for alternatives and pricing.
 How well do different judge models reproduce human-authored reference fingerprints? Regenerate with `python labs/lab-04-inter-model-comparison.py`, then `python labs/update-readme-leaderboard.py`.
 
 <!-- LEADERBOARD:START -->
-| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Time |
-|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|
-| 1 | Claude Opus 4.6 | subagent | **100%** | **100%** | **100%** | 87% | 31% | Calibrated | — |
-| 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Calibrated | 71s |
-| 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Calibrated | 10.2m |
-| 4 | Tencent Hunyuan T1 | api | **95%** | **100%** | 79% | 66% | 33% | Jittery | 181.9m |
-| 5 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 63% | 38% | Jittery | 17.0m |
-| 6 | Gemini 3.1 Flash Lite | api | 92% | 93% | 88% | 61% | 43% | Jittery | 2.6m |
-| 7 | Claude Haiku 3.5 | api | 92% | 93% | 88% | 60% | 29% | Jittery | 6.7m |
-| 8 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — |
-| 9 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 89% | 26% | Calibrated | — |
-| 10 | MiniMax M2.7 | api | 87% | 87% | 87% | 68% | 36% | Noisy | 20.4m |
-| 11 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | 8.4m |
-| 12 | Baidu CoBuddy | api | 83% | 80% | **100%** | 61% | 50% | Sleepy | 22.7m |
-| 13 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | 21.3m |
-| 14 | DeepSeek V4 Flash | api | 79% | 80% | 75% | 59% | 50% | Noisy | 40.2m |
-| 15 | Claude Haiku 4.5 (api) | api | 79% | 80% | 75% | 58% | 24% | Noisy | 6.2m |
-| 16 | InclusionAI Ring 2.6 1T | api | 75% | 73% | 85% | 64% | 40% | Sleepy | 15.9m |
-| 17 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy | 17.2m |
-| 18 | Poolside Laguna XS 2 | api | 73% | 73% | 73% | 48% | 57% | Noisy | 2.1m |
-| 19 | Qwen3.6 Plus | api | 70% | 67% | 91% | 59% | 67% | Sleepy | 51.4m |
-| 20 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 49% | 60% | Sleepy | 6.8m |
-| 21 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 50% | 52% | Sleepy | 102s |
-| 22 | Arcee Trinity (free) | api | 57% | 53% | 80% | 48% | 69% | Sleepy | 4.3m |
-| 23 | Gemma 4 26B A4B | api | 45% | 40% | 86% | 55% | 50% | Sleepy | 57.3m |
-| 24 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 34% | 62% | Sleepy | 2.3m |
-| 25 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — |
+| # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Cost | Time |
+|---|-------|--------|---:|----------:|-------------:|--------:|-----:|------|-----:|-----:|
+| 1 | Claude Opus 4.6 | subagent | **100%** | **100%** | **100%** | 87% | 31% | Calibrated | — | — |
+| 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Calibrated | — | 71s |
+| 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Calibrated | — | 10.2m |
+| 4 | Tencent Hunyuan T1 | api | **95%** | **100%** | 79% | 66% | 33% | Jittery | — | 181.9m |
+| 5 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 63% | 38% | Jittery | — | 17.0m |
+| 6 | Gemini 3.1 Flash Lite | api | 92% | 93% | 88% | 61% | 43% | Jittery | $0.035 | 2.6m |
+| 7 | Claude Haiku 3.5 | api | 92% | 93% | 88% | 60% | 29% | Jittery | $0.092 | 6.7m |
+| 8 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — | — |
+| 9 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 89% | 26% | Calibrated | — | — |
+| 10 | MiniMax M2.7 | api | 87% | 87% | 87% | 68% | 36% | Noisy | — | 20.4m |
+| 11 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | — | 8.4m |
+| 12 | Baidu CoBuddy | api | 83% | 80% | **100%** | 61% | 50% | Sleepy | — | 22.7m |
+| 13 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | — | 21.3m |
+| 14 | DeepSeek V4 Flash | api | 79% | 80% | 75% | 59% | 50% | Noisy | $0.015 | 40.2m |
+| 15 | Claude Haiku 4.5 (api) | api | 79% | 80% | 75% | 58% | 24% | Noisy | $0.218 | 6.2m |
+| 16 | InclusionAI Ring 2.6 1T | api | 75% | 73% | 85% | 64% | 40% | Sleepy | — | 15.9m |
+| 17 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy | — | 17.2m |
+| 18 | Poolside Laguna XS 2 | api | 73% | 73% | 73% | 48% | 57% | Noisy | — | 2.1m |
+| 19 | Qwen3.6 Plus | api | 70% | 67% | 91% | 59% | 67% | Sleepy | $0.016 | 51.4m |
+| 20 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 49% | 60% | Sleepy | — | 6.8m |
+| 21 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 50% | 52% | Sleepy | $0.029 | 102s |
+| 22 | Arcee Trinity (free) | api | 57% | 53% | 80% | 48% | 69% | Sleepy | $0.002 | 4.3m |
+| 23 | Gemma 4 26B A4B | api | 45% | 40% | 86% | 55% | 50% | Sleepy | — | 57.3m |
+| 24 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 34% | 62% | Sleepy | — | 2.3m |
+| 25 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — | — |
 
 *25 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-05-10.*
 
-**Metrics:** **F2** = F-beta (beta=2), weights recall 4x over precision. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Time** = wall-clock benchmark duration (39 calls).
+**Metrics:** **F2** = F-beta (beta=2), weights recall 4x over precision. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Cost** = total OpenRouter cost per full eval run (39 calls). **Time** = wall-clock benchmark duration (39 calls).
 <!-- LEADERBOARD:END -->
 
 Previous leaderboard versions are archived in [`shared/archive/`](shared/archive/) with an [`index.json`](shared/archive/index.json) for browsing.
