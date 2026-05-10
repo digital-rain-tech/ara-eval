@@ -65,25 +65,26 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Calibrated | 10.2m |
 | 4 | Tencent Hunyuan T1 | api | **95%** | **100%** | 79% | 66% | 33% | Jittery | 181.9m |
 | 5 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 63% | 38% | Jittery | 17.0m |
-| 6 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — |
-| 7 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 89% | 26% | Calibrated | — |
-| 8 | MiniMax M2.7 | api | 87% | 87% | 87% | 68% | 36% | Noisy | 20.4m |
-| 9 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | 8.4m |
-| 10 | Baidu CoBuddy | api | 83% | 80% | **100%** | 61% | 50% | Sleepy | 22.7m |
-| 11 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | 21.3m |
-| 12 | DeepSeek V4 Flash | api | 79% | 80% | 75% | 59% | 50% | Noisy | 40.2m |
-| 13 | InclusionAI Ring 2.6 1T | api | 75% | 73% | 85% | 64% | 40% | Sleepy | 15.9m |
-| 14 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy | 17.2m |
-| 15 | Poolside Laguna XS 2 | api | 73% | 73% | 73% | 48% | 57% | Noisy | 2.1m |
-| 16 | Qwen3.6 Plus | api | 70% | 67% | 91% | 59% | 67% | Sleepy | 51.4m |
-| 17 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 49% | 60% | Sleepy | 6.8m |
-| 18 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 50% | 52% | Sleepy | 102s |
-| 19 | Arcee Trinity (free) | api | 57% | 53% | 80% | 48% | 69% | Sleepy | 4.3m |
-| 20 | Gemma 4 26B A4B | api | 45% | 40% | 86% | 55% | 50% | Sleepy | 57.3m |
-| 21 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 34% | 62% | Sleepy | 2.3m |
-| 22 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — |
+| 6 | Claude Haiku 3.5 | api | 92% | 93% | 88% | 60% | 29% | Jittery | 6.7m |
+| 7 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — |
+| 8 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 89% | 26% | Calibrated | — |
+| 9 | MiniMax M2.7 | api | 87% | 87% | 87% | 68% | 36% | Noisy | 20.4m |
+| 10 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | 8.4m |
+| 11 | Baidu CoBuddy | api | 83% | 80% | **100%** | 61% | 50% | Sleepy | 22.7m |
+| 12 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | 21.3m |
+| 13 | DeepSeek V4 Flash | api | 79% | 80% | 75% | 59% | 50% | Noisy | 40.2m |
+| 14 | InclusionAI Ring 2.6 1T | api | 75% | 73% | 85% | 64% | 40% | Sleepy | 15.9m |
+| 15 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy | 17.2m |
+| 16 | Poolside Laguna XS 2 | api | 73% | 73% | 73% | 48% | 57% | Noisy | 2.1m |
+| 17 | Qwen3.6 Plus | api | 70% | 67% | 91% | 59% | 67% | Sleepy | 51.4m |
+| 18 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 49% | 60% | Sleepy | 6.8m |
+| 19 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 50% | 52% | Sleepy | 102s |
+| 20 | Arcee Trinity (free) | api | 57% | 53% | 80% | 48% | 69% | Sleepy | 4.3m |
+| 21 | Gemma 4 26B A4B | api | 45% | 40% | 86% | 55% | 50% | Sleepy | 57.3m |
+| 22 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 34% | 62% | Sleepy | 2.3m |
+| 23 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — |
 
-*22 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-05-10.*
+*23 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-05-10.*
 
 **Metrics:** **F2** = F-beta (beta=2), weights recall 4x over precision. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Time** = wall-clock benchmark duration (39 calls).
 <!-- LEADERBOARD:END -->

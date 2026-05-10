@@ -92,6 +92,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. Required max_tokens bump to 4096.",
         "is_default": False,
     },
+    "claude-3.5-haiku": {
+        "id": "anthropic/claude-3.5-haiku",
+        "label": "Claude Haiku 3.5",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 39/39 calls successful.",
+        "is_default": False,
+    },
     "deepseek-v4-flash": {
         "id": "deepseek/deepseek-v4-flash",
         "label": "DeepSeek V4 Flash",

@@ -110,6 +110,24 @@
       "eval_duration_seconds": 1020
     },
     {
+      "id": "anthropic/claude-3.5-haiku",
+      "label": "Claude Haiku 3.5",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 39/39 calls successful.",
+      "completion": "18/18",
+      "f2": 0.92,
+      "hard_gate_recall": 0.93,
+      "hard_gate_precision": 0.88,
+      "false_negatives": 1,
+      "false_positives": 2,
+      "fingerprint_match": 0.6,
+      "differentiation": 0.29,
+      "bias": "jittery",
+      "cost_per_eval": 0.0922,
+      "is_default": false,
+      "eval_duration_seconds": 403
+    },
+    {
       "id": "claude-sonnet-4.6-subagent",
       "label": "Claude Sonnet 4.6",
       "method": "subagent",
