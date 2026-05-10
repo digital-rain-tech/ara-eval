@@ -193,9 +193,9 @@ MODEL_MAP: dict[str, dict] = {
 }
 
 
-def load_durations() -> dict[str, int]:
-    """Extract wall_time_ms from raw lab-01 result files in results/reference/*/."""
-    durations: dict[str, int] = {}
+def load_run_metadata() -> dict[str, dict]:
+    """Extract wall_time_ms and total_cost_usd from raw lab-01 result files in results/reference/*/."""
+    metadata: dict[str, dict] = {}
     for model_dir in RESULTS_DIR.iterdir():
         if not model_dir.is_dir():
             continue
@@ -207,16 +207,19 @@ def load_durations() -> dict[str, int]:
                 data = json.loads(result_file.read_text())
                 run = data.get("_run", {})
                 wall_ms = run.get("wall_time_ms")
-                if wall_ms is not None:
-                    model_slug = model_dir.name
-                    durations[model_slug] = round(wall_ms / 1000)
+                cost = run.get("total_cost_usd")
+                if wall_ms is not None or cost is not None:
+                    metadata[model_dir.name] = {
+                        "duration_seconds": round(wall_ms / 1000) if wall_ms is not None else None,
+                        "cost_usd": cost,
+                    }
                     break  # use most recent
             except (json.JSONDecodeError, KeyError):
                 continue
-    return durations
+    return metadata
 
 
-def build_model_entry(score: dict, meta: dict, duration_seconds: int | None) -> dict:
+def build_model_entry(score: dict, meta: dict, duration_seconds: int | None, cost_usd: float | None = None) -> dict:
     """Convert a results score entry + metadata into a shared leaderboard entry."""
     successful = score.get("successful", 0)
     total = score.get("total", 0)
@@ -236,7 +239,7 @@ def build_model_entry(score: dict, meta: dict, duration_seconds: int | None) -> 
         "fingerprint_match": round(score.get("fingerprint_match_rate", 0), 2),
         "differentiation": round(score.get("personality_differentiation_rate", 0), 2),
         "bias": score.get("bias", "unknown"),
-        "cost_per_eval": score.get("cost_per_eval", None),
+        "cost_per_eval": round(cost_usd, 4) if cost_usd is not None else None,
         "is_default": meta["is_default"],
         "eval_duration_seconds": duration_seconds,
     }
@@ -299,7 +302,7 @@ def main():
 
     results = json.loads(RESULTS.read_text())
     scores = results.get("scores", [])
-    durations = load_durations()
+    run_metadata = load_run_metadata()
 
     # Read existing shared to preserve header/metadata and manually-added entries
     if SHARED.exists():
@@ -322,8 +325,10 @@ def main():
             print(f"Warning: no MODEL_MAP entry for '{model_key}', skipping", file=sys.stderr)
             continue
         meta = MODEL_MAP[model_key]
-        duration = durations.get(model_key)
-        entry = build_model_entry(score, meta, duration)
+        run_meta = run_metadata.get(model_key, {})
+        duration = run_meta.get("duration_seconds")
+        cost_usd = run_meta.get("cost_usd")
+        entry = build_model_entry(score, meta, duration, cost_usd)
         models.append(entry)
         synced_ids.add(entry["id"])
 
