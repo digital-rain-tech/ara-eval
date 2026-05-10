@@ -254,6 +254,24 @@
       "eval_duration_seconds": 2411
     },
     {
+      "id": "anthropic/claude-haiku-4.5",
+      "label": "Claude Haiku 4.5 (api)",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 39/39 calls successful. Retested after subagent run showed 8% F2 — dimension name compliance issue was subagent-specific.",
+      "completion": "18/18",
+      "f2": 0.79,
+      "hard_gate_recall": 0.8,
+      "hard_gate_precision": 0.75,
+      "false_negatives": 3,
+      "false_positives": 4,
+      "fingerprint_match": 0.58,
+      "differentiation": 0.24,
+      "bias": "noisy",
+      "cost_per_eval": 0.2177,
+      "is_default": false,
+      "eval_duration_seconds": 369
+    },
+    {
       "id": "inclusionai/ring-2.6-1t:free",
       "label": "InclusionAI Ring 2.6 1T",
       "method": "api",

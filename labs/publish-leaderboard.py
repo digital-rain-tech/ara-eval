@@ -92,6 +92,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. Required max_tokens bump to 4096.",
         "is_default": False,
     },
+    "claude-haiku-4.5-api": {
+        "id": "anthropic/claude-haiku-4.5",
+        "label": "Claude Haiku 4.5 (api)",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios. 39/39 calls successful. Retested after subagent run showed 8% F2 — dimension name compliance issue was subagent-specific.",
+        "is_default": False,
+    },
     "claude-3.5-haiku": {
         "id": "anthropic/claude-3.5-haiku",
         "label": "Claude Haiku 3.5",
