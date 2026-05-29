@@ -1,10 +1,12 @@
 FROM node:22-alpine AS deps
 RUN apk add --no-cache python3 make g++
+RUN corepack enable
 WORKDIR /app/web
-COPY web/package.json web/package-lock.json ./
-RUN npm ci
+COPY web/package.json web/pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 FROM node:22-alpine AS builder
+RUN corepack enable
 WORKDIR /app
 COPY shared/ ./shared/
 COPY prompts/ ./prompts/
@@ -12,7 +14,9 @@ COPY scenarios/ ./scenarios/
 COPY web/ ./web/
 COPY --from=deps /app/web/node_modules ./web/node_modules
 WORKDIR /app/web
-RUN npm run build
+# Self-host build: emit standalone server (gated in next.config.ts)
+ENV BUILD_STANDALONE=1
+RUN pnpm build
 
 FROM node:22-alpine AS runner
 WORKDIR /app
