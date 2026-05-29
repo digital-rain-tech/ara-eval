@@ -29,6 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
+        with:
+          # Explicit: action-setup reads packageManager from the repo-root
+          # package.json (the Python project), not web/, so it can't infer it.
+          version: 9.15.9
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
