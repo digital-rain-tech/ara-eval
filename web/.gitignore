@@ -5,3 +5,4 @@ tsconfig.tsbuildinfo
 
 # Build-time generated bundled data (scenarios + prompts)
 /src/generated/
+.vercel
