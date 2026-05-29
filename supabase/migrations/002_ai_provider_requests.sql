@@ -1,1 +1,14 @@
-../../../photocritic-site/supabase/migrations/002_ai_provider_requests.sql
+-- PLACEHOLDER — NOT an ara-eval migration. Owned by photocritic-site.
+--
+-- The Supabase project is SHARED with photocritic-site. This migration belongs
+-- to photocritic and is already applied to the shared project (it creates
+-- photocritic's `ai_provider_requests` table — distinct from ara-eval's
+-- `ara_ai_provider_requests`, which the ara_ prefix keeps from colliding).
+--
+-- This stub exists only so `supabase db push` run from the ara-eval repo
+-- recognizes version `002` as already applied and skips it (the Supabase CLI
+-- dedupes migrations by version prefix). It is intentionally empty and must
+-- NEVER create or alter photocritic's tables.
+--
+-- ➜ To change this migration, edit it in photocritic-site, not here:
+--      photocritic-site/supabase/migrations/002_ai_provider_requests.sql

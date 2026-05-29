@@ -1,1 +1,13 @@
-../../../photocritic-site/supabase/migrations/003_avg_score_rpc.sql
+-- PLACEHOLDER — NOT an ara-eval migration. Owned by photocritic-site.
+--
+-- The Supabase project is SHARED with photocritic-site. This migration belongs
+-- to photocritic and is already applied to the shared project (it creates
+-- photocritic's `avg_score_overall()` RPC — nothing ara-eval owns).
+--
+-- This stub exists only so `supabase db push` run from the ara-eval repo
+-- recognizes version `003` as already applied and skips it (the Supabase CLI
+-- dedupes migrations by version prefix). It is intentionally empty and must
+-- NEVER create or alter photocritic's functions.
+--
+-- ➜ To change this migration, edit it in photocritic-site, not here:
+--      photocritic-site/supabase/migrations/003_avg_score_rpc.sql
