@@ -40,6 +40,11 @@ function ChatPageContent() {
     Record<string, PersonalityMeta>
   >({});
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
+  const [jurisdictions, setJurisdictions] = useState<
+    Record<string, { label: string }>
+  >({});
+  const [scenarioSet, setScenarioSet] = useState("starter-scenarios.json");
+  const [availableSets, setAvailableSets] = useState<string[]>([]);
   const [personality, setPersonality] = useState("compliance_officer");
   const [jurisdiction, setJurisdiction] = useState("hk");
   const [rubric, setRubric] = useState("rubric.md");
@@ -69,19 +74,21 @@ function ChatPageContent() {
   const isNewSession = useRef(true);
   const msgCounter = useRef(0);
 
-  // Load metadata
+  // Load metadata (re-fetches when the scenario set changes)
   useEffect(() => {
-    fetch("/api/scenarios")
+    fetch(`/api/scenarios?set=${encodeURIComponent(scenarioSet)}`)
       .then((r) => r.json())
       .then((data) => {
         setPersonalities(data.personalities || {});
         setScenarios(data.scenarios || []);
-        setModel(data.model || "");
+        setJurisdictions(data.jurisdictions || {});
+        setAvailableSets(data.availableSets || []);
+        setModel((m) => m || data.model || "");
         setDefaultModel(data.model || "");
         setPageState("ready");
       })
       .catch(() => setPageState("error"));
-  }, []);
+  }, [scenarioSet]);
 
   // Restore or create session on mount
   useEffect(() => {
@@ -377,6 +384,23 @@ function ChatPageContent() {
   const challenges =
     fingerprint && mode === "agent" ? generateChallenges(fingerprint) : [];
 
+  // Jurisdiction picker options, derived from the backend registry (_index.json)
+  // so new jurisdictions (e.g. sg, sg-grounded) appear automatically.
+  const jurisdictionOptions = Object.entries(jurisdictions).map(
+    ([id, meta]) => ({
+      id,
+      label: meta.label + (id.endsWith("-grounded") ? " (grounded)" : ""),
+    }),
+  );
+
+  const SET_LABELS: Record<string, string> = {
+    "starter-scenarios.json": "HK (starter)",
+    "singapore-scenarios.json": "Singapore",
+    "rwa-scenarios.json": "RWA",
+  };
+  const setLabel = (f: string) =>
+    SET_LABELS[f] ?? f.replace(/-scenarios\.json$/, "").replace(/\.json$/, "");
+
   if (pageState !== "ready") {
     return (
       <div className="flex h-screen flex-col items-center justify-center bg-gray-950">
@@ -466,6 +490,25 @@ function ChatPageContent() {
             {mode === "agent" && (
               <>
                 <div className="space-y-2">
+                  {availableSets.length > 1 && (
+                    <div className="flex items-center gap-3">
+                      <label className="shrink-0 text-sm text-gray-500">Set:</label>
+                      <select
+                        value={scenarioSet}
+                        onChange={(e) => {
+                          setScenarioSet(e.target.value);
+                          setSelectedScenarioId("");
+                        }}
+                        className="flex-1 rounded border border-gray-700 bg-gray-800 px-2 py-1 text-sm text-gray-300"
+                      >
+                        {availableSets.map((f) => (
+                          <option key={f} value={f}>
+                            {setLabel(f)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
                   <div className="flex items-center gap-3">
                     <label className="shrink-0 text-sm text-gray-500">Scenario:</label>
                     <select
@@ -509,6 +552,7 @@ function ChatPageContent() {
                 model={model}
                 defaultModel={defaultModel}
                 personalities={personalities}
+                jurisdictionOptions={jurisdictionOptions}
                 onPersonalityChange={setPersonality}
                 onJurisdictionChange={setJurisdiction}
                 onRubricChange={setRubric}
@@ -521,21 +565,17 @@ function ChatPageContent() {
             {mode === "agent" && selectedScenarioId && (
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-gray-500">Grounding:</span>
-                {["generic", "hk", "hk-grounded"].map((j) => (
+                {jurisdictionOptions.map((j) => (
                   <button
-                    key={j}
-                    onClick={() => setJurisdiction(j)}
+                    key={j.id}
+                    onClick={() => setJurisdiction(j.id)}
                     className={`rounded px-2 py-1 transition-colors ${
-                      jurisdiction === j
+                      jurisdiction === j.id
                         ? "bg-amber-800/40 text-amber-300"
                         : "text-gray-400 hover:text-gray-200"
                     }`}
                   >
-                    {j === "generic"
-                      ? "Generic"
-                      : j === "hk"
-                        ? "HK"
-                        : "HK Grounded"}
+                    {j.label}
                   </button>
                 ))}
                 <button

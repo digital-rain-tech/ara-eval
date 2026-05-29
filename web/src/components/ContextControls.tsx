@@ -11,18 +11,13 @@ interface ContextControlsProps {
   model: string;
   defaultModel: string;
   personalities: Record<string, { label: string }>;
+  jurisdictionOptions: { id: string; label: string }[];
   onPersonalityChange: (v: string) => void;
   onJurisdictionChange: (v: string) => void;
   onRubricChange: (v: string) => void;
   onModelChange: (v: string) => void;
   onNewSession: () => void;
 }
-
-const JURISDICTION_OPTIONS = [
-  { id: "generic", label: "Generic" },
-  { id: "hk", label: "HK" },
-  { id: "hk-grounded", label: "HK Grounded" },
-];
 
 const RUBRIC_OPTIONS = [
   { id: "rubric.md", label: "Full" },
@@ -37,6 +32,7 @@ export default function ContextControls({
   model,
   defaultModel,
   personalities,
+  jurisdictionOptions,
   onPersonalityChange,
   onJurisdictionChange,
   onRubricChange,
@@ -68,7 +64,7 @@ export default function ContextControls({
             Grounding:
             <HelpTip content={HELP.groundingLevel} side="bottom" align="start" />
           </label>
-          {JURISDICTION_OPTIONS.map((j) => (
+          {jurisdictionOptions.map((j) => (
             <button
               key={j.id}
               onClick={() => onJurisdictionChange(j.id)}
