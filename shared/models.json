@@ -1,10 +1,17 @@
 [
   {
+    "id": "deepseek/deepseek-v4-flash:free",
+    "label": "DeepSeek V4 Flash",
+    "note": "default free model; F2 0.79, sleepy bias, 17/18 completion",
+    "success_rate": "17/18",
+    "is_default": true
+  },
+  {
     "id": "arcee-ai/trinity-large-preview:free",
     "label": "Arcee Trinity",
-    "note": "default free model, 100% completion rate, sleepy bias",
+    "note": "free model, 100% completion rate, sleepy bias",
     "success_rate": "18/18",
-    "is_default": true
+    "is_default": false
   },
   {
     "id": "openrouter/hunter-alpha",

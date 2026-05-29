@@ -93,7 +93,7 @@ ARA_MODEL=deepseek/deepseek-v3.2
 ARA_MODEL=google/gemini-2.5-flash python3 labs/lab-01-risk-fingerprinting.py
 ```
 
-Default (if unset): `arcee-ai/trinity-large-preview:free` (defined in `ara_eval/core.py::DEFAULT_MODEL`)
+Default (if unset): `deepseek/deepseek-v4-flash:free` (set via `is_default` in `shared/models.json`, read by `ara_eval/core.py::DEFAULT_MODEL`)
 
 ## Multi-Model Comparison
 

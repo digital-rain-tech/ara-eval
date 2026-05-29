@@ -70,7 +70,7 @@ Output goes to `results/` (gitignored): JSON results, markdown reports, and `ara
 - Gating rules are deterministic code, never delegated to the LLM — this is intentional separation of probabilistic classification from deterministic policy
 - Level A–D is ordinal (A=0 highest risk, D=3 lowest risk), defined in `LEVEL_ORDER`
 - The 7 dimensions are ordered and the fingerprint string preserves that order (e.g., "C-B-A-A-C-B-C")
-- LLM calls go through OpenRouter (default: `arcee-ai/trinity-large-preview:free`) with `httpx`; all request/response metadata persisted to SQLite (`results/ara-eval.db`)
+- LLM calls go through OpenRouter (default: `deepseek/deepseek-v4-flash:free`) with `httpx`; all request/response metadata persisted to SQLite (`results/ara-eval.db`)
 
 **Prompt template system** (`prompts/`): System prompts are composed from Mustache templates via `chevron`. `build_system_prompt()` combines personality + rubric + jurisdiction + output format. Personalities and jurisdictions are registered in `_index.json` files. `load_prompt()` enforces path traversal protection.
 
@@ -104,7 +104,7 @@ Lab 04 writes `results/reference/leaderboard.json` (gitignored, verbose). The `s
 3. Run `pip install -e .` so the `ara_eval` package is importable.
 
 **Choosing a model:**
-- Default is `arcee-ai/trinity-large-preview:free` — the only free model tested to reliably complete 18/18 calls without rate-limiting.
+- Default is `deepseek/deepseek-v4-flash:free` (set via `is_default` in `shared/models.json`; F2 0.79, 17/18 completion). `arcee-ai/trinity-large-preview:free` remains a reliable 18/18 fallback.
 - Free models on OpenRouter are volatile: they get removed, rate-limited, or return empty responses without warning. See `docs/adr/007-free-model-comparison.md` for tested models and results.
 - Override with `ARA_MODEL=<openrouter-id> python labs/lab-01-risk-fingerprinting.py`. No code changes needed.
 - See `docs/models.md` for the full model guide with pricing.

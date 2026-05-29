@@ -46,7 +46,7 @@ Run the core evaluation:
 python3 labs/lab-01-risk-fingerprinting.py --all --structured
 ```
 
-Default model: **Arcee Trinity Large** (free via OpenRouter). Swap models without touching code:
+Default model: **DeepSeek V4 Flash** (free via OpenRouter). Swap models without touching code:
 ```bash
 ARA_MODEL=qwen/qwen3-235b-a22b-2507 python3 labs/lab-01-risk-fingerprinting.py --all --structured
 ```
