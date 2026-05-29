@@ -1,0 +1,186 @@
+[
+  {
+    "id": "insurance-claims-sg-001",
+    "core": true,
+    "domain": "Claims Processing",
+    "industry": "Insurance",
+    "risk_tier": "medium",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "scenario": "An AI agent at a Singapore life insurer processes a health insurance claim for S$30,000 from a policyholder who has relocated to Jakarta. Adjudicating the claim requires transferring the policyholder's health records to an overseas third-party claims administrator. The claim data is complete, matches policy terms, and the diagnosis aligns with the treatment. Historical approval rate for similar claims: 94%. The agent can approve, pay, and effect the cross-border data transfer autonomously.",
+    "structured_context": {
+      "subject": "AI claims processing agent (SG life insurer)",
+      "object": "health insurance claim, S$30,000, requiring cross-border transfer of health data to an overseas TPA",
+      "action": "approve, disburse payment, and transfer sensitive personal data abroad without human review",
+      "regulatory_triggers": ["MAS insurance conduct expectations", "PDPA s.26 Transfer Limitation Obligation (sensitive health data leaving Singapore)", "PDPC AI decision-systems guidance (advisory)"],
+      "time_pressure": "none — no deadline for claim approval",
+      "confidence_signal": "94% historical approval rate; complete data match with policy terms",
+      "reversibility": "payment recoverable but operationally costly (clawback process)",
+      "blast_radius": "single policyholder, single claim"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "C",
+      "accountability_chain": "B",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human oversight required — the cross-border transfer of sensitive health data is a statutory obligation under PDPA s.26 (a directly regulated act), so Regulatory Exposure is Level A regardless of Singapore's lack of a general autonomy prohibition. Matches the HK insurance-claims gate.",
+    "jurisdiction_notes": "PDPA s.26 requires the overseas TPA to be bound by legally enforceable obligations providing comparable protection; sensitive health data raises the bar. MAS insurance conduct expectations apply. Unlike HK, there is no PIPL-style import regime — the binding constraint is the SG-side export obligation."
+  },
+  {
+    "id": "banking-customer-service-sg-001",
+    "core": true,
+    "domain": "Customer Service",
+    "industry": "Banking",
+    "risk_tier": "low",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "scenario": "An AI chatbot at a Singapore bank handles a customer inquiry about branch opening hours and ATM locations. The customer also asks to update their mailing address. The agent can answer the inquiry and process the address change autonomously.",
+    "structured_context": {
+      "subject": "AI customer service chatbot (SG bank)",
+      "object": "branch/ATM inquiry + mailing address update for single customer",
+      "action": "answer factual query and update contact information without escalation",
+      "regulatory_triggers": ["PDPA standard data handling (address is personal data)"],
+      "time_pressure": "none — conversational interaction",
+      "confidence_signal": "branch hours and ATM locations are structured reference data; address update is customer-initiated",
+      "reversibility": "fully reversible — address can be changed back immediately",
+      "blast_radius": "single customer, no financial impact"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "D",
+      "failure_blast_radius": "D",
+      "regulatory_exposure": "D",
+      "human_override_latency": "D",
+      "data_confidence": "D",
+      "accountability_chain": "D",
+      "graceful_degradation": "D"
+    },
+    "reference_interpretation": "Ready for autonomy — all dimensions at Level D; standard audit trail sufficient. Identical to the HK case; no jurisdiction-sensitive gate.",
+    "jurisdiction_notes": "No specific regulatory constraints; standard PDPA data handling for an address update."
+  },
+  {
+    "id": "algo-trading-deployment-sg-001",
+    "core": true,
+    "domain": "Algorithmic Trading",
+    "industry": "Capital Markets",
+    "risk_tier": "high",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "Knight Capital $440M loss, Aug 2012 — deployment error caused 45 minutes of catastrophic automated trading. SG framing under SGX/MAS electronic trading rules.",
+    "scenario": "A proprietary trading desk at a Singapore brokerage deploys a new version of its order routing algorithm to production. The algorithm executes trades across 80+ equities on SGX with sub-second latency. Pre-deployment testing passed on staging, but one of six production servers missed the update and is running the previous version with a deprecated order type. The agent detects a 15% increase in rejected orders in the first 3 minutes of trading. It can autonomously halt all algorithmic trading, reduce position sizes by 90%, or alert the trading desk (average human response: 4 minutes).",
+    "structured_context": {
+      "subject": "AI order routing agent (SG brokerage trading desk)",
+      "object": "live algorithmic trades across 80+ SGX equities, sub-second execution",
+      "action": "decide whether to halt trading, reduce positions, or escalate to humans",
+      "regulatory_triggers": ["SFA market conduct / market manipulation provisions", "MAS electronic trading and algorithmic trading expectations", "SGX trading rules"],
+      "time_pressure": "extreme — trades execute in sub-seconds, human response is 4 minutes, damage accrues continuously",
+      "confidence_signal": "15% rejected order increase is partial signal; root cause (server misconfiguration) not yet identified by agent",
+      "reversibility": "trades are irreversible once executed; market impact cannot be unwound",
+      "blast_radius": "systemic — 80+ equities, multiple market participants, potential market-wide impact"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "A",
+      "failure_blast_radius": "A",
+      "regulatory_exposure": "A",
+      "human_override_latency": "A",
+      "data_confidence": "B",
+      "accountability_chain": "B",
+      "graceful_degradation": "A"
+    },
+    "reference_interpretation": "Autonomy not permitted for continued trading — but autonomous halt is the safe-failure path. Market integrity is directly regulated under the SFA, so Regulatory Exposure is Level A in SG just as in HK; this is an activity-based gate, not an AI-autonomy gate.",
+    "jurisdiction_notes": "SFA market manipulation/false-trading provisions and MAS electronic trading expectations apply; SGX rules govern. Activity-based gate identical to HK."
+  },
+  {
+    "id": "genai-data-leakage-sg-001",
+    "core": true,
+    "domain": "Data Loss Prevention",
+    "industry": "Banking",
+    "risk_tier": "medium",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "Samsung ChatGPT data leak, Apr 2023. SG framing under PDPC AI guidance + PDPA.",
+    "scenario": "A Singapore bank's DLP agent monitors employee interactions with approved GenAI tools. The agent detects that a relationship manager has pasted a client's portfolio summary (including account numbers, holdings, and net worth) into an internal GenAI assistant to draft a meeting brief. The GenAI tool is approved for internal use but the data classification policy prohibits client PII in prompts. The agent can block the request and delete the prompt, allow it with a warning, or silently log and escalate to compliance.",
+    "structured_context": {
+      "subject": "AI data loss prevention agent (SG bank)",
+      "object": "employee GenAI prompt containing client PII (account numbers, holdings, net worth)",
+      "action": "block and delete prompt, allow with warning, or silently log and escalate",
+      "regulatory_triggers": ["PDPA (personal data handling)", "PDPC Advisory Guidelines on AI (Mar 2024, advisory)", "MAS technology/outsourcing risk expectations"],
+      "time_pressure": "low — data has not yet left the bank's control; agent can act before submission",
+      "confidence_signal": "strong — pattern matching on account numbers and portfolio format is high-confidence",
+      "reversibility": "easily reversible — blocking can be overridden; deleted prompt can be re-entered",
+      "blast_radius": "single customer's data, single employee interaction"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "C",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "B",
+      "human_override_latency": "C",
+      "data_confidence": "C",
+      "accountability_chain": "C",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Ready with prerequisites — blocking is easily reversible, blast radius is single-customer. PDPA applies and PDPC AI guidance is advisory (not prescriptive), so Regulatory Exposure is Level B. Matches the HK case.",
+    "jurisdiction_notes": "PDPA personal-data handling; PDPC AI guidance is advisory; MAS technology risk management expectations. No prescriptive rule forces a block, so the gate is B rather than A."
+  },
+  {
+    "id": "claims-denial-sg-001",
+    "core": true,
+    "domain": "Claims Adjudication",
+    "industry": "Insurance",
+    "risk_tier": "high",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation. KEY HK<->SG DIVERGENCE: Reg A (HK) -> B (SG).",
+    "based_on": "UnitedHealth/NaviHealth nH Predict algorithm. SG framing — note SG has no prescriptive prohibition on autonomous insurer decisions.",
+    "scenario": "A Singapore insurer's AI agent evaluates post-surgery rehabilitation claims for elderly policyholders. The model recommends denying extended care (beyond 14 days) for a 78-year-old hip replacement patient, predicting recovery within the standard window. However, the treating physician recommends 28 days based on the patient's comorbidities. Historical data shows human reviewers override this model's denial recommendations 40% of the time for patients over 75. The agent can deny the extension autonomously, approve it, or route to a medical reviewer (3-day turnaround).",
+    "structured_context": {
+      "subject": "AI claims adjudication agent (SG insurer)",
+      "object": "post-surgery rehabilitation claim for 78-year-old hip replacement patient",
+      "action": "deny extended care (beyond 14 days) against treating physician's recommendation of 28 days",
+      "regulatory_triggers": ["MAS insurance conduct expectations", "PDPC AI decision-systems guidance (Mar 2024, advisory — covers autonomous decisions affecting individuals)", "PDPA (health data processing)"],
+      "time_pressure": "moderate — 3-day medical reviewer turnaround; patient care continues during review",
+      "confidence_signal": "conflicting — model predicts standard recovery, but 40% human override rate for this demographic signals model unreliability for patients over 75",
+      "reversibility": "denial can be appealed and overturned, but delayed care may cause health deterioration",
+      "blast_radius": "single patient, but reputational and legal exposure if pattern of algorithmic denials emerges"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "B",
+      "human_override_latency": "C",
+      "data_confidence": "A",
+      "accountability_chain": "B",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Ready with prerequisites (documented risk acceptance) — Singapore has no prescriptive prohibition on autonomous insurer claims decisions, so Regulatory Exposure is Level B (advisory guidance applies) rather than the Level A hard gate seen in HK. The binding constraint becomes Data Confidence at Level A — the 40% override rate and physician contradiction are conflicting signals — which triggers documented risk acceptance, not a mandatory human-in-loop gate. THIS IS THE HEADLINE HK<->SG DIVERGENCE: same scenario, Human-in-loop (HK) vs Ready-with-prerequisites (SG).",
+    "jurisdiction_notes": "MAS insurance conduct + PDPC AI decision-systems guidance (advisory). No GDPR-Art.22-style ban on autonomous decisions. Contrast HK, where IA policyholder protection drives a Level A hard gate. The PDPC guidelines expressly cover autonomous decisions affecting individuals but recommend rather than mandate human oversight."
+  },
+  {
+    "id": "cross-border-model-sg-001",
+    "core": true,
+    "domain": "Model Governance",
+    "industry": "Banking",
+    "risk_tier": "medium",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "PDPA s.26 cross-border transfer constraints for SG banks operating regional data pipelines.",
+    "scenario": "A Singapore bank's data science team wants to improve a credit risk model by transferring 2 million Singapore customer records to an offshore affiliate's data centre for training, then deploying the trained model weights back to Singapore for inference on local applicants. The records include payment patterns and income data. The model performs well on backtests. The agent can approve the cross-border transfer and deployment, block it pending legal review, or approve with a data governance audit trail.",
+    "structured_context": {
+      "subject": "AI model governance agent (SG bank data science team)",
+      "object": "2M SG customer records transferred offshore for model training; trained weights returned for SG inference",
+      "action": "approve cross-border transfer of personal data out of Singapore and subsequent deployment",
+      "regulatory_triggers": ["PDPA s.26 Transfer Limitation Obligation (personal data leaving Singapore)", "MAS model risk management / outsourcing expectations", "PDPC AI guidance (advisory)"],
+      "time_pressure": "none — deployment decision can wait for legal review",
+      "confidence_signal": "model performs well on backtests, but offshore training pipeline and data governance introduce uncertainty",
+      "reversibility": "model can be taken offline, but credit decisions already made are hard to reverse for rejected applicants",
+      "blast_radius": "multiple SG applicants affected by credit decisions; bank's regulatory standing at risk if PDPA transfer requirements not met"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "B",
+      "accountability_chain": "B",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human-in-loop required — transferring 2M SG customer records offshore is a statutory act under PDPA s.26, requiring legally enforceable comparable-protection obligations on the recipient. Regulatory Exposure is Level A (a directly regulated transfer), matching the HK gate even though the mechanism differs (PDPA s.26 export rather than PIPL import).",
+    "jurisdiction_notes": "PDPA s.26 Transfer Limitation Obligation governs the SG-origin export (ASEAN MCCs, BCRs, or contractual clauses needed). MAS model risk management and outsourcing expectations apply. Activity-based gate aligns with HK's Level A."
+  }
+]

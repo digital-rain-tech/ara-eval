@@ -719,9 +719,17 @@ def print_run_summary(run_stats: dict):
 # Scenario loading
 # ---------------------------------------------------------------------------
 
-def load_scenarios(use_all: bool = False) -> list:
-    """Load scenarios, filtering to core set unless --all is specified."""
-    scenarios_path = _root / "scenarios" / "starter-scenarios.json"
+def load_scenarios(use_all: bool = False, scenarios_file: str = "starter-scenarios.json") -> list:
+    """Load scenarios, filtering to core set unless --all is specified.
+
+    scenarios_file is a filename within the scenarios/ directory (path-traversal
+    protected). Defaults to the HK starter set; pass e.g. "singapore-scenarios.json"
+    or "rwa-scenarios.json" to load an alternate set.
+    """
+    scenarios_dir = _root / "scenarios"
+    scenarios_path = (scenarios_dir / scenarios_file).resolve()
+    if scenarios_dir.resolve() not in scenarios_path.parents:
+        raise ValueError(f"scenarios_file must reside in {scenarios_dir}: {scenarios_file}")
     with open(scenarios_path) as f:
         all_scenarios = json.load(f)
     if use_all:

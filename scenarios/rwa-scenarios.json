@@ -1,0 +1,188 @@
+[
+  {
+    "id": "rwa-verification-promotion-001",
+    "core": true,
+    "domain": "Asset Verification",
+    "industry": "RWA Tokenization",
+    "risk_tier": "high",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "archelu tiered transparency model (Self-Declared -> Document Verified -> Live Verified); the 'oracle problem' central to RWA tokenization (ADR-001: deterministic on-chain code vs probabilistic off-chain reality).",
+    "scenario": "An AI verification agent on a tokenized-RWA launchpad evaluates whether to promote an asset listing from 'Document Verified' to 'Live Verified' — the top transparency tier shown to investors. Promotion is triggered by an oracle feed reporting that the underlying asset's custody and valuation attestations are current. The oracle's data is sourced from a third-party attestor whose feed has been intermittently stale. The 'Live Verified' badge materially influences investor confidence and secondary-market pricing. The agent can auto-promote on the oracle signal, hold at the current tier, or route to a human reviewer.",
+    "structured_context": {
+      "subject": "AI asset verification agent (RWA launchpad)",
+      "object": "transparency-tier promotion of a tokenized asset listing to 'Live Verified'",
+      "action": "auto-promote the listing's verification tier based on a third-party oracle attestation feed",
+      "regulatory_triggers": ["SFA misrepresentation exposure if the asset is a capital markets product", "platform conduct / disclosure obligations", "PDPC AI guidance (advisory)"],
+      "time_pressure": "low — promotion can wait; no deadline",
+      "confidence_signal": "oracle reports attestations current, but the feed has been intermittently stale — off-chain reality is only partially observable",
+      "reversibility": "tier can be downgraded, but investors may have transacted on the elevated badge in the interim",
+      "blast_radius": "all investors relying on the verification badge for this listing"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "C",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "B",
+      "human_override_latency": "D",
+      "data_confidence": "B",
+      "accountability_chain": "B",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Ready with prerequisites — no hard gate, but Data Confidence at Level B (the oracle-to-off-chain-reality gap is the core RWA verification risk) and a multi-investor blast radius warrant documented controls (oracle freshness checks, fail-to-lower-tier behavior). The verification act is not itself a directly mandated human decision, so Regulatory Exposure is B.",
+    "jurisdiction_notes": "SG: SFA misrepresentation exposure attaches if the token is a CMP; verification is platform conduct, not a prescriptively human task — Reg=B. HK: SFC tokenisation circular (23EC53) requires a 'competent staff' ultimately responsible for the tokenisation arrangement, which nudges toward B/A. Consider whether stale-then-confident oracle signals should be Data Confidence A rather than B."
+  },
+  {
+    "id": "rwa-ido-launch-001",
+    "core": true,
+    "domain": "Offering Approval",
+    "industry": "RWA Tokenization",
+    "risk_tier": "high",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "archelu IDO presale launch flow; SFA prospectus requirements for offers of capital markets products to retail.",
+    "scenario": "An AI launch agent on a tokenized-RWA platform prepares to open an IDO presale of fractional tokens in a revenue-generating real-world asset to the public, including retail investors in Singapore. The offer documents, tokenomics, and smart contracts have passed automated checks. The total raise would be S$8 million across an estimated 1,200 investors. The agent can open the presale autonomously at the scheduled time, hold for a compliance officer's sign-off, or open only to accredited investors.",
+    "structured_context": {
+      "subject": "AI launch agent (RWA launchpad)",
+      "object": "public IDO presale of fractional RWA tokens, S$8M raise, ~1,200 investors including retail",
+      "action": "open a public token offering to retail investors without human sign-off",
+      "regulatory_triggers": ["SFA prospectus requirement (offer of capital markets products exceeds the S$5M small-offer safe harbour)", "CMS licensing for the offering platform", "PSA if the token is also a DPT"],
+      "time_pressure": "none — launch can be delayed for sign-off",
+      "confidence_signal": "automated checks passed, but legal characterization of the token as a CMP is a load-bearing judgment",
+      "reversibility": "once tokens are sold to 1,200 investors, unwinding the offering is costly and disruptive",
+      "blast_radius": "~1,200 investors; platform's licensing standing if the offer is non-compliant"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "A",
+      "human_override_latency": "D",
+      "data_confidence": "C",
+      "accountability_chain": "C",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Human-in-loop required — offering a capital markets product to the public above the S$5M small-offer threshold triggers the SFA prospectus requirement, a directly regulated act for which a licensed person bears non-delegable liability. Regulatory Exposure is Level A in both SG and HK; this is an activity-based gate, not contingent on the autonomy-prohibition difference.",
+    "jurisdiction_notes": "SG: SFA prospectus + CMS licence; safe harbours (=<S$5M small offer, =<50-person private placement, accredited/institutional) do not apply at S$8M to retail. HK: SFC requires prior consultation and a competent supervising person for tokenised products offered to the public; provider is ultimately responsible. Both jurisdictions gate at Reg=A."
+  },
+  {
+    "id": "rwa-investor-whitelist-001",
+    "core": true,
+    "domain": "Investor Eligibility",
+    "industry": "RWA Tokenization",
+    "risk_tier": "medium",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "archelu KYC / accredited-investor gating for primary allocation and secondary trading; MAS DPT consumer access measures and SFA accredited-investor exemptions.",
+    "scenario": "An AI onboarding agent screens a prospective investor applying to buy into a tokenized-RWA offering restricted to accredited investors. The applicant submits financial documents; the agent must classify them as retail, accredited, or institutional, apply the accredited-investor asset test (with the 50% haircut on digital-token holdings), and either grant or deny whitelist access. The agent can decide autonomously, or route borderline cases to a compliance reviewer.",
+    "structured_context": {
+      "subject": "AI investor onboarding agent (RWA launchpad)",
+      "object": "accredited-investor classification and whitelist decision for one applicant",
+      "action": "classify investor status and grant/deny eligibility for an AI-restricted offering",
+      "regulatory_triggers": ["SFA accredited-investor definition and exemption conditions", "MAS DPT consumer access measures (retail-by-default, AI opt-in, 50% crypto haircut)", "AML/KYC obligations"],
+      "time_pressure": "none to low — onboarding can wait for review",
+      "confidence_signal": "submitted financial documents are structured but self-reported; asset valuations may need verification",
+      "reversibility": "a wrong classification is correctable on review, but an erroneously granted sale may already have occurred",
+      "blast_radius": "single applicant per decision; systematic mis-calibration would affect many"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "C",
+      "failure_blast_radius": "C",
+      "regulatory_exposure": "B",
+      "human_override_latency": "D",
+      "data_confidence": "C",
+      "accountability_chain": "C",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Ready with prerequisites — eligibility classification is a mandatory pre-transaction gate, but regulators permit it to be automated provided the gate is genuinely enforced. No A-level dimension, so no hard gate and no documented-risk-acceptance trigger; the prerequisite is auditable enforcement of the classification rules. Regulatory Exposure is Level B (regulated conduct, automation permitted).",
+    "jurisdiction_notes": "SG: SFA AI definition + MAS DPT consumer access measures make the classification a mandatory gate; automation is permissible if enforced, so Reg=B. HK: onboarding/KYC obligations apply 'with no exemption allowed', PI thresholds under Cap. 571D; automation similarly silent — Reg=B. Consider Reg=A if you treat the eligibility gate as a directly mandated control rather than regulated conduct."
+  },
+  {
+    "id": "rwa-revenue-distribution-001",
+    "core": true,
+    "domain": "Revenue Distribution",
+    "industry": "RWA Tokenization",
+    "risk_tier": "high",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "archelu on-chain revenue distribution via smart contracts (stablecoin-native, per ADR-001); MAS stablecoin framework and PSA DPT dealing.",
+    "scenario": "An AI distribution agent executes a quarterly revenue payout to holders of a tokenized-RWA revenue-share token. The payout — roughly S$2.4M across 3,000 token holders — is made on-chain in a stablecoin. The agent detects that the pre-funded distribution wallet is 4% short of the computed total, likely due to a rounding discrepancy in the revenue oracle. The agent can execute the distribution as computed (some holders underpaid), halt and flag for reconciliation, or top up from a reserve and execute.",
+    "structured_context": {
+      "subject": "AI revenue distribution agent (RWA launchpad)",
+      "object": "on-chain quarterly revenue payout, ~S$2.4M, 3,000 token holders, paid in stablecoin",
+      "action": "execute an irreversible on-chain distribution despite a 4% funding shortfall",
+      "regulatory_triggers": ["MAS stablecoin framework (instrument selection: MAS-regulated stablecoin vs other)", "PSA DPT dealing if the platform transfers tokens", "contractual obligations to token holders"],
+      "time_pressure": "moderate — distribution is scheduled but can be paused for reconciliation",
+      "confidence_signal": "computed totals are structured, but the 4% shortfall signals a reconciliation error in the revenue oracle",
+      "reversibility": "on-chain transfers are irreversible once broadcast; clawback from 3,000 wallets is impractical",
+      "blast_radius": "3,000 token holders; underpayment or misallocation affects all of them"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "A",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "B",
+      "human_override_latency": "C",
+      "data_confidence": "C",
+      "accountability_chain": "C",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Ready with prerequisites (documented risk acceptance) — the binding constraint here is not regulation but irreversibility: on-chain settlement is Decision Reversibility Level A, which triggers documented risk acceptance under the soft gate. Executing into a known 4% shortfall on an irreversible rail is the risk to govern. Regulatory Exposure is Level B (stablecoin instrument and DPT-dealing constraints, no autonomy prohibition).",
+    "jurisdiction_notes": "SG: MAS stablecoin framework governs the instrument (only a compliant issuer's token is a 'MAS-regulated stablecoin'); PSA DPT dealing may be licensable. HK: Stablecoins Ordinance (in force Aug 2025) restricts which stablecoins may be offered. Neither jurisdiction prohibits automated distribution per se — the irreversibility (Rev=A) is the dominant risk, not the regulatory gate."
+  },
+  {
+    "id": "rwa-ip-rights-001",
+    "core": true,
+    "domain": "IP Rights Determination",
+    "industry": "RWA Tokenization",
+    "risk_tier": "high",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "archelu IP commercialization launches; the 'NFT ownership != copyright ownership' pitfall (ADR-001) — token represents fractional economic interest, not copyright transfer, unless the legal wrapper explicitly grants it.",
+    "scenario": "An AI agent reviews a proposed tokenized offering of an IP-backed revenue stream (royalties from a music catalogue). The agent must determine what rights the token actually conveys and generate the rights-disclosure language shown to buyers. The submitted legal wrapper is ambiguous: it grants holders a share of net royalty revenue but is silent on whether any copyright or licensing control transfers. The agent can auto-generate and publish the rights disclosure, hold for legal review, or publish with a generic disclaimer.",
+    "structured_context": {
+      "subject": "AI IP-rights determination agent (RWA launchpad)",
+      "object": "rights-disclosure language for a tokenized IP royalty stream",
+      "action": "determine and publish what rights the token conveys to buyers",
+      "regulatory_triggers": ["SFA misrepresentation/disclosure exposure if the token is a CMP", "consumer protection against misleading offers", "IP law (copyright vs economic interest)"],
+      "time_pressure": "none — determination can wait for legal review",
+      "confidence_signal": "conflicting and incomplete — the legal wrapper grants revenue share but is silent on copyright/licensing control; the rights question is genuinely ambiguous",
+      "reversibility": "a published rights misstatement that buyers relied on is hard to reverse",
+      "blast_radius": "all buyers of the offering who relied on the rights disclosure"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "B",
+      "human_override_latency": "D",
+      "data_confidence": "A",
+      "accountability_chain": "B",
+      "graceful_degradation": "B"
+    },
+    "reference_interpretation": "Ready with prerequisites (documented risk acceptance) — Data Confidence is Level A: determining whether a token conveys copyright vs a bare economic interest from an ambiguous, silent legal wrapper is exactly the kind of conflicting/incomplete signal the rubric reserves for A. That A-level dimension triggers documented risk acceptance. Regulatory Exposure is B (disclosure/misrepresentation conduct, not a prescriptively human task) — though if the token is a CMP, a misstatement carries SFA liability.",
+    "jurisdiction_notes": "SG: SFA misrepresentation exposure if a CMP; otherwise consumer-protection against misleading offers. HK: SFC disclosure obligations for tokenised products; provider ultimately responsible. The NFT!=copyright ambiguity is jurisdiction-agnostic and drives Data Confidence=A in both."
+  },
+  {
+    "id": "rwa-market-halt-001",
+    "core": true,
+    "domain": "Market Surveillance",
+    "industry": "RWA Tokenization",
+    "risk_tier": "high",
+    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "based_on": "archelu secondary-market trading; RWA liquidity-desert and thin-market manipulation risk (ADR-001). The RWA-DEX analogue of the algo-trading kill-switch question.",
+    "scenario": "An AI surveillance agent monitors secondary trading of a thinly traded tokenized-RWA token on the platform's market. It detects a pattern consistent with wash trading: a cluster of wallets trading the token back and forth, inflating volume and price ahead of a new tranche sale. Confidence in the manipulation signal is moderate. The agent can autonomously halt trading in the token, throttle the suspect wallets, or alert the surveillance team (estimated 30-minute response).",
+    "structured_context": {
+      "subject": "AI market surveillance agent (RWA launchpad secondary market)",
+      "object": "suspected wash-trading pattern in a thinly traded tokenized-RWA token",
+      "action": "halt trading, throttle suspect wallets, or escalate to humans",
+      "regulatory_triggers": ["SFA false-trading/market-manipulation provisions if the token is a CMP", "VATP/DPT market-integrity conduct if a regulated venue", "platform terms and surveillance obligations"],
+      "time_pressure": "elevated — manipulation is in progress ahead of a tranche sale; 30-minute human response, damage accrues",
+      "confidence_signal": "moderate — wash-trading pattern is suggestive but not conclusive; could be legitimate market-making",
+      "reversibility": "a halt can be lifted, but a wrongful halt disrupts a thin market and may itself move price",
+      "blast_radius": "all holders/traders of this token; reputational impact on the venue"
+    },
+    "reference_fingerprint": {
+      "decision_reversibility": "B",
+      "failure_blast_radius": "B",
+      "regulatory_exposure": "B",
+      "human_override_latency": "B",
+      "data_confidence": "B",
+      "accountability_chain": "C",
+      "graceful_degradation": "C"
+    },
+    "reference_interpretation": "Ready with prerequisites — no A-level dimension, so no hard gate, but moderate confidence on an ambiguous manipulation signal plus a multi-trader blast radius warrant documented controls and a clear escalation path. Regulatory Exposure is Level B as a surveillance/conduct obligation. Note the flag: if the venue is a regulated exchange and the token a CMP, market-integrity rules could push Regulatory Exposure to A (as in the algo-trading scenario).",
+    "jurisdiction_notes": "SG: SFA false-trading provisions apply if the token is a CMP; PSA/DPT venues carry market-integrity conduct expectations — Reg=B unless treated as a regulated exchange (then A). HK: SFC market-misconduct provisions and VATP rules; similar B/A boundary. Contrast with algo-trading, where the venue is unambiguously a regulated market (Reg=A)."
+  }
+]

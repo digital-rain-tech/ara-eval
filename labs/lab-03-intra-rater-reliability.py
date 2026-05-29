@@ -107,20 +107,21 @@ def main():
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
     parser.add_argument("--repetitions", type=int, default=5, help="Number of repetitions per cell (default: 5)")
     parser.add_argument("--scenarios", type=str, default=None, help="Comma-separated scenario IDs to test (overrides --all)")
+    parser.add_argument("--scenarios-file", type=str, default="starter-scenarios.json", help="Scenario file in scenarios/ (default: starter-scenarios.json)")
     parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "sg", "sg-grounded", "generic"], help="Jurisdiction to use (default: hk)")
     parser.add_argument("--structured", action="store_true", help="Include structured context in prompts")
     args = parser.parse_args()
 
     # Load scenarios
     if args.scenarios:
-        all_scenarios = load_scenarios(use_all=True)
+        all_scenarios = load_scenarios(use_all=True, scenarios_file=args.scenarios_file)
         selected_ids = set(args.scenarios.split(","))
         scenarios = [s for s in all_scenarios if s["id"] in selected_ids]
         if not scenarios:
             print(f"No matching scenarios found. Available: {[s['id'] for s in all_scenarios]}")
             sys.exit(1)
     else:
-        scenarios = load_scenarios(use_all=args.all)
+        scenarios = load_scenarios(use_all=args.all, scenarios_file=args.scenarios_file)
 
     reps = args.repetitions
     total_calls = len(scenarios) * len(PERSONALITIES) * reps

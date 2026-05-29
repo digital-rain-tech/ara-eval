@@ -58,6 +58,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 01: Risk Fingerprinting")
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
+    parser.add_argument("--scenarios-file", type=str, default="starter-scenarios.json", help="Scenario file in scenarios/ (default: starter-scenarios.json; e.g. singapore-scenarios.json, rwa-scenarios.json)")
     parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "sg", "sg-grounded", "generic"], help="Jurisdiction to use (default: hk)")
     parser.add_argument("--rubric", type=str, default="rubric.md", help="Rubric file to use (default: rubric.md)")
     parser.add_argument("--structured", action="store_true", help="Include structured context (subject/object/action) in prompts")
@@ -92,7 +93,7 @@ def main():
             args.all = True
 
     # Load scenarios
-    scenarios = load_scenarios(use_all=args.all)
+    scenarios = load_scenarios(use_all=args.all, scenarios_file=args.scenarios_file)
     scenario_set = "all" if args.all else "core"
 
     # Init SQLite

@@ -91,11 +91,12 @@ def main():
 
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 02: Grounding Experiment")
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
+    parser.add_argument("--scenarios-file", type=str, default="starter-scenarios.json", help="Scenario file in scenarios/ (default: starter-scenarios.json)")
     parser.add_argument("--structured", action="store_true", help="Include structured context in prompts")
     args = parser.parse_args()
 
     # Load scenarios
-    scenarios = load_scenarios(use_all=args.all)
+    scenarios = load_scenarios(use_all=args.all, scenarios_file=args.scenarios_file)
 
     # Init DB and HTTP
     results_dir = _root / "results"
