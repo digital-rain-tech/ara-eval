@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { TESTED_MODELS, DEFAULT_MODEL } from "@/lib/constants";
+import { TESTED_MODELS } from "@/lib/constants";
 import HelpTip from "./HelpTip";
 import { HELP } from "@/lib/help-content";
 
@@ -16,8 +16,13 @@ export default function ModelSelector({
   defaultModel,
   onChange,
 }: ModelSelectorProps) {
-  const freeModel = TESTED_MODELS.find((m) => m.id === DEFAULT_MODEL)!;
-  const isCustom = value !== "" && value !== DEFAULT_MODEL;
+  // The active default comes from the server (getCurrentModel = ARA_MODEL ||
+  // registry default), so the hosted demo's paid model shows here, not a guess.
+  const defaultEntry = TESTED_MODELS.find((m) => m.id === defaultModel);
+  const defaultOptionLabel = defaultEntry
+    ? `${defaultEntry.label} — ${defaultEntry.note}`
+    : defaultModel;
+  const isCustom = value !== "" && value !== defaultModel;
   const [showCustom, setShowCustom] = useState(isCustom);
   const [customValue, setCustomValue] = useState(isCustom ? value : "");
 
@@ -51,7 +56,7 @@ export default function ModelSelector({
           onChange={(e) => handleSelect(e.target.value)}
           className="flex-1 rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-gray-200"
         >
-          <option value={freeModel.id}>{freeModel.label} — {freeModel.note}</option>
+          <option value={defaultModel}>{defaultOptionLabel}</option>
           <option value="__custom__">Custom free model...</option>
         </select>
         {value !== defaultModel && (
