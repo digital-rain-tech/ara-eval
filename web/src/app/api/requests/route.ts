@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
   const id = searchParams.get("id");
 
   if (id) {
-    const row = getRequest(id);
+    const row = await getRequest(id);
     if (!row) {
       return NextResponse.json(
         { error: "Request not found" },
@@ -23,6 +23,6 @@ export async function GET(request: NextRequest) {
     limit: parseInt(searchParams.get("limit") || "100", 10),
   };
 
-  const requests = listRequests(filters);
+  const requests = await listRequests(filters);
   return NextResponse.json({ requests });
 }

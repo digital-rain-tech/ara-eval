@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
 
   // Create session if new
   if (isNewSession) {
-    createChatSession({
+    await createChatSession({
       sessionId,
       model,
       personality: mode === "agent" ? `agent:${personality}` : personality,
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
   // Log context change as system message if applicable
   if (contextChange) {
-    addChatMessage({
+    await addChatMessage({
       sessionId,
       role: "system",
       content: contextChange,
@@ -109,11 +109,11 @@ export async function POST(request: NextRequest) {
       rubric,
       model,
     });
-    updateSessionContextChanges(sessionId);
+    await updateSessionContextChanges(sessionId);
   }
 
   // Log user message
-  addChatMessage({
+  await addChatMessage({
     sessionId,
     role: "user",
     content: message,
@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
     const usage = data.usage || {};
 
     // Log assistant message
-    addChatMessage({
+    await addChatMessage({
       sessionId,
       role: "assistant",
       content,

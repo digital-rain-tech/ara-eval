@@ -1,0 +1,1 @@
+../../../photocritic-site/supabase/migrations/004_site_settings.sql
