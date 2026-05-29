@@ -25,6 +25,7 @@ from ara_eval.core import (
     apply_gating_rules,
     init_db,
     load_prompt,
+    load_scenarios,
     parse_llm_json,
 )
 
@@ -171,6 +172,43 @@ class TestLoadPrompt:
     def test_absolute_traversal_rejected(self):
         with pytest.raises((ValueError, OSError)):
             load_prompt("../../etc/passwd")
+
+
+# ---------------------------------------------------------------------------
+# Scenario loading (default + alternate scenario files)
+# ---------------------------------------------------------------------------
+
+
+class TestLoadScenarios:
+    def test_default_starter_set_loads(self):
+        core = load_scenarios(use_all=False)
+        assert core, "expected at least one core scenario"
+        assert all("reference_fingerprint" in s for s in core)
+
+    def test_alternate_file_singapore(self):
+        scen = load_scenarios(use_all=False, scenarios_file="singapore-scenarios.json")
+        ids = {s["id"] for s in scen}
+        assert "claims-denial-sg-001" in ids
+        # IDs must NOT collide with the HK starter set — guards the retry-mode
+        # bug where an alternate run could silently reload starter-scenarios.json.
+        hk_ids = {s["id"] for s in load_scenarios(use_all=True)}
+        assert ids.isdisjoint(hk_ids)
+
+    def test_alternate_file_rwa(self):
+        scen = load_scenarios(use_all=False, scenarios_file="rwa-scenarios.json")
+        ids = {s["id"] for s in scen}
+        assert "rwa-ido-launch-001" in ids
+
+    def test_every_scenario_has_all_seven_dimensions(self):
+        for fname in ("singapore-scenarios.json", "rwa-scenarios.json"):
+            for s in load_scenarios(use_all=True, scenarios_file=fname):
+                fp = s["reference_fingerprint"]
+                missing = [d for d in DIMENSIONS if d not in fp]
+                assert not missing, f"{s['id']} missing {missing}"
+
+    def test_traversal_rejected(self):
+        with pytest.raises((ValueError, OSError)):
+            load_scenarios(scenarios_file="../ara_eval/core.py")
 
 
 # ---------------------------------------------------------------------------

@@ -68,6 +68,7 @@ def main():
     jurisdiction = args.jurisdiction
     rubric = args.rubric
     structured = args.structured
+    scenarios_file = args.scenarios_file
 
     # --retry: load previous results and identify failed/missing evals
     prior_results = None
@@ -91,9 +92,13 @@ def main():
             structured = prior_run["structured"]
         if prior_run.get("scenario_set") == "all":
             args.all = True
+        # Inherit the scenario file so a retry reloads the SAME set (e.g. a
+        # Singapore or RWA run must not silently fall back to the HK starter set).
+        if prior_run.get("scenarios_file"):
+            scenarios_file = prior_run["scenarios_file"]
 
     # Load scenarios
-    scenarios = load_scenarios(use_all=args.all, scenarios_file=args.scenarios_file)
+    scenarios = load_scenarios(use_all=args.all, scenarios_file=scenarios_file)
     scenario_set = "all" if args.all else "core"
 
     # Init SQLite
@@ -125,6 +130,7 @@ def main():
         "jurisdiction": jurisdiction,
         "rubric": rubric,
         "scenario_set": scenario_set,
+        "scenarios_file": scenarios_file,
         "structured": structured,
     }
     if prior_path:
@@ -144,7 +150,8 @@ def main():
     print(f"Run {run_id}")
     print(f"Model: {MODEL}")
     structured_label = " | Structured: yes" if structured else ""
-    print(f"Jurisdiction: {jurisdiction} | Rubric: {rubric} | Scenarios: {scenario_set}{structured_label}")
+    file_label = f" | File: {scenarios_file}" if scenarios_file != "starter-scenarios.json" else ""
+    print(f"Jurisdiction: {jurisdiction} | Rubric: {rubric} | Scenarios: {scenario_set}{file_label}{structured_label}")
     if prior_results:
         print(f"Retry mode: {retry_count} prior successes kept, {calls_to_make} calls to retry")
     else:
@@ -296,6 +303,7 @@ def main():
         "jurisdiction": jurisdiction,
         "rubric": rubric,
         "scenario_set": scenario_set,
+        "scenarios_file": scenarios_file,
         "started_at": run_started,
         "finished_at": datetime.now(timezone.utc).isoformat(),
         "total_calls": total_expected,

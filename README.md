@@ -32,7 +32,7 @@ The framework evaluates operational domains across **7 dimensions**, producing a
 ## Quickstart
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
+python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt && pip install -e .
 ```
 
@@ -55,7 +55,7 @@ See [`docs/models.md`](docs/models.md) for alternatives and pricing.
 
 ## Model Leaderboard
 
-How well do different judge models reproduce human-authored reference fingerprints? Regenerate with `python labs/lab-04-inter-model-comparison.py`, then `python labs/update-readme-leaderboard.py`.
+How well do different judge models reproduce human-authored reference fingerprints? Regenerate with `python labs/lab-04-inter-model-comparison.py`, then `python labs/publish-leaderboard.py`.
 
 <!-- LEADERBOARD:START -->
 | # | Model | Method | F2 | HG Recall | HG Precision | FP Match | Diff | Bias | Cost | Time |
