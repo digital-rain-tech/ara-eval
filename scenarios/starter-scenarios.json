@@ -10,7 +10,7 @@
       "decision_reversibility": "C",
       "failure_blast_radius": "B",
       "regulatory_exposure": "A",
-      "human_override_latency": "A",
+      "human_override_latency": "B",
       "data_confidence": "C",
       "accountability_chain": "B",
       "graceful_degradation": "C"
@@ -59,7 +59,7 @@
       "failure_blast_radius": "C",
       "regulatory_exposure": "A",
       "human_override_latency": "D",
-      "data_confidence": "D",
+      "data_confidence": "C",
       "accountability_chain": "B",
       "graceful_degradation": "C"
     },
@@ -184,8 +184,8 @@
       "failure_blast_radius": "A",
       "regulatory_exposure": "A",
       "human_override_latency": "A",
-      "data_confidence": "C",
-      "accountability_chain": "C",
+      "data_confidence": "B",
+      "accountability_chain": "B",
       "graceful_degradation": "A"
     },
     "reference_interpretation": "Autonomy not permitted for continued trading — but autonomous halt is the safe-failure path. The interesting question is whether the kill switch itself should be autonomous.",
@@ -252,7 +252,7 @@
       "failure_blast_radius": "C",
       "regulatory_exposure": "A",
       "human_override_latency": "C",
-      "data_confidence": "B",
+      "data_confidence": "A",
       "accountability_chain": "B",
       "graceful_degradation": "B"
     },
@@ -287,7 +287,7 @@
       "failure_blast_radius": "B",
       "regulatory_exposure": "A",
       "human_override_latency": "D",
-      "data_confidence": "C",
+      "data_confidence": "B",
       "accountability_chain": "B",
       "graceful_degradation": "C"
     },
