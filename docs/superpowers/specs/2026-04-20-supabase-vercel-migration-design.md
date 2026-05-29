@@ -268,8 +268,9 @@ await addChatMessage({ sessionId, role: "user", content, ... });
 
 - Connect the ara-eval repo to a Vercel project.
 - Project root: `web/` (Next.js app).
-- Build command: `npm run build` (default).
-- Install command: `npm ci`.
+- Package manager: **pnpm** (single `pnpm-lock.yaml`; Vercel auto-detects).
+- Build command: `pnpm build` (default; runs the shared-data codegen then `next build`).
+- Install command: `pnpm install --frozen-lockfile`.
 - Environment variables (Production + Preview):
   - `NEXT_PUBLIC_SUPABASE_URL`
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -282,8 +283,8 @@ The root-level `railway.json` and `web/Dockerfile` are left in place (not remove
 
 ```bash
 cd web
-npm install
-npm run dev
+pnpm install
+pnpm dev
 # ↑ No SUPABASE_URL in .env.local → db.ts picks db-sqlite.ts → reads ../results/ara-eval.db
 ```
 
@@ -298,7 +299,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
 OPENROUTER_API_KEY=...
 
-cd web && npm run dev
+cd web && pnpm dev
 # ↑ SUPABASE_URL present → db.ts picks db-supabase.ts → talks to shared Supabase project
 ```
 

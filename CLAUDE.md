@@ -20,9 +20,14 @@ pip install -e .   # installs ara_eval package in dev mode
 # Run labs (all support --structured for structured input decomposition)
 python labs/lab-01-risk-fingerprinting.py          # core scenarios (6)
 python labs/lab-01-risk-fingerprinting.py --all --structured  # all 13 with structured prompts
-python labs/lab-02-grounding-experiment.py          # grounding A/B experiment
+python labs/lab-02-grounding-experiment.py          # grounding A/B experiment (hk vs hk-grounded)
+python labs/lab-02-grounding-experiment.py --grounding sg  # sg vs sg-grounded
 python labs/lab-03-intra-rater-reliability.py       # reliability testing
 python labs/lab-03-intra-rater-reliability.py --repetitions 5 --scenarios banking-fraud-001
+
+# Alternate scenario sets + jurisdictions (lab-01/02/03 take --scenarios-file; lab-01/03 take --jurisdiction)
+python labs/lab-01-risk-fingerprinting.py --all --scenarios-file singapore-scenarios.json --jurisdiction sg-grounded
+python labs/lab-01-risk-fingerprinting.py --all --scenarios-file rwa-scenarios.json --jurisdiction sg-grounded
 
 # Subagent evaluation (no API key needed — uses Claude Code subagents)
 python labs/lab-05-subagent-evaluation.py --structured           # generate manifest
@@ -70,6 +75,12 @@ Output goes to `results/` (gitignored): JSON results, markdown reports, and `ara
 **Prompt template system** (`prompts/`): System prompts are composed from Mustache templates via `chevron`. `build_system_prompt()` combines personality + rubric + jurisdiction + output format. Personalities and jurisdictions are registered in `_index.json` files. `load_prompt()` enforces path traversal protection.
 
 **Scenario format** (`scenarios/starter-scenarios.json`): Each scenario has `id`, `domain`, `industry`, `risk_tier`, `scenario` (narrative), `reference_fingerprint` (human-authored ground truth), and `jurisdiction_notes`. Scenarios are split into `core: true` (6) and extended (13 total). All scenarios include `structured_context` fields for use with `--structured`.
+
+**Scenario sets** (`scenarios/*.json`, selected via `--scenarios-file`): `starter-scenarios.json` (HK, 13), `singapore-scenarios.json` (6 SG translations of the core HK scenarios), `rwa-scenarios.json` (6 RWA-tokenization scenarios anchored to the sister project `art-verify`/archelu). SG/RWA fingerprints carry a `reference_status` field marking them provisional/reviewed. Key cross-jurisdiction finding: SG has no statutory human-in-loop mandate, so activity-based gates match HK but `claims-denial` diverges (Reg A→B). `load_scenarios(scenarios_file=...)` is path-traversal protected.
+
+**Jurisdictions** (`prompts/jurisdictions/`): `hk`, `hk-grounded`, `sg`, `sg-grounded`, `generic` — registered in `_index.json`, selectable via `--jurisdiction`. Grounded variants embed citation-grade regulatory requirements.
+
+**Web app** (`web/`): Next.js 16 + React 19 interactive evaluator / red-teaming chat (app.ara-eval.org). Uses **pnpm** (single lockfile; no npm). Deployed on **Vercel** with **Supabase** (dual-driver `db.ts`: Supabase when `NEXT_PUBLIC_SUPABASE_URL` is set, else local SQLite for student dev; anonymous auth + optional Google sign-in). Scenarios/prompts (which live at the repo root, outside `web/`) are bundled at build via `web/scripts/generate-shared-data.mjs` → `src/generated/shared-data.ts` (gitignored) so request-time code never reads parent-dir files — required for Vercel serverless. The app exposes the scenario sets and jurisdictions above. Self-host Docker path stays behind `BUILD_STANDALONE=1`. See `docs/superpowers/specs/2026-04-20-supabase-vercel-migration-design.md`.
 
 **Subagent evaluation** (`labs/lab-05-subagent-evaluation.py`): Dispatches isolated Claude Code subagents for each scenario × personality × variant. Uses `.claude/commands/ara-evaluate.md` as the skill (full rubric baked in). Supports `--structured`, `--grounding`, `--repetitions`. Run `--assemble <run-id>` to collect results into lab-01 format for lab-04 scoring.
 

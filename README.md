@@ -118,16 +118,17 @@ See [`labs/README.md`](labs/README.md) for exercises and key questions. Course s
 
 ## Web Interface
 
-A Next.js web app for interactive evaluation and adversarial red-teaming.
+A Next.js web app for interactive evaluation and adversarial red-teaming. Uses **pnpm**.
 
 ```bash
-cd web && npm install && npm run dev   # http://localhost:3000
+cd web && pnpm install && pnpm dev   # http://localhost:3000
 ```
 
 - **Evaluate page** — Split-pane: system prompt inspector + scenario input with fingerprint matrix and gating verdict
 - **Chat page** — Agent Mode (red-team an agent constrained by its fingerprint) or Judge Mode (probe the LLM judge directly)
+- **Scenario sets & jurisdictions** — pick the HK starter, Singapore, or RWA scenario set; grounding can be Generic / HK / HK-grounded / Singapore / Singapore-grounded
 
-See [`docs/adr/013-railway-deployment.md`](docs/adr/013-railway-deployment.md) for deployment.
+Deployed on **Vercel** with **Supabase** as the data store (anonymous auth + optional Google sign-in). The DB layer is dual-driver: Supabase when `NEXT_PUBLIC_SUPABASE_URL` is set (deploy), local SQLite otherwise (student dev). See [`docs/superpowers/specs/2026-04-20-supabase-vercel-migration-design.md`](docs/superpowers/specs/2026-04-20-supabase-vercel-migration-design.md). The self-host Docker path (`web/Dockerfile`, `BUILD_STANDALONE=1`) remains for `app.ara-eval.org` on a VPS.
 
 ## Repository Structure
 
@@ -135,7 +136,7 @@ See [`docs/adr/013-railway-deployment.md`](docs/adr/013-railway-deployment.md) f
 docs/               Framework spec, rubric, model guide, course syllabi, ADRs
 labs/               Runnable Python labs
 prompts/            LLM prompt templates (Mustache)
-scenarios/          Starter scenario library (JSON, 13 scenarios)
+scenarios/          Scenario library — HK starter (13), Singapore (6), RWA (6)
 shared/             Structured data for site integration (leaderboard, models, dimensions, challenges)
   archive/          Historical leaderboard snapshots
 web/                Next.js web interface
