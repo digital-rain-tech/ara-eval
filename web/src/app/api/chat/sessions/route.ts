@@ -6,18 +6,18 @@ export async function GET(request: NextRequest) {
   const id = searchParams.get("id");
 
   if (id) {
-    const session = getChatSession(id);
+    const session = await getChatSession(id);
     if (!session) {
       return NextResponse.json(
         { error: "Session not found" },
         { status: 404 },
       );
     }
-    const messages = getChatMessages(id);
+    const messages = await getChatMessages(id);
     return NextResponse.json({ session, messages });
   }
 
   const limit = parseInt(searchParams.get("limit") || "50", 10);
-  const sessions = listChatSessions(limit);
+  const sessions = await listChatSessions(limit);
   return NextResponse.json({ sessions });
 }
