@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+# Opt the GitHub-maintained JS actions (checkout, setup-node/python,
+# pnpm/action-setup) into the Node 24 runtime now — Node 20 is deprecated and
+# becomes forced in June 2026.
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -35,7 +41,7 @@ jobs:
           version: 9.15.9
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24"
           cache: pnpm
           cache-dependency-path: web/pnpm-lock.yaml
       - name: Install dependencies

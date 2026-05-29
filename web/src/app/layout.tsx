@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AuthButton } from "@/components/AuthButton";
 import "./globals.css";
 import { Geist } from "next/font/google";
@@ -21,9 +22,9 @@ export default function RootLayout({
     <html lang="en" className={cn("font-sans", geist.variable)}>
       <body className="bg-gray-950 text-gray-100 antialiased">
         <header className="flex items-center justify-between border-b border-gray-800 px-4 py-2">
-          <a href="/" className="text-sm font-semibold text-gray-200">
+          <Link href="/" className="text-sm font-semibold text-gray-200">
             ARA-Eval
-          </a>
+          </Link>
           {process.env.NEXT_PUBLIC_SUPABASE_URL && <AuthButton />}
         </header>
         {children}
