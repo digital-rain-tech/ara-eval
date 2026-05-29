@@ -58,7 +58,7 @@ def main():
 
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 01: Risk Fingerprinting")
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
-    parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "generic"], help="Jurisdiction to use (default: hk)")
+    parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "sg", "sg-grounded", "generic"], help="Jurisdiction to use (default: hk)")
     parser.add_argument("--rubric", type=str, default="rubric.md", help="Rubric file to use (default: rubric.md)")
     parser.add_argument("--structured", action="store_true", help="Include structured context (subject/object/action) in prompts")
     parser.add_argument("--retry", type=str, metavar="PATH", help="Retry failed/missing evals from a previous results JSON file")

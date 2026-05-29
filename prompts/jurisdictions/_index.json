@@ -9,6 +9,16 @@
     "label": "Hong Kong",
     "description": "Grounded with actual regulatory requirements from each framework"
   },
+  "sg": {
+    "file": "sg.md",
+    "label": "Singapore",
+    "description": "Framework names only — MAS FEAT, PDPC, SFA, PSA, stablecoin framework"
+  },
+  "sg-grounded": {
+    "file": "sg-grounded.md",
+    "label": "Singapore",
+    "description": "Grounded with actual MAS/PDPC requirements; notes no statutory human-in-loop mandate"
+  },
   "generic": {
     "file": "generic.md",
     "label": "Generic",

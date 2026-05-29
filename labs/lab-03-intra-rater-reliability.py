@@ -107,7 +107,7 @@ def main():
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
     parser.add_argument("--repetitions", type=int, default=5, help="Number of repetitions per cell (default: 5)")
     parser.add_argument("--scenarios", type=str, default=None, help="Comma-separated scenario IDs to test (overrides --all)")
-    parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "generic"], help="Jurisdiction to use (default: hk)")
+    parser.add_argument("--jurisdiction", type=str, default="hk", choices=["hk", "hk-grounded", "sg", "sg-grounded", "generic"], help="Jurisdiction to use (default: hk)")
     parser.add_argument("--structured", action="store_true", help="Include structured context in prompts")
     args = parser.parse_args()
 
