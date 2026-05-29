@@ -5,25 +5,21 @@
  * derived from the fingerprint levels via shared/challenges.json.
  */
 
-import fs from "fs";
-import path from "path";
 import Mustache from "mustache";
 import type { Scenario, GatingClassification } from "./constants";
 import { generateConstraints, formatClassification } from "./challenges";
-
-const PROMPTS_DIR = path.resolve(process.cwd(), "..", "prompts");
+import { PROMPT_FILES } from "../generated/shared-data";
 
 function loadPrompt(relativePath: string): string {
-  return fs.readFileSync(path.join(PROMPTS_DIR, relativePath), "utf-8");
+  const content = PROMPT_FILES[relativePath];
+  if (content === undefined) {
+    throw new Error(`Prompt not found: ${relativePath}`);
+  }
+  return content;
 }
 
 function loadJurisdictions(): Record<string, { file: string; label: string }> {
-  return JSON.parse(
-    fs.readFileSync(
-      path.join(PROMPTS_DIR, "jurisdictions", "_index.json"),
-      "utf-8",
-    ),
-  );
+  return JSON.parse(loadPrompt("jurisdictions/_index.json"));
 }
 
 export function buildAgentPrompt(params: {

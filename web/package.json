@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "generate:data": "node scripts/generate-shared-data.mjs",
+    "dev": "node scripts/generate-shared-data.mjs && next dev",
+    "build": "node scripts/generate-shared-data.mjs && next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run"
+    "test": "node scripts/generate-shared-data.mjs && vitest run"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",

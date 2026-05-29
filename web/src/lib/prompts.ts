@@ -1,32 +1,29 @@
 /**
  * Prompt template composition — mirrors ara_eval/core.py build_system_prompt().
  *
- * Reads the same Mustache template files from ../prompts/ that the Python labs use.
+ * Reads the same Mustache templates the Python labs use, via the bundled
+ * shared-data module (generated from ../prompts/ at build time) so it works on
+ * Vercel serverless. See scripts/generate-shared-data.mjs.
  */
 
-import fs from "fs";
-import path from "path";
 import Mustache from "mustache";
 import type {
   JurisdictionMeta,
   PersonalityMeta,
   Scenario,
 } from "./constants";
-
-const PROMPTS_DIR = path.resolve(process.cwd(), "..", "prompts");
+import { PROMPT_FILES } from "../generated/shared-data";
 
 function loadPrompt(relativePath: string): string {
-  const resolved = path.resolve(PROMPTS_DIR, relativePath);
-  // Path traversal protection
-  if (!resolved.startsWith(path.resolve(PROMPTS_DIR))) {
-    throw new Error(`Prompt path escapes prompts directory: ${relativePath}`);
+  const content = PROMPT_FILES[relativePath];
+  if (content === undefined) {
+    throw new Error(`Prompt not found: ${relativePath}`);
   }
-  return fs.readFileSync(resolved, "utf-8");
+  return content;
 }
 
 function loadIndex<T>(subdir: string): Record<string, T> {
-  const indexPath = path.join(PROMPTS_DIR, subdir, "_index.json");
-  return JSON.parse(fs.readFileSync(indexPath, "utf-8"));
+  return JSON.parse(loadPrompt(`${subdir}/_index.json`));
 }
 
 export function getPersonalities(): Record<string, PersonalityMeta> {
