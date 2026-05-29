@@ -52,7 +52,12 @@ from ara_eval.core import (
 )
 
 _root = Path(__file__).parent.parent
-JURISDICTIONS = ["hk", "hk-grounded"]
+
+# Grounding A/B pairs: maps a --grounding choice to (base, grounded) jurisdictions.
+GROUNDING_PAIRS = {
+    "hk": ("hk", "hk-grounded"),
+    "sg": ("sg", "sg-grounded"),
+}
 
 
 def compare_fingerprints(result_a: dict, result_b: dict, label_a: str, label_b: str) -> dict:
@@ -73,7 +78,7 @@ def compare_fingerprints(result_a: dict, result_b: dict, label_a: str, label_b: 
     return shifts
 
 
-def print_comparison(scenario_id: str, personality: str, shifts: dict):
+def print_comparison(scenario_id: str, personality: str, shifts: dict, base: str, grounded: str):
     """Print a side-by-side comparison for one scenario x personality."""
     changed = {k: v for k, v in shifts.items() if v["changed"]}
     if not changed:
@@ -82,7 +87,7 @@ def print_comparison(scenario_id: str, personality: str, shifts: dict):
 
     for dim, s in changed.items():
         direction = "STRICTER" if s["shift"] > 0 else "LOOSER"
-        print(f"  {personality:<22} {dim:<25} {s['hk']} → {s['hk-grounded']}  ({direction})")
+        print(f"  {personality:<22} {dim:<25} {s[base]} → {s[grounded]}  ({direction})")
 
 
 def main():
@@ -92,8 +97,12 @@ def main():
     parser = argparse.ArgumentParser(description="ARA-Eval Lab 02: Grounding Experiment")
     parser.add_argument("--all", action="store_true", help="Run all scenarios (default: core only)")
     parser.add_argument("--scenarios-file", type=str, default="starter-scenarios.json", help="Scenario file in scenarios/ (default: starter-scenarios.json)")
+    parser.add_argument("--grounding", type=str, default="hk", choices=list(GROUNDING_PAIRS), help="Grounding A/B pair: base vs grounded jurisdiction (default: hk → hk vs hk-grounded)")
     parser.add_argument("--structured", action="store_true", help="Include structured context in prompts")
     args = parser.parse_args()
+
+    base, grounded = GROUNDING_PAIRS[args.grounding]
+    conditions = [base, grounded]
 
     # Load scenarios
     scenarios = load_scenarios(use_all=args.all, scenarios_file=args.scenarios_file)
@@ -112,7 +121,7 @@ def main():
 
     # Run both conditions
     condition_results = {}
-    for jurisdiction in JURISDICTIONS:
+    for jurisdiction in conditions:
         run_id = str(uuid.uuid4())
         run_started = datetime.now(timezone.utc).isoformat()
         total_expected = len(scenarios) * len(PERSONALITIES)
@@ -184,7 +193,7 @@ def main():
     # Compare conditions
     print(f"\n{'='*70}")
     print(f"  GROUNDING EFFECT ANALYSIS")
-    print(f"  Comparing: hk (names only) vs hk-grounded (full requirements)")
+    print(f"  Comparing: {base} (names only) vs {grounded} (full requirements)")
     print(f"{'='*70}")
 
     for scenario in scenarios:
@@ -195,16 +204,16 @@ def main():
         print(f"  {'-'*65}")
 
         for personality_id, personality_meta in PERSONALITIES.items():
-            result_a = condition_results["hk"].get(sid, {}).get(personality_id)
-            result_b = condition_results["hk-grounded"].get(sid, {}).get(personality_id)
+            result_a = condition_results[base].get(sid, {}).get(personality_id)
+            result_b = condition_results[grounded].get(sid, {}).get(personality_id)
 
             if not result_a or not result_b:
                 print(f"  {personality_id:<22} SKIPPED (missing data)")
                 continue
 
-            shifts = compare_fingerprints(result_a, result_b, "hk", "hk-grounded")
+            shifts = compare_fingerprints(result_a, result_b, base, grounded)
             all_comparisons[sid][personality_id] = shifts
-            print_comparison(sid, personality_id, shifts)
+            print_comparison(sid, personality_id, shifts, base, grounded)
 
             # Accumulate totals
             for dim_label, s in shifts.items():
@@ -235,7 +244,7 @@ def main():
     output = {
         "_experiment": {
             "name": "regulatory_grounding",
-            "conditions": JURISDICTIONS,
+            "conditions": conditions,
             "model": MODEL,
             "scenarios": len(scenarios),
             "personalities": len(PERSONALITIES),

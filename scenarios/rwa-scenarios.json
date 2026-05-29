@@ -5,7 +5,7 @@
     "domain": "Asset Verification",
     "industry": "RWA Tokenization",
     "risk_tier": "high",
-    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "reference_status": "reviewed 2026-05-29 — Data Confidence kept at B (conservative; not escalating to A for stale-then-confident oracle signals)",
     "based_on": "archelu tiered transparency model (Self-Declared -> Document Verified -> Live Verified); the 'oracle problem' central to RWA tokenization (ADR-001: deterministic on-chain code vs probabilistic off-chain reality).",
     "scenario": "An AI verification agent on a tokenized-RWA launchpad evaluates whether to promote an asset listing from 'Document Verified' to 'Live Verified' — the top transparency tier shown to investors. Promotion is triggered by an oracle feed reporting that the underlying asset's custody and valuation attestations are current. The oracle's data is sourced from a third-party attestor whose feed has been intermittently stale. The 'Live Verified' badge materially influences investor confidence and secondary-market pricing. The agent can auto-promote on the oracle signal, hold at the current tier, or route to a human reviewer.",
     "structured_context": {
@@ -28,7 +28,7 @@
       "graceful_degradation": "B"
     },
     "reference_interpretation": "Ready with prerequisites — no hard gate, but Data Confidence at Level B (the oracle-to-off-chain-reality gap is the core RWA verification risk) and a multi-investor blast radius warrant documented controls (oracle freshness checks, fail-to-lower-tier behavior). The verification act is not itself a directly mandated human decision, so Regulatory Exposure is B.",
-    "jurisdiction_notes": "SG: SFA misrepresentation exposure attaches if the token is a CMP; verification is platform conduct, not a prescriptively human task — Reg=B. HK: SFC tokenisation circular (23EC53) requires a 'competent staff' ultimately responsible for the tokenisation arrangement, which nudges toward B/A. Consider whether stale-then-confident oracle signals should be Data Confidence A rather than B."
+    "jurisdiction_notes": "SG: SFA misrepresentation exposure attaches if the token is a CMP; verification is platform conduct, not a prescriptively human task — Reg=B. HK: SFC tokenisation circular (23EC53) requires a 'competent staff' ultimately responsible for the tokenisation arrangement, which nudges toward B/A. Resolved 2026-05-29: Data Confidence kept at B (conservative) — stale-then-confident oracle signals modelled as a partial signal, not fully conflicting (A)."
   },
   {
     "id": "rwa-ido-launch-001",
@@ -67,7 +67,7 @@
     "domain": "Investor Eligibility",
     "industry": "RWA Tokenization",
     "risk_tier": "medium",
-    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "reference_status": "reviewed 2026-05-29 — Reg kept at B (conservative; eligibility gating treated as regulated conduct with permitted automation, not a directly mandated Reg=A control)",
     "based_on": "archelu KYC / accredited-investor gating for primary allocation and secondary trading; MAS DPT consumer access measures and SFA accredited-investor exemptions.",
     "scenario": "An AI onboarding agent screens a prospective investor applying to buy into a tokenized-RWA offering restricted to accredited investors. The applicant submits financial documents; the agent must classify them as retail, accredited, or institutional, apply the accredited-investor asset test (with the 50% haircut on digital-token holdings), and either grant or deny whitelist access. The agent can decide autonomously, or route borderline cases to a compliance reviewer.",
     "structured_context": {
@@ -90,7 +90,7 @@
       "graceful_degradation": "C"
     },
     "reference_interpretation": "Ready with prerequisites — eligibility classification is a mandatory pre-transaction gate, but regulators permit it to be automated provided the gate is genuinely enforced. No A-level dimension, so no hard gate and no documented-risk-acceptance trigger; the prerequisite is auditable enforcement of the classification rules. Regulatory Exposure is Level B (regulated conduct, automation permitted).",
-    "jurisdiction_notes": "SG: SFA AI definition + MAS DPT consumer access measures make the classification a mandatory gate; automation is permissible if enforced, so Reg=B. HK: onboarding/KYC obligations apply 'with no exemption allowed', PI thresholds under Cap. 571D; automation similarly silent — Reg=B. Consider Reg=A if you treat the eligibility gate as a directly mandated control rather than regulated conduct."
+    "jurisdiction_notes": "SG: SFA AI definition + MAS DPT consumer access measures make the classification a mandatory gate; automation is permissible if enforced, so Reg=B. HK: onboarding/KYC obligations apply 'with no exemption allowed', PI thresholds under Cap. 571D; automation similarly silent — Reg=B. Resolved 2026-05-29: kept at B (conservative) — regulated conduct with permitted automation rather than a directly mandated Reg=A control."
   },
   {
     "id": "rwa-revenue-distribution-001",
@@ -160,7 +160,7 @@
     "domain": "Market Surveillance",
     "industry": "RWA Tokenization",
     "risk_tier": "high",
-    "reference_status": "provisional — drafted by Opus 4.8, pending human validation",
+    "reference_status": "reviewed 2026-05-29 — Reg kept at B (conservative; venue not assumed to be a regulated exchange — surveillance/conduct obligation rather than Reg=A market-integrity gate)",
     "based_on": "archelu secondary-market trading; RWA liquidity-desert and thin-market manipulation risk (ADR-001). The RWA-DEX analogue of the algo-trading kill-switch question.",
     "scenario": "An AI surveillance agent monitors secondary trading of a thinly traded tokenized-RWA token on the platform's market. It detects a pattern consistent with wash trading: a cluster of wallets trading the token back and forth, inflating volume and price ahead of a new tranche sale. Confidence in the manipulation signal is moderate. The agent can autonomously halt trading in the token, throttle the suspect wallets, or alert the surveillance team (estimated 30-minute response).",
     "structured_context": {
@@ -182,7 +182,7 @@
       "accountability_chain": "C",
       "graceful_degradation": "C"
     },
-    "reference_interpretation": "Ready with prerequisites — no A-level dimension, so no hard gate, but moderate confidence on an ambiguous manipulation signal plus a multi-trader blast radius warrant documented controls and a clear escalation path. Regulatory Exposure is Level B as a surveillance/conduct obligation. Note the flag: if the venue is a regulated exchange and the token a CMP, market-integrity rules could push Regulatory Exposure to A (as in the algo-trading scenario).",
+    "reference_interpretation": "Ready with prerequisites — no A-level dimension, so no hard gate, but moderate confidence on an ambiguous manipulation signal plus a multi-trader blast radius warrant documented controls and a clear escalation path. Regulatory Exposure is Level B as a surveillance/conduct obligation. Resolved 2026-05-29: kept at B (conservative) — the launchpad DEX is not assumed to be a regulated exchange; if it were (and the token a CMP), market-integrity rules would push Regulatory Exposure to A as in the algo-trading scenario.",
     "jurisdiction_notes": "SG: SFA false-trading provisions apply if the token is a CMP; PSA/DPT venues carry market-integrity conduct expectations — Reg=B unless treated as a regulated exchange (then A). HK: SFC market-misconduct provisions and VATP rules; similar B/A boundary. Contrast with algo-trading, where the venue is unambiguously a regulated market (Reg=A)."
   }
 ]
