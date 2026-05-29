@@ -1,6 +1,6 @@
 # ADR-013: Railway Deployment
 
-**Status:** Accepted
+**Status:** Superseded by [ADR-016](ADR-016-vercel-supabase-deployment.md) (Vercel + Supabase), 2026-05-29
 **Date:** 2026-03-17
 
 ## Context
