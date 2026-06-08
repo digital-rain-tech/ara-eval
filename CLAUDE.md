@@ -10,6 +10,15 @@ Focused on Hong Kong financial services regulation (HKMA, SFC, PCPD, PIPL).
 
 **Naming:** the canonical expansion of ARA is "Agentic Risk Assessment" (not "Readiness", not "Agent") on all SEO/machine-facing surfaces; plain "AI agent risk assessment" is preferred in prose, and "readiness" is used only for verdict language ("ready now", readiness classification). See [ADR-017](docs/adr/ADR-017-naming-agentic-risk-assessment.md) — don't rename historical docs.
 
+## Database & migrations
+
+ARA-Eval shares the Supabase project `ezlyfsgpcahlnbqgdlxh` with photocritic and lantern.
+**Schema changes are managed centrally in the `platform-db` repo** (the single canonical
+`supabase/migrations/` history) — **not here**. The `supabase/migrations/` folder in this
+repo is frozen/legacy (see `supabase/migrations/FROZEN.md`); do not run `supabase db push`
+from this repo. ARA-Eval owns its `ara_*` tables (incl. `ara_ai_provider_requests`); to
+change them, add a migration in `platform-db` and push from there.
+
 ## Commands
 
 ```bash
