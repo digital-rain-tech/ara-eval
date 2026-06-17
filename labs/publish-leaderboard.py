@@ -211,6 +211,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
         "is_default": False,
     },
+    "owl-alpha": {
+        "id": "openrouter/owl-alpha",
+        "label": "Owl Alpha (stealth)",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+        "is_default": False,
+    },
 }
 
 

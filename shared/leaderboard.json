@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-05-29",
+  "last_updated": "2026-06-17",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "Risk Detection — F2 (F-beta, beta=2): weights recall 4x over precision — penalises missed risk gates heavily",
@@ -180,6 +180,24 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": null
+    },
+    {
+      "id": "openrouter/owl-alpha",
+      "label": "Owl Alpha (stealth)",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+      "completion": "18/18",
+      "f2": 0.89,
+      "hard_gate_recall": 0.87,
+      "hard_gate_precision": 1.0,
+      "false_negatives": 2,
+      "false_positives": 0,
+      "fingerprint_match": 0.75,
+      "differentiation": 0.19,
+      "bias": "calibrated",
+      "cost_per_eval": 0.0,
+      "is_default": false,
+      "eval_duration_seconds": 970
     },
     {
       "id": "minimax/minimax-m2.7",
