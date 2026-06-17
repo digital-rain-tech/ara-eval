@@ -35,6 +35,13 @@
       "label": "Added 4 new models (batch evaluation)",
       "models": 11,
       "note": "Gemini 2.5 Flash Lite, Qwen3 235B, Grok 4.1 Fast, DeepSeek v3.2. Renamed metrics: hard_gate_recall, hard_gate_precision, fingerprint_match."
+    },
+    {
+      "file": "leaderboard-2026-06-17-owl-alpha.json",
+      "date": "2026-06-17",
+      "label": "Added Owl Alpha (stealth)",
+      "models": 26,
+      "note": "Owl Alpha (openrouter/owl-alpha) — F2 0.89, calibrated bias, 100% precision. Ties Claude Opus 4.6 (manual) at #4. Provider undisclosed."
     }
   ]
 }

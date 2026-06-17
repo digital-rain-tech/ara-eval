@@ -96,5 +96,12 @@
     "note": "sleepy bias (misses gates), 1 eval failure on graceful_degradation. 17/18 completion.",
     "success_rate": "17/18",
     "is_default": false
+  },
+  {
+    "id": "openrouter/owl-alpha",
+    "label": "Owl Alpha (stealth)",
+    "note": "F2 0.89, calibrated bias, 100% precision (0 false alarms). Ties Claude Opus 4.6 (manual) at #4. Provider undisclosed.",
+    "success_rate": "18/18",
+    "is_default": false
   }
 ]
