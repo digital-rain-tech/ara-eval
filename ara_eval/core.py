@@ -750,6 +750,9 @@ def _is_rate_limit_error(exc: Exception) -> bool:
     msg = str(exc)
     if "empty content" in msg.lower():
         return True
+    # OpenRouter sometimes returns 200 with no 'choices' key when rate-limited
+    if isinstance(exc, KeyError) and str(exc) in ("'choices'", '"choices"'):
+        return True
     return False
 
 
