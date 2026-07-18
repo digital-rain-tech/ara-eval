@@ -1,6 +1,6 @@
 # ARA-Eval: 5-Week MBA Capstone
 
-**Agentic Readiness Assessment — When Can Enterprises Trust Autonomous AI?**
+**Agentic Risk Assessment — When Can Enterprises Trust Autonomous AI?**
 
 Course format for a 5-week MBA capstone module. Students produce risk fingerprints for financial services scenarios using an LLM judge, then critically evaluate the instrument they just used. The recursive structure is intentional: by using AI to evaluate AI autonomy, students discover LLM inconsistency, framing sensitivity, and perspective-dependence firsthand — not from a slide deck.
 

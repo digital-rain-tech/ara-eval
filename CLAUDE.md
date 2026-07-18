@@ -4,9 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-ARA-Eval (Agentic Readiness Assessment) is an evaluation framework for determining when enterprises can safely deploy autonomous AI agents. It produces **risk fingerprints** — 7-dimension level classifications (A–D) — and applies deterministic gating rules to classify domains as "ready now", "ready with prerequisites", or "human-in-loop required".
+ARA-Eval (Agentic Risk Assessment) is an evaluation framework for determining when enterprises can safely deploy autonomous AI agents. It produces **risk fingerprints** — 7-dimension level classifications (A–D) — and applies deterministic gating rules to classify domains as "ready now", "ready with prerequisites", or "human-in-loop required".
 
 Focused on Hong Kong financial services regulation (HKMA, SFC, PCPD, PIPL).
+
+**Naming:** the canonical expansion of ARA is "Agentic Risk Assessment" (not "Readiness", not "Agent") on all SEO/machine-facing surfaces; plain "AI agent risk assessment" is preferred in prose, and "readiness" is used only for verdict language ("ready now", readiness classification). See [ADR-017](docs/adr/ADR-017-naming-agentic-risk-assessment.md) — don't rename historical docs.
 
 ## Commands
 

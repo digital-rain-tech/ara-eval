@@ -65,7 +65,7 @@ def make_headers(api_key: str) -> dict:
     return {
         "Authorization": f"Bearer {api_key}",
         "HTTP-Referer": "https://github.com/digital-rain-tech/ara-eval",
-        "X-Title": "ARA-Eval (Agentic Readiness Assessment)",
+        "X-Title": "ARA-Eval (Agentic Risk Assessment)",
         "Content-Type": "application/json",
     }
 

@@ -1,7 +1,7 @@
 [project]
 name = "ara-eval"
 version = "0.1.0"
-description = "Agentic Readiness Assessment evaluation framework"
+description = "Agentic Risk Assessment evaluation framework"
 requires-python = ">=3.11"
 dependencies = [
     "chevron>=0.14",

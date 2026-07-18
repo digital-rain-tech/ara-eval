@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
-  title: "ARA-Eval — Agentic Readiness Assessment",
+  title: "ARA-Eval — Agentic Risk Assessment",
   description:
     "Evaluate when enterprises can safely deploy autonomous AI agents",
 };

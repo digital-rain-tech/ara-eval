@@ -1,1 +1,1 @@
-"""ARA-Eval: Agentic Readiness Assessment framework."""
+"""ARA-Eval: Agentic Risk Assessment framework."""

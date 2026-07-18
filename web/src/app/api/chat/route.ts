@@ -149,7 +149,7 @@ export async function POST(request: NextRequest) {
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "HTTP-Referer": "https://github.com/digital-rain-tech/ara-eval",
-        "X-Title": "ARA-Eval (Agentic Readiness Assessment)",
+        "X-Title": "ARA-Eval (Agentic Risk Assessment)",
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
