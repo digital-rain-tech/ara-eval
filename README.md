@@ -8,7 +8,7 @@ Most AI governance frameworks ask: *Should we use AI?*
 
 ARA-Eval asks the harder question: **When can an AI safely take action on its own?**
 
-Developed by [IRAI Labs](https://irai.co) × [Digital Rain Technologies](https://digitalrain.studio).
+Developed by [Digital Rain Technologies](https://digitalrain.studio).
 
 **[Try the live demo →](https://app.ara-eval.org/)**
 
