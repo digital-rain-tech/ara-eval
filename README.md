@@ -2,6 +2,8 @@
 
 An open framework for determining when an AI agent can act autonomously — without human approval.
 
+ARA stands for **Agentic Risk Assessment** — risk assessment for AI agents. (In frontier-lab safety literature, "ARA" often means autonomous replication and adaptation. Different thing: this framework measures whether a specific enterprise scenario is safe to hand to an agent.)
+
 Most AI governance frameworks ask: *Should we use AI?*
 
 ARA-Eval asks the harder question: **When can an AI safely take action on its own?**
