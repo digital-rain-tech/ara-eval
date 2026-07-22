@@ -6,6 +6,10 @@
 
 ## Current Leaderboard (11 models, as of 2026-03-22)
 
+> **Note (2026-07-22):** the `calibrated` bias token was later renamed to `even-keeled`
+> across the classifier, registries, and docs. The table below is left with the original
+> label as a historical snapshot of the 2026-03-22 results.
+
 | Rank | Model | Method | A-Gate Recall | Calibration | Bias |
 |------|-------|--------|--------------|-------------|------|
 | 1 | Claude Opus 4.6 | subagent | 100% | 87% | calibrated |
