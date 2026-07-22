@@ -182,4 +182,4 @@ python labs/publish-leaderboard.py --dry-run  # print shared/leaderboard.json to
 - `fingerprint_match` — exact dimension-level match vs human reference fingerprint
 - `f2` — F-beta (beta=2), weights recall 4x over precision
 - `differentiation` — personality spread across CO/CRO/Ops
-- `bias` — calibrated | sleepy | jittery | noisy | broken
+- `bias` — even-keeled | sleepy | jittery | noisy | broken

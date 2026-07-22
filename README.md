@@ -62,16 +62,16 @@ How well do different judge models reproduce human-authored reference fingerprin
 <!-- LEADERBOARD:START -->
 | # | Model | Method | Risk Detection | HG Recall | HG Precision | FP Match | Diff | Bias | Cost | Time |
 |---|-------|--------|---------------:|----------:|-------------:|--------:|-----:|------|-----:|-----:|
-| 1 | Claude Opus 4.6 | subagent | **100%** | **100%** | **100%** | 89% | 31% | Calibrated | — | — |
-| 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Calibrated | — | 71s |
-| 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Calibrated | — | 10.2m |
+| 1 | Claude Opus 4.6 | subagent | **100%** | **100%** | **100%** | 89% | 31% | Even-keeled | — | — |
+| 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Even-keeled | — | 71s |
+| 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Even-keeled | — | 10.2m |
 | 4 | Tencent Hunyuan T1 | api | **95%** | **100%** | 79% | 70% | 33% | Jittery | — | 181.9m |
 | 5 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 72% | 38% | Jittery | — | 17.0m |
 | 6 | Gemini 3.1 Flash Lite | api | 92% | 93% | 88% | 61% | 43% | Jittery | $0.035 | 2.6m |
 | 7 | Claude Haiku 3.5 | api | 92% | 93% | 88% | 60% | 29% | Jittery | $0.092 | 6.7m |
 | 8 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — | — |
-| 9 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 90% | 26% | Calibrated | — | — |
-| 10 | Owl Alpha (stealth) | api | 89% | 87% | **100%** | 75% | 19% | Calibrated | — | 16.2m |
+| 9 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 90% | 26% | Even-keeled | — | — |
+| 10 | Owl Alpha (stealth) | api | 89% | 87% | **100%** | 75% | 19% | Even-keeled | — | 16.2m |
 | 11 | MiniMax M2.7 | api | 87% | 87% | 87% | 75% | 36% | Noisy | — | 20.4m |
 | 12 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | — | 8.4m |
 | 13 | Baidu CoBuddy | api | 83% | 80% | **100%** | 68% | 50% | Sleepy | — | 22.7m |
@@ -91,7 +91,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 
 *26 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-06-17.*
 
-**Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Cost** = total OpenRouter cost per full eval run (39 calls). **Time** = wall-clock benchmark duration (39 calls).
+**Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Even-keeled | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Cost** = total OpenRouter cost per full eval run (39 calls). **Time** = wall-clock benchmark duration (39 calls).
 <!-- LEADERBOARD:END -->
 
 Previous leaderboard versions are archived in [`shared/archive/`](shared/archive/) with an [`index.json`](shared/archive/index.json) for browsing.
