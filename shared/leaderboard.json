@@ -9,11 +9,11 @@
     "false_positives": "Fired a gate that shouldn't (conservative but wrong)",
     "fingerprint_match": "Exact dimension-level match vs reference fingerprint across all 7 dimensions",
     "differentiation": "% of dimensions where CO/CRO/Ops personalities disagree",
-    "bias": "Error bias direction: where FN >> FP the model under-detects risk (sleepy); where FP >> FN it over-triggers (jittery); balanced means errors go both ways; calibrated means few errors overall",
+    "bias": "Error bias direction: where FN >> FP the model under-detects risk (sleepy); where FP >> FN it over-triggers (jittery); balanced means errors go both ways; even-keeled means few errors overall",
     "eval_duration_seconds": "Wall-clock time to complete the full benchmark run (39 calls for API models, 18 for subagent/manual)"
   },
   "bias_labels": {
-    "calibrated": "Calibrated — few errors in either direction",
+    "even-keeled": "Even-keeled — few errors in either direction",
     "sleepy": "Sleepy alarm — misses real risks (high FN, low FP)",
     "jittery": "Jittery alarm — over-triggers on safe scenarios (high FP, low FN)",
     "noisy": "Noisy — errors in both directions"
@@ -32,7 +32,7 @@
       "false_positives": 0,
       "fingerprint_match": 0.89,
       "differentiation": 0.31,
-      "bias": "calibrated",
+      "bias": "even-keeled",
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": null
@@ -50,7 +50,7 @@
       "false_positives": 1,
       "fingerprint_match": 0.6,
       "differentiation": 0.36,
-      "bias": "calibrated",
+      "bias": "even-keeled",
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 71
@@ -68,7 +68,7 @@
       "false_positives": 2,
       "fingerprint_match": 0.66,
       "differentiation": 0.19,
-      "bias": "calibrated",
+      "bias": "even-keeled",
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 613
@@ -176,7 +176,7 @@
       "false_positives": 0,
       "fingerprint_match": 0.9,
       "differentiation": 0.26,
-      "bias": "calibrated",
+      "bias": "even-keeled",
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": null
@@ -194,7 +194,7 @@
       "false_positives": 0,
       "fingerprint_match": 0.75,
       "differentiation": 0.19,
-      "bias": "calibrated",
+      "bias": "even-keeled",
       "cost_per_eval": 0.0,
       "is_default": false,
       "eval_duration_seconds": 970

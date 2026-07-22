@@ -176,7 +176,7 @@ def score_model(model_name: str, data: dict, gold: dict) -> dict:
     fn = hard_gate_false_neg
     fp = hard_gate_false_pos
     if fn + fp <= 2:
-        bias = "calibrated"
+        bias = "even-keeled"
     elif fn >= 2 * fp and fn > fp:
         bias = "sleepy"      # misses real risks
     elif fp >= 2 * fn and fp > fn:
@@ -248,7 +248,7 @@ def print_leaderboard(scores: list[dict]):
     print(f"  FP = false positives (over-fired gates — conservative but wrong)")
     print(f"  FP MT = fingerprint match: exact dimension-level match vs reference")
     print(f"  DIFF = personality differentiation (% of dims where CO/CRO/Ops disagree)")
-    print(f"  BIAS = error direction: calibrated | sleepy (misses risks) | jittery (over-triggers) | noisy (both)")
+    print(f"  BIAS = error direction: even-keeled | sleepy (misses risks) | jittery (over-triggers) | noisy (both)")
 
     # Per-dimension breakdown
     print(f"\n{'='*90}")
