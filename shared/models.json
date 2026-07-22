@@ -1,17 +1,17 @@
 [
   {
     "id": "deepseek/deepseek-v4-flash:free",
-    "label": "DeepSeek V4 Flash",
-    "note": "default free model; F2 0.79, sleepy bias, 17/18 completion",
+    "label": "DeepSeek V4 Flash (free)",
+    "note": "free endpoint pulled by OpenRouter (2026-07) — now 404s; use the paid slug or arcee-ai/trinity-large-preview:free. F2 0.79, sleepy bias, 17/18 completion when it was live",
     "success_rate": "17/18",
-    "is_default": true
+    "is_default": false
   },
   {
     "id": "deepseek/deepseek-v4-flash",
     "label": "DeepSeek V4 Flash (paid)",
-    "note": "paid endpoint — no rate limits; used for the hosted demo",
+    "note": "default model; paid endpoint — no rate limits. F2 0.79, sleepy bias, 17/18 completion",
     "success_rate": "17/18",
-    "is_default": false
+    "is_default": true
   },
   {
     "id": "arcee-ai/trinity-large-preview:free",
