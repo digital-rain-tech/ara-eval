@@ -190,13 +190,10 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
         "is_default": False,
     },
-    "tencent-hy3-preview": {
-        "id": "tencent/hy3-preview:free",
-        "label": "Tencent Hunyuan T1",
-        "method": "api",
-        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 37/39 calls completed (2 read timeouts). Very verbose (~9.5k tokens/response), required removing max_tokens cap.",
-        "is_default": False,
-    },
+    # tencent-hy3-preview (Hunyuan 3.0 preview, mislabeled "Hunyuan T1") is
+    # superseded by the tencent-hy3 GA run below — same model. Its MODEL_MAP entry
+    # is intentionally removed so it drops off the published board (publish will
+    # log a benign "no MODEL_MAP entry, skipping" for its retained reference dir).
     "inclusionai-ring-2.6-1t": {
         "id": "inclusionai/ring-2.6-1t:free",
         "label": "InclusionAI Ring 2.6 1T",
@@ -216,6 +213,27 @@ MODEL_MAP: dict[str, dict] = {
         "label": "Owl Alpha (stealth)",
         "method": "api",
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+        "is_default": False,
+    },
+    "glm-5.2": {
+        "id": "z-ai/glm-5.2",
+        "label": "GLM 5.2",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed.",
+        "is_default": False,
+    },
+    "mimo-v2.5": {
+        "id": "xiaomi/mimo-v2.5",
+        "label": "MiMo v2.5",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed.",
+        "is_default": False,
+    },
+    "tencent-hy3": {
+        "id": "tencent/hy3",
+        "label": "Tencent Hunyuan Hy3",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Paid GA endpoint of Hunyuan 3.0 (295B MoE); supersedes the earlier hy3-preview:free run (which was mislabeled 'Hunyuan T1').",
         "is_default": False,
     },
 }
@@ -315,7 +333,7 @@ def generate_readme_table(data: dict) -> str:
         "**HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). "
         "**FP Match** = fingerprint match (exact dimension-level match vs reference). "
         "**Diff** = personality differentiation. "
-        "**Bias** = Calibrated | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). "
+        "**Bias** = Even-keeled | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). "
         "**Cost** = total OpenRouter cost per full eval run (39 calls). "
         "**Time** = wall-clock benchmark duration (39 calls)."
     )
