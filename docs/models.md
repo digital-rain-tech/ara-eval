@@ -93,7 +93,7 @@ ARA_MODEL=deepseek/deepseek-v3.2
 ARA_MODEL=google/gemini-2.5-flash python3 labs/lab-01-risk-fingerprinting.py
 ```
 
-Default (if unset): `deepseek/deepseek-v4-flash:free` (set via `is_default` in `shared/models.json`, read by `ara_eval/core.py::DEFAULT_MODEL`)
+Default (if unset): `deepseek/deepseek-v4-flash` (paid; set via `is_default` in `shared/models.json`, read by `ara_eval/core.py::DEFAULT_MODEL`). The `:free` endpoint was pulled by OpenRouter (2026-07) and now 404s; for a free default use `arcee-ai/trinity-large-preview:free`.
 
 ## Multi-Model Comparison
 
