@@ -37,7 +37,7 @@ def parse_fingerprint(completion: str) -> dict | None:
         parsed = parse_llm_json(completion.strip())
         dims = parsed["dimensions"]
         levels = {d: dims[d]["level"] for d in DIMENSIONS}
-    except (Exception,):
+    except Exception:
         return None
     if any(lvl not in LEVEL_ORDER for lvl in levels.values()):
         return None

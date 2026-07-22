@@ -20,10 +20,15 @@ Task parameters (pass with -T):
 
 from inspect_ai import Task, task
 from inspect_ai.dataset import MemoryDataset, Sample
-from inspect_ai.model import ChatMessageSystem, ChatMessageUser
+from inspect_ai.model import ChatMessageSystem, ChatMessageUser, GenerateConfig
 from inspect_ai.solver import generate
 
-from ara_eval.core import build_system_prompt, build_user_prompt, load_scenarios
+from ara_eval.core import (
+    DIMENSIONS,
+    build_system_prompt,
+    build_user_prompt,
+    load_scenarios,
+)
 
 # Absolute import: Inspect loads this file as a standalone module, where
 # relative imports have no parent package. (ara_eval_inspect is installed
@@ -47,7 +52,7 @@ def scenario_to_sample(scenario: dict, system: str, structured: bool) -> Sample:
             ChatMessageSystem(content=system),
             ChatMessageUser(content=build_user_prompt(scenario, structured=structured)),
         ],
-        target="-".join(reference[d] for d in reference),
+        target="-".join(reference[d] for d in DIMENSIONS),
         metadata={
             "domain": scenario.get("domain"),
             "industry": scenario.get("industry"),
@@ -82,4 +87,9 @@ def ara_eval_fingerprint(
         ),
         solver=generate(),
         scorer=[fingerprint_agreement(), gate_match()],
+        # Match lab-01's token budget (ara_eval.core, max_tokens=16384) so
+        # truncation behaviour is comparable across the two harnesses. Retry
+        # and rate-limit pacing intentionally differ: lab-01 hand-paces free
+        # models at a fixed interval; here Inspect owns retry/concurrency.
+        config=GenerateConfig(max_tokens=16384),
     )

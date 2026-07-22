@@ -6,7 +6,7 @@ The risk-fingerprinting evaluation (lab-01) exposed as an [Inspect](https://insp
 
 ```bash
 source venv/bin/activate
-pip install -e . inspect-ai
+pip install -e . -r requirements-dev.txt   # inspect-ai + openai (the openrouter provider client)
 # OPENROUTER_API_KEY in .env.local is NOT picked up by inspect — export it:
 export OPENROUTER_API_KEY=$(grep OPENROUTER_API_KEY .env.local | cut -d= -f2)
 ```
@@ -54,3 +54,10 @@ for p in operations_director compliance_officer cro; do
   inspect eval ara_eval_inspect --model openrouter/<model> -T personality=$p
 done
 ```
+
+## Comparability with lab-01
+
+Prompts, parsing, and gating are imported from `ara_eval.core`, so those are identical by construction. Generation is aligned where it affects output: the task pins `max_tokens=16384` to match lab-01's request, so truncation behaves the same. Two harness differences are deliberate and do **not** affect a single call's output, only throughput and failure handling:
+
+- **Pacing/retry:** lab-01 hand-paces free models at a fixed interval and retries with its own backoff; here Inspect owns retry, rate-limit handling, and `--max-connections`. For volatile free models, cap concurrency (`--max-connections 1`) to approximate lab-01's sequential pacing.
+- **Sampling temperature** is left at the provider default in both, so it is not pinned here either.
