@@ -33,7 +33,11 @@ from ara_eval.core import (
 # Absolute import: Inspect loads this file as a standalone module, where
 # relative imports have no parent package. (ara_eval_inspect is installed
 # by the existing "ara_eval*" glob in pyproject.)
-from ara_eval_inspect.scorers import fingerprint_agreement, gate_match
+from ara_eval_inspect.scorers import (
+    fingerprint_agreement,
+    gate_match,
+    hard_gate_detection,
+)
 
 
 def scenario_to_sample(scenario: dict, system: str, structured: bool) -> Sample:
@@ -86,7 +90,7 @@ def ara_eval_fingerprint(
             name=f"ara-eval:{scenarios_file}",
         ),
         solver=generate(),
-        scorer=[fingerprint_agreement(), gate_match()],
+        scorer=[fingerprint_agreement(), gate_match(), hard_gate_detection()],
         # Match lab-01's token budget (ara_eval.core, max_tokens=16384) so
         # truncation behaviour is comparable across the two harnesses. Retry
         # and rate-limit pacing intentionally differ: lab-01 hand-paces free

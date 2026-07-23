@@ -48,6 +48,10 @@ DIMENSIONS = _dim_config["dimensions"]
 DIMENSION_LABELS = _dim_config["dimension_labels"]
 LEVEL_ORDER = _dim_config["level_order"]
 
+# Hard gate dimensions and their trigger level. Single source for lab-04's
+# leaderboard metrics and the Inspect scorers (ara_eval_inspect).
+HARD_GATE_DIMS = {"regulatory_exposure": "A", "failure_blast_radius": "A"}
+
 with open(_shared_dir / "models.json") as _f:
     _models_config = json.load(_f)
 
