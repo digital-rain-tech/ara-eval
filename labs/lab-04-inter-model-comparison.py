@@ -20,16 +20,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ara_eval.core import DIMENSIONS, DIMENSION_LABELS, LEVEL_ORDER
+from ara_eval.core import DIMENSIONS, DIMENSION_LABELS, HARD_GATE_DIMS, LEVEL_ORDER
 
 _root = Path(__file__).parent.parent
 REFERENCE_DIR = _root / "results" / "reference"
 SCENARIOS_PATH = _root / "scenarios" / "starter-scenarios.json"
 
 PERSONALITIES = ["compliance_officer", "cro", "operations_director"]
-
-# Hard gate dimensions and their trigger level
-HARD_GATE_DIMS = {"regulatory_exposure": "A", "failure_blast_radius": "A"}
 
 
 def load_gold_references() -> dict:

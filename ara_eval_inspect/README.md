@@ -40,8 +40,18 @@ inspect eval ara_eval_inspect --model mockllm/model --limit 1
 |---|---|---|
 | `fingerprint_agreement` | mean ± stderr | Fraction of the 7 dimensions exactly matching the human reference fingerprint. Per-dimension breakdown + mean level distance in score metadata. |
 | `gate_match` | accuracy ± stderr | Does the deterministic gating verdict (`apply_gating_rules`) from the judge's fingerprint match the verdict from the reference fingerprint? |
+| `hard_gate_detection` | gate_recall / gate_precision / gate_f2 | Per-sample hard-gate confusion counts pooled into corpus-level recall, precision, and F2 (β=2) — the same metric stack as lab-04's leaderboard "Risk Detection" column (`HARD_GATE_DIMS` shared via `ara_eval.core`). Unparseable output counts as FN for gates that should fire. |
 
-`gate_match` is the deployment-relevant number: two fingerprints can disagree on levels yet land on the same readiness verdict — and vice versa, one flipped `regulatory_exposure` level can flip a hard gate.
+`gate_match` is the deployment-relevant number: two fingerprints can disagree on levels yet land on the same readiness verdict — and vice versa, one flipped `regulatory_exposure` level can flip a hard gate. `hard_gate_detection` is the leaderboard-comparable number.
+
+## Rescoring stored outputs (no API calls)
+
+`labs/rescore-inspect-metrics.py` applies this same scorer logic (shared functions `hard_gate_counts` / `gate_prf`) to existing Lab 01 result JSON — one metric implementation, two data paths. Validated 2026-07-23: rescoring `results/2026-07-22/` reproduces lab-04's freshly-computed recall/precision/F2 and FP-match figures exactly for all three models.
+
+```bash
+python labs/rescore-inspect-metrics.py                     # newest results/<date>/
+python labs/rescore-inspect-metrics.py results/2026-07-22/*.json
+```
 
 ## Task parameters
 
