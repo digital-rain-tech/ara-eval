@@ -34,3 +34,7 @@ data/
 
 # Inspect eval logs
 logs/
+
+# Node build artifacts (root-level; the web app has its own under web/)
+node_modules/
+.next/
