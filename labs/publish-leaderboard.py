@@ -215,6 +215,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
         "is_default": False,
     },
+    "ox-alpha": {
+        "id": "stealth/ox-alpha",
+        "label": "Ox Alpha (stealth)",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+        "is_default": False,
+    },
     "glm-5.2": {
         "id": "z-ai/glm-5.2",
         "label": "GLM 5.2",

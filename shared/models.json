@@ -103,5 +103,12 @@
     "note": "F2 0.89, even-keeled bias, 100% precision (0 false alarms). Ties Claude Opus 4.6 (manual) at #4. Provider undisclosed.",
     "success_rate": "18/18",
     "is_default": false
+  },
+  {
+    "id": "stealth/ox-alpha",
+    "label": "Ox Alpha (stealth)",
+    "note": "F2 0.96, jittery bias (3 false alarms, 0 missed gates), 100% hard gate recall. Provider undisclosed.",
+    "success_rate": "18/18",
+    "is_default": false
   }
 ]

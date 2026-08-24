@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-23",
+  "last_updated": "2026-08-25",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "Risk Detection — F2 (F-beta, beta=2): weights recall 4x over precision — penalises missed risk gates heavily",
@@ -72,6 +72,24 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 613
+    },
+    {
+      "id": "stealth/ox-alpha",
+      "label": "Ox Alpha (stealth)",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+      "completion": "18/18",
+      "f2": 0.96,
+      "hard_gate_recall": 1.0,
+      "hard_gate_precision": 0.83,
+      "false_negatives": 0,
+      "false_positives": 3,
+      "fingerprint_match": 0.73,
+      "differentiation": 0.24,
+      "bias": "jittery",
+      "cost_per_eval": 0.0,
+      "is_default": false,
+      "eval_duration_seconds": 4782
     },
     {
       "id": "z-ai/glm-5.2",
