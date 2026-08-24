@@ -73,7 +73,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 9 | Gemini 3.1 Flash Lite | api | 92% | 93% | 88% | 71% | 43% | Jittery | $0.035 | 2.6m |
 | 10 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — | — |
 | 11 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 90% | 26% | Even-keeled | — | — |
-| 12 | Owl Alpha (stealth) | api | 89% | 87% | **100%** | 75% | 19% | Even-keeled | — | 16.2m |
+| 12 | Owl Alpha (Meituan LongCat-2.0) | api | 89% | 87% | **100%** | 75% | 19% | Even-keeled | — | 16.2m |
 | 13 | MiniMax M2.7 | api | 87% | 87% | 87% | 75% | 36% | Noisy | — | 20.4m |
 | 14 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | — | 8.4m |
 | 15 | Baidu CoBuddy | api | 83% | 80% | **100%** | 68% | 50% | Sleepy | — | 22.7m |
@@ -82,10 +82,10 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 18 | Claude Haiku 4.5 (api) | api | 79% | 80% | 75% | 68% | 24% | Noisy | $0.218 | 6.2m |
 | 19 | DeepSeek V4 Flash | api | 79% | 80% | 75% | 63% | 50% | Noisy | $0.015 | 40.2m |
 | 20 | InclusionAI Ring 2.6 1T | api | 75% | 73% | 85% | 70% | 40% | Sleepy | — | 15.9m |
-| 21 | Hunter Alpha (1T, stealth) | api | 74% | 73% | 79% | 43% | 64% | Noisy | — | 17.2m |
+| 21 | Hunter Alpha (Xiaomi MiMo-V2-Pro) | api | 74% | 73% | 79% | 43% | 64% | Noisy | — | 17.2m |
 | 22 | Poolside Laguna XS 2 | api | 73% | 73% | 73% | 47% | 57% | Noisy | — | 2.1m |
 | 23 | Qwen3.6 Plus | api | 70% | 67% | 91% | 63% | 67% | Sleepy | $0.016 | 51.4m |
-| 24 | Healer Alpha (omni, stealth) | api | 62% | 60% | 75% | 47% | 60% | Sleepy | — | 6.8m |
+| 24 | Healer Alpha (Xiaomi MiMo-V2-Omni) | api | 62% | 60% | 75% | 47% | 60% | Sleepy | — | 6.8m |
 | 25 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 58% | 52% | Sleepy | $0.029 | 102s |
 | 26 | Arcee Trinity (free) | api | 57% | 53% | 80% | 49% | 69% | Sleepy | $0.002 | 4.3m |
 | 27 | Gemma 4 26B A4B | api | 45% | 40% | 86% | 59% | 50% | Sleepy | — | 57.3m |
