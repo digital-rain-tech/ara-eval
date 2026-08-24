@@ -46,6 +46,7 @@ from ara_eval.core import (
     print_delta_report,
     print_fingerprint,
     print_run_summary,
+    prompt_fingerprint,
     update_run,
 )
 
@@ -129,6 +130,7 @@ def main():
         "lab": "01-risk-fingerprinting",
         "jurisdiction": jurisdiction,
         "rubric": rubric,
+        "prompt_fingerprint": prompt_fingerprint(jurisdiction, rubric),
         "scenario_set": scenario_set,
         "scenarios_file": scenarios_file,
         "structured": structured,

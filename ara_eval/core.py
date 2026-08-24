@@ -10,6 +10,7 @@ All lab scripts import from this module rather than duplicating logic.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -114,6 +115,26 @@ def build_system_prompt(personality_id: str, jurisdiction: str = "hk", rubric: s
     output_format = load_prompt("output_format.md")
 
     return personality_rendered.strip() + "\n\n" + rubric_rendered.strip() + "\n\n" + output_format.strip()
+
+
+def prompt_fingerprint(jurisdiction: str = "hk", rubric: str = "rubric.md") -> str:
+    """
+    Hash the composed judge prompts for every personality.
+
+    A filename is not a version. `rubric.md` has held three different texts
+    over the life of the leaderboard, so results that record only the filename
+    cannot be grouped by what the judge actually read. This hashes the rendered
+    system prompt itself — rubric, jurisdiction, personality, output format —
+    so a run states exactly which prompt produced it.
+
+    Returns the first 12 hex characters of a SHA-256 over the composed prompts,
+    ordered by personality id so the value is stable across runs.
+    """
+    digest = hashlib.sha256()
+    for personality_id in sorted(load_index("personalities")):
+        digest.update(build_system_prompt(personality_id, jurisdiction, rubric).encode())
+        digest.update(b"\0")
+    return digest.hexdigest()[:12]
 
 
 def build_user_prompt(scenario: dict, structured: bool = False) -> str:

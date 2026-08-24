@@ -246,6 +246,41 @@ MODEL_MAP: dict[str, dict] = {
 }
 
 
+# Judge-prompt versions over the life of the leaderboard, oldest first.
+# Runs before 2026-08-25 record only the rubric filename, which held four
+# different texts. Reconstructed by hashing prompts/ at each commit that
+# touched it; see ara_eval.core.prompt_fingerprint. Runs from 2026-08-25
+# carry their own fingerprint and never need this table.
+PROMPT_TIMELINE = [
+    ("2026-03-11", "2a68655dd13d", "b9d58a27 prompts extracted into Mustache templates"),
+    ("2026-03-11", "33d2d4156083", "2c16d72d real-incident scenarios added"),
+    ("2026-03-15", "58cc76bbead7", "b640adc4 dimension 4 renamed to Decision Time Pressure"),
+    ("2026-07-18", "13caa7a42563", "b4bcf3e6 rebrand, Readiness to Risk (cosmetic)"),
+    ("2026-08-25", "0c6a1b25d5ec", "96884a57 Regulatory Exposure scope note (rubric-v2.md)"),
+]
+
+
+def prompt_version_for(run: dict) -> str | None:
+    """
+    Report which judge prompt produced a run.
+
+    Prefer the fingerprint the run recorded. Fall back to the date it started,
+    matched against the timeline above, for runs that predate fingerprinting.
+    """
+    recorded = run.get("prompt_fingerprint")
+    if recorded:
+        return recorded
+    started = run.get("started_at")
+    if not started:
+        return None
+    day = started[:10]
+    version = None
+    for effective_from, fingerprint, _ in PROMPT_TIMELINE:
+        if day >= effective_from:
+            version = fingerprint
+    return version
+
+
 def load_run_metadata() -> dict[str, dict]:
     """Extract wall_time_ms and total_cost_usd from raw lab-01 result files in results/reference/*/."""
     metadata: dict[str, dict] = {}
@@ -265,6 +300,7 @@ def load_run_metadata() -> dict[str, dict]:
                     metadata[model_dir.name] = {
                         "duration_seconds": round(wall_ms / 1000) if wall_ms is not None else None,
                         "cost_usd": cost,
+                        "prompt_version": prompt_version_for(run),
                     }
                     break  # use most recent
             except (json.JSONDecodeError, KeyError):
@@ -272,7 +308,7 @@ def load_run_metadata() -> dict[str, dict]:
     return metadata
 
 
-def build_model_entry(score: dict, meta: dict, duration_seconds: int | None, cost_usd: float | None = None) -> dict:
+def build_model_entry(score: dict, meta: dict, duration_seconds: int | None, cost_usd: float | None = None, prompt_version: str | None = None) -> dict:
     """Convert a results score entry + metadata into a shared leaderboard entry."""
     successful = score.get("successful", 0)
     total = score.get("total", 0)
@@ -295,6 +331,7 @@ def build_model_entry(score: dict, meta: dict, duration_seconds: int | None, cos
         "cost_per_eval": round(cost_usd, 4) if cost_usd is not None else None,
         "is_default": meta["is_default"],
         "eval_duration_seconds": duration_seconds,
+        "prompt_version": prompt_version,
     }
 
 
@@ -384,7 +421,7 @@ def main():
         run_meta = run_metadata.get(model_key, {})
         duration = run_meta.get("duration_seconds")
         cost_usd = run_meta.get("cost_usd")
-        entry = build_model_entry(score, meta, duration, cost_usd)
+        entry = build_model_entry(score, meta, duration, cost_usd, run_meta.get("prompt_version"))
         models.append(entry)
         synced_ids.add(entry["id"])
 

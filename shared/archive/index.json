@@ -42,6 +42,13 @@
       "label": "Added Owl Alpha (stealth)",
       "models": 26,
       "note": "Owl Alpha (openrouter/owl-alpha) — F2 0.89, calibrated bias, 100% precision. Ties Claude Opus 4.6 (manual) at #4. Provider undisclosed."
+    },
+    {
+      "file": "leaderboard-2026-08-25-prompt-provenance.json",
+      "date": "2026-08-25",
+      "label": "Ox Alpha added; prompt provenance stamped",
+      "models": 29,
+      "note": "Last board before the rubric-v2 transition. Adds prompt_version per row: 10 runs on 58cc76bbead7, 4 on 13caa7a42563 (those two differ only by the cosmetic Readiness/Risk rename), 15 unrecorded. Scores are comparable within a prompt version, not across versions."
     }
   ]
 }
