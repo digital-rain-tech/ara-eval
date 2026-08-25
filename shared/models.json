@@ -22,15 +22,15 @@
   },
   {
     "id": "openrouter/hunter-alpha",
-    "label": "Hunter Alpha",
-    "note": "best gate accuracy among free API models, noisy bias",
+    "label": "Hunter Alpha (Xiaomi MiMo-V2-Pro)",
+    "note": "best gate accuracy among free API models, noisy bias. Stealth endpoint; revealed as Xiaomi MiMo-V2-Pro.",
     "success_rate": "18/18",
     "is_default": false
   },
   {
     "id": "openrouter/healer-alpha",
-    "label": "Healer Alpha",
-    "note": "no compelling advantage over Hunter or Arcee, sleepy bias",
+    "label": "Healer Alpha (Xiaomi MiMo-V2-Omni)",
+    "note": "no compelling advantage over Hunter or Arcee, sleepy bias. Stealth endpoint; revealed as Xiaomi MiMo-V2-Omni.",
     "success_rate": "18/18",
     "is_default": false
   },
@@ -99,15 +99,15 @@
   },
   {
     "id": "openrouter/owl-alpha",
-    "label": "Owl Alpha (stealth)",
-    "note": "F2 0.89, even-keeled bias, 100% precision (0 false alarms). Ties Claude Opus 4.6 (manual) at #4. Provider undisclosed.",
+    "label": "Owl Alpha (Meituan LongCat-2.0)",
+    "note": "F2 0.89, even-keeled bias, 100% precision (0 false alarms). Ties Claude Opus 4.6 (manual) at #4. Stealth endpoint; revealed as Meituan LongCat-2.0, released openly 2026-06-30.",
     "success_rate": "18/18",
     "is_default": false
   },
   {
     "id": "stealth/ox-alpha",
     "label": "Ox Alpha (stealth)",
-    "note": "F2 0.96, jittery bias (3 false alarms, 0 missed gates), 100% hard gate recall. Provider undisclosed.",
+    "note": "F2 0.96, jittery bias (3 false alarms, 0 missed gates), 100% hard gate recall. Provider still undisclosed as of 2026-08-25; community theory points to a Z.ai GLM lineage but no lab has claimed it.",
     "success_rate": "18/18",
     "is_default": false
   }

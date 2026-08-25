@@ -129,14 +129,14 @@ MODEL_MAP: dict[str, dict] = {
     },
     "openrouter-hunter-alpha": {
         "id": "openrouter/hunter-alpha",
-        "label": "Hunter Alpha (1T, stealth)",
+        "label": "Hunter Alpha (Xiaomi MiMo-V2-Pro)",
         "method": "api",
         "method_note": "OpenRouter API via lab-01 pipeline",
         "is_default": False,
     },
     "openrouter-healer-alpha": {
         "id": "openrouter/healer-alpha",
-        "label": "Healer Alpha (omni, stealth)",
+        "label": "Healer Alpha (Xiaomi MiMo-V2-Omni)",
         "method": "api",
         "method_note": "OpenRouter API via lab-01 pipeline",
         "is_default": False,
@@ -210,7 +210,7 @@ MODEL_MAP: dict[str, dict] = {
     },
     "owl-alpha": {
         "id": "openrouter/owl-alpha",
-        "label": "Owl Alpha (stealth)",
+        "label": "Owl Alpha (Meituan LongCat-2.0)",
         "method": "api",
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
         "is_default": False,
