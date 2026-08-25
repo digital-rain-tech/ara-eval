@@ -176,6 +176,8 @@ python labs/publish-leaderboard.py --dry-run  # print shared/leaderboard.json to
 - `results/reference/leaderboard.json` — auto-generated verbose leaderboard (gitignored)
 - `results/reference/<model-slug>/` — raw lab-01 results per model (committed)
 - `labs/publish-leaderboard.py` — single script: results → shared/leaderboard.json + README.md
+- `shared/prompt-versions.json` — the judge prompt behind every score, keyed by fingerprint
+- `labs/export-prompt-versions.py` — regenerates the above from git history
 
 **Metric naming conventions:**
 - `hard_gate_recall` / `hard_gate_precision` — specifically for A-level hard gates (Reg=A, Blast=A)
@@ -183,3 +185,25 @@ python labs/publish-leaderboard.py --dry-run  # print shared/leaderboard.json to
 - `f2` — F-beta (beta=2), weights recall 4x over precision
 - `differentiation` — personality spread across CO/CRO/Ops
 - `bias` — even-keeled | sleepy | jittery | noisy | broken
+
+## Judge prompt versions
+
+A rubric filename is not a version. `prompts/rubric.md` has held four different
+texts, so a result that records only `"rubric": "rubric.md"` cannot be grouped by
+what the judge actually read. Runs therefore record `_run.prompt_fingerprint`, a
+hash of the composed system prompt across all three personalities
+(`ara_eval.core.prompt_fingerprint`).
+
+**Scores are comparable within a prompt version, never across versions.** Two
+kinds of change are not alike:
+
+- **Scoring-side** (reference fingerprints, metric definitions) — rescore offline
+  with `lab-04`. No API calls, so the whole board moves together.
+- **Prompt-side** (rubric, personality, jurisdiction) — changes the judge's input.
+  It cannot be rescored, only re-run. Most models on the board are delisted, so a
+  full re-run is not possible. Add a new rubric file instead of editing an
+  existing one in place, and let the board carry both versions.
+
+`prompts/rubric-v2.md` adds the Regulatory Exposure scope note. Run it with
+`--rubric rubric-v2.md`. After changing any prompt file, run
+`python labs/export-prompt-versions.py` so the site can show readers the new text.

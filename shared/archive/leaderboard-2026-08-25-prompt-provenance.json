@@ -225,7 +225,7 @@
     },
     {
       "id": "openrouter/owl-alpha",
-      "label": "Owl Alpha (Meituan LongCat-2.0)",
+      "label": "Owl Alpha (stealth)",
       "method": "api",
       "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
       "completion": "18/18",
@@ -392,7 +392,7 @@
     },
     {
       "id": "openrouter/hunter-alpha",
-      "label": "Hunter Alpha (Xiaomi MiMo-V2-Pro)",
+      "label": "Hunter Alpha (1T, stealth)",
       "method": "api",
       "method_note": "OpenRouter API via lab-01 pipeline",
       "completion": "18/18",
@@ -448,7 +448,7 @@
     },
     {
       "id": "openrouter/healer-alpha",
-      "label": "Healer Alpha (Xiaomi MiMo-V2-Omni)",
+      "label": "Healer Alpha (omni, stealth)",
       "method": "api",
       "method_note": "OpenRouter API via lab-01 pipeline",
       "completion": "18/18",
