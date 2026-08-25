@@ -219,7 +219,7 @@ MODEL_MAP: dict[str, dict] = {
         "id": "stealth/ox-alpha",
         "label": "Ox Alpha (stealth)",
         "method": "api",
-        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Re-run under the rubric-v2 scope note scores F2 1.00 with 0 false alarms (even-keeled); that result is not ranked here because the board is scored on v1 — see ADR-018.",
         "is_default": False,
     },
     "glm-5.2": {
@@ -233,14 +233,14 @@ MODEL_MAP: dict[str, dict] = {
         "id": "xiaomi/mimo-v2.5",
         "label": "MiMo v2.5",
         "method": "api",
-        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed.",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. A targeted re-run of genai-data-leakage-001 under the rubric-v2 scope note clears 2 of its 3 false alarms; the third, on banking-customer-service-001, was not re-measured. Probe only, not a full re-score, and not ranked here because the board is scored on v1 — see ADR-018.",
         "is_default": False,
     },
     "tencent-hy3": {
         "id": "tencent/hy3",
         "label": "Tencent Hunyuan Hy3",
         "method": "api",
-        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Paid GA endpoint of Hunyuan 3.0 (295B MoE); supersedes the earlier hy3-preview:free run (which was mislabeled 'Hunyuan T1').",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Paid GA endpoint of Hunyuan 3.0 (295B MoE); supersedes the earlier hy3-preview:free run (which was mislabeled 'Hunyuan T1'). A targeted re-run of genai-data-leakage-001 under the rubric-v2 scope note clears its only false alarm, though two personas then sit one level below the reference on that dimension. Probe only, not a full re-score, and not ranked here because the board is scored on v1 — see ADR-018.",
         "is_default": False,
     },
 }
