@@ -281,6 +281,20 @@ def prompt_version_for(run: dict) -> str | None:
     return version
 
 
+# Runs kept in results/reference/ so lab-04 can rescore them, but deliberately
+# absent from the board. Listing them here states the intent: a bare "no
+# MODEL_MAP entry" warning reads like an oversight, and the next person adds
+# the entry and puts a row back that was removed on purpose.
+HELD_BACK: dict[str, str] = {
+    "tencent-hy3-preview": (
+        "superseded by the paid GA endpoint (tencent-hy3); the preview run was mislabeled 'Hunyuan T1'"
+    ),
+    "ox-alpha-v2": (
+        "validation run under rubric-v2.md; a v2 score cannot sit in a v1 ranking (ADR-018)"
+    ),
+}
+
+
 def load_run_metadata() -> dict[str, dict]:
     """Extract wall_time_ms and total_cost_usd from raw lab-01 result files in results/reference/*/."""
     metadata: dict[str, dict] = {}
@@ -414,6 +428,9 @@ def main():
     models = []
     for score in scores:
         model_key = score["model"]
+        if model_key in HELD_BACK:
+            print(f"Held back: {model_key} — {HELD_BACK[model_key]}", file=sys.stderr)
+            continue
         if model_key not in MODEL_MAP:
             print(f"Warning: no MODEL_MAP entry for '{model_key}', skipping", file=sys.stderr)
             continue

@@ -207,3 +207,9 @@ kinds of change are not alike:
 `prompts/rubric-v2.md` adds the Regulatory Exposure scope note. Run it with
 `--rubric rubric-v2.md`. After changing any prompt file, run
 `python labs/export-prompt-versions.py` so the site can show readers the new text.
+
+The board stays on v1 and v2 is not the default: 11 of 25 API models are delisted, so
+a v2 board could never be complete. See [ADR-018](docs/adr/ADR-018-judge-prompt-versioning.md)
+for the decision, the validation, and the known side effect. Runs kept in
+`results/reference/` but deliberately off the board are declared in `HELD_BACK` in
+`labs/publish-leaderboard.py`, with the reason.
