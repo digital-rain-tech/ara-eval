@@ -121,9 +121,11 @@ Lab 04 writes `results/reference/leaderboard.json` (gitignored, verbose). The `s
 - See `docs/models.md` for the full model guide with pricing.
 
 **Rate limiting and pacing:**
-- All labs use `evaluate_with_retry()` from `ara_eval/core.py`, which enforces a minimum 17s interval between calls (based on Arcee Trinity's median response time across 387 calls). This prevents faster free models from outrunning rate limits.
-- On 429 or empty responses, retries use exponential backoff: `2^attempt × 17s`.
-- Arcee Trinity's natural latency (~17s median) means pacing adds zero overhead for the default model. Faster models get artificial delay.
+- All labs use `evaluate_with_retry()` from `ara_eval/core.py`. Successful calls run back to back with no fixed pacing.
+- Failed calls retry with exponential backoff and full jitter: a random wait in `[0, min(60s, 1s × 2^attempt)]`, up to 5 retries. This follows OpenRouter's and TypeSafe's guidance for 429/529.
+- On 429/503/529 a `Retry-After` header (seconds or HTTP-date, or TypeSafe's `retry-after-ms`) is honored instead, capped at 60s.
+- 400/401/403/404/413/422 are not retried, since a retry can't fix them.
+- Tune per run with `ARA_MAX_RETRIES`, `ARA_RETRY_BASE_DELAY` and `ARA_RETRY_MAX_DELAY`.
 
 **Interpreting results:**
 - A run produces a JSON file in `results/<date>/` plus entries in `results/ara-eval.db`.

@@ -13,11 +13,13 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import random
 import re
 import sqlite3
 import time
 import uuid
 from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -57,9 +59,17 @@ with open(_shared_dir / "models.json") as _f:
     _models_config = json.load(_f)
 
 DEFAULT_MODEL = next(m["id"] for m in _models_config if m.get("is_default"))
-# Median response time for Arcee Trinity across 387 calls. Used as the minimum
-# interval between API calls to avoid rate-limiting on free-tier models.
-DEFAULT_CALL_DELAY = 17.0
+# Retry policy: exponential backoff with full jitter, honoring Retry-After.
+# OpenRouter and TypeSafe both say to back off exponentially on 429/529 and
+# honor Retry-After rather than pace at a fixed rate. Override per run with
+# ARA_MAX_RETRIES / ARA_RETRY_BASE_DELAY / ARA_RETRY_MAX_DELAY.
+MAX_RETRIES = int(os.environ.get("ARA_MAX_RETRIES", "5"))
+RETRY_BASE_DELAY = float(os.environ.get("ARA_RETRY_BASE_DELAY", "1.0"))
+RETRY_MAX_DELAY = float(os.environ.get("ARA_RETRY_MAX_DELAY", "60.0"))
+# Statuses whose Retry-After header is honored.
+RETRY_AFTER_STATUSES = {429, 503, 529}
+# Client errors that retrying cannot fix (bad request, auth, not found, too large, invalid).
+NON_RETRYABLE_STATUSES = {400, 401, 403, 404, 413, 422}
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 # Decision models (TypeSafe Jev) don't serve chat/completions. OpenRouter
@@ -895,6 +905,60 @@ def _is_rate_limit_error(exc: Exception) -> bool:
     return False
 
 
+def parse_retry_after(headers: Any, now: Optional[datetime] = None) -> Optional[float]:
+    """
+    Seconds to wait from a Retry-After header (delta-seconds or HTTP-date),
+    or TypeSafe's retry-after-ms. Returns None if absent or unparseable.
+    """
+    if not headers:
+        return None
+    ms = headers.get("retry-after-ms")
+    if ms is not None:
+        try:
+            return max(0.0, float(ms) / 1000.0)
+        except (TypeError, ValueError):
+            pass
+    value = headers.get("retry-after")
+    if value is None:
+        return None
+    value = str(value).strip()
+    try:
+        return max(0.0, float(value))
+    except ValueError:
+        pass
+    try:
+        when = parsedate_to_datetime(value)
+    except (TypeError, ValueError, IndexError):
+        return None
+    if when.tzinfo is None:
+        when = when.replace(tzinfo=timezone.utc)
+    now = now or datetime.now(timezone.utc)
+    return max(0.0, (when - now).total_seconds())
+
+
+def backoff_delay(
+    attempt: int,
+    exc: Optional[Exception] = None,
+    *,
+    base: float = RETRY_BASE_DELAY,
+    cap: float = RETRY_MAX_DELAY,
+    rand: Any = None,
+) -> float:
+    """
+    Delay before retry number `attempt` (0-based).
+
+    Full-jitter exponential backoff: uniform in [0, min(cap, base * 2^attempt)].
+    A Retry-After header on a 429/503/529 response takes precedence, capped at `cap`.
+    """
+    response = getattr(exc, "response", None) if exc is not None else None
+    if response is not None and getattr(response, "status_code", None) in RETRY_AFTER_STATUSES:
+        retry_after = parse_retry_after(getattr(response, "headers", None))
+        if retry_after is not None:
+            return min(cap, retry_after)
+    jitter = rand() if rand is not None else random.random()
+    return jitter * min(cap, base * (2 ** attempt))
+
+
 def evaluate_with_retry(
     http_client: httpx.Client,
     db_conn: sqlite3.Connection,
@@ -905,52 +969,31 @@ def evaluate_with_retry(
     jurisdiction: str = "hk",
     rubric: str = "rubric.md",
     structured: bool = False,
-    max_retries: int = 2,
-    call_delay: float = DEFAULT_CALL_DELAY,
+    max_retries: int = MAX_RETRIES,
     verbose: bool = True,
 ) -> dict:
     """
-    Call evaluate_scenario with pacing and exponential backoff.
+    Call evaluate_scenario, retrying failures with exponential backoff.
 
-    - Ensures at least `call_delay` seconds elapse between the start of each
-      attempt (matches Arcee Trinity's median latency so faster models don't
-      outrun free-tier rate limits).
-    - On rate-limit errors (429 or empty content), backs off exponentially:
-      wait 2^attempt * call_delay before the next retry.
-    - On other errors, retries immediately (up to max_retries).
+    - Successful calls run back to back; there is no fixed pacing.
+    - Each retry waits `backoff_delay()`: full jitter over base * 2^attempt
+      (1s, 2s, 4s, ... capped at RETRY_MAX_DELAY), or the server's Retry-After
+      on 429/503/529.
+    - Client errors that a retry cannot fix (400/401/403/404/413/422) raise
+      immediately.
     """
-    last_attempt_start = 0.0
-
     for attempt in range(1 + max_retries):
-        # Pacing: ensure minimum interval since last attempt started
-        if last_attempt_start > 0:
-            elapsed_since_start = time.monotonic() - last_attempt_start
-            if _is_rate_limit_error(Exception("")) if attempt == 0 else False:
-                pass  # first attempt, no delay
-            wait = call_delay - elapsed_since_start
-            if wait > 0:
-                time.sleep(wait)
-
-        last_attempt_start = time.monotonic()
-
         try:
-            result = evaluate_scenario(
+            return evaluate_scenario(
                 http_client, db_conn, run_id, scenario, personality_id,
                 jurisdiction=jurisdiction, rubric=rubric, structured=structured,
             )
-            return result
-
         except Exception as e:
-            is_last = attempt >= max_retries
-            if is_last:
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            if attempt >= max_retries or status in NON_RETRYABLE_STATUSES:
                 raise
-
-            if _is_rate_limit_error(e):
-                # Exponential backoff: 2^attempt * base delay
-                backoff = (2 ** (attempt + 1)) * call_delay
-                if verbose:
-                    print(f"rate-limited, backing off {backoff:.0f}s...", end=" ", flush=True)
-                time.sleep(backoff)
-            else:
-                if verbose:
-                    print(f"attempt {attempt + 1} failed ({e}), retrying...", end=" ", flush=True)
+            delay = backoff_delay(attempt, e)
+            if verbose:
+                reason = "rate-limited" if _is_rate_limit_error(e) else f"attempt {attempt + 1} failed ({e})"
+                print(f"{reason}, retrying in {delay:.1f}s...", end=" ", flush=True)
+            time.sleep(delay)
