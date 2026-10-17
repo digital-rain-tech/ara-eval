@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-17",
+  "last_updated": "2026-10-18",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "Risk Detection — F2 (F-beta, beta=2): weights recall 4x over precision — penalises missed risk gates heavily",
@@ -10,7 +10,8 @@
     "fingerprint_match": "Exact dimension-level match vs reference fingerprint across all 7 dimensions",
     "differentiation": "% of dimensions where CO/CRO/Ops personalities disagree",
     "bias": "Error bias direction: where FN >> FP the model under-detects risk (sleepy); where FP >> FN it over-triggers (jittery); balanced means errors go both ways; even-keeled means few errors overall",
-    "eval_duration_seconds": "Wall-clock time to complete the full benchmark run (39 calls for API models, 18 for subagent/manual)"
+    "eval_duration_seconds": "Wall-clock time to complete the full benchmark run (39 calls for API models, 18 for subagent/manual)",
+    "orchestration_window_seconds": "Subagent runs only: seconds from lab-05 dispatch (manifest created_at) to result assembly (assembled_at). Includes orchestration and possible parallelism, so it is not comparable to eval_duration_seconds and should not be plotted as run time"
   },
   "bias_labels": {
     "even-keeled": "Even-keeled — few errors in either direction",
@@ -36,7 +37,8 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": null,
-      "prompt_version": null
+      "prompt_version": null,
+      "orchestration_window_seconds": 179
     },
     {
       "id": "google/gemini-2.5-flash-lite-preview-09-2025",
@@ -204,6 +206,44 @@
       "cost_per_eval": 0.0353,
       "is_default": false,
       "eval_duration_seconds": 154
+    },
+    {
+      "id": "meta/muse-wonder",
+      "label": "Meta Muse Wonder",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Reasoning is mandatory on this model; run at its default (medium) effort. Meta's endpoint rejects seed and stop, which the pipeline never sends.",
+      "completion": "18/18",
+      "f2": 0.91,
+      "hard_gate_recall": 0.93,
+      "hard_gate_precision": 0.82,
+      "false_negatives": 1,
+      "false_positives": 3,
+      "fingerprint_match": 0.73,
+      "differentiation": 0.5,
+      "bias": "jittery",
+      "cost_per_eval": 1.2676,
+      "is_default": false,
+      "eval_duration_seconds": 511,
+      "prompt_version": "0c6a1b25d5ec"
+    },
+    {
+      "id": "deepseek/deepseek-v4.1-flash-1017",
+      "label": "DeepSeek V4.1 Flash 1017",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Run at the endpoint's default reasoning setting.",
+      "completion": "18/18",
+      "f2": 0.91,
+      "hard_gate_recall": 0.93,
+      "hard_gate_precision": 0.82,
+      "false_negatives": 1,
+      "false_positives": 3,
+      "fingerprint_match": 0.7,
+      "differentiation": 0.48,
+      "bias": "jittery",
+      "cost_per_eval": 0.0485,
+      "is_default": false,
+      "eval_duration_seconds": 745,
+      "prompt_version": "0c6a1b25d5ec"
     },
     {
       "id": "claude-sonnet-4.6-subagent",
@@ -521,6 +561,25 @@
       "is_default": true,
       "eval_duration_seconds": 261,
       "prompt_version": "58cc76bbead7"
+    },
+    {
+      "id": "google/gemini-4-argon",
+      "label": "Gemini 4 Argon",
+      "method": "api",
+      "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Reasoning is mandatory on this model; run at its default (medium) effort.",
+      "completion": "18/18",
+      "f2": 0.56,
+      "hard_gate_recall": 0.53,
+      "hard_gate_precision": 0.73,
+      "false_negatives": 7,
+      "false_positives": 3,
+      "fingerprint_match": 0.47,
+      "differentiation": 0.81,
+      "bias": "sleepy",
+      "cost_per_eval": 0.2719,
+      "is_default": false,
+      "eval_duration_seconds": 297,
+      "prompt_version": "0c6a1b25d5ec"
     },
     {
       "id": "google/gemma-4-26b-a4b-it:free",

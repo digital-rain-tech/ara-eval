@@ -313,6 +313,24 @@ class TestLab05Validation:
                 validate(sid)
 
 
+class TestChatRequest:
+    """Chat/completions request body for judge calls."""
+
+    def test_body_is_model_max_tokens_and_messages_only(self):
+        from ara_eval.core import build_chat_request
+        req = build_chat_request("sys", "user", model="meta/muse-wonder")
+        assert set(req) == {"model", "max_tokens", "messages"}
+        assert req["model"] == "meta/muse-wonder"
+        assert [m["role"] for m in req["messages"]] == ["system", "user"]
+
+    def test_no_params_that_some_endpoints_reject(self):
+        # meta/muse-wonder's only endpoint rejects seed and stop.
+        from ara_eval.core import build_chat_request
+        req = build_chat_request("sys", "user", model="meta/muse-wonder")
+        for param in ("seed", "stop", "temperature", "top_p"):
+            assert param not in req
+
+
 class TestDecisionModel:
     """TypeSafe Jev (System One API) request building and answer parsing."""
 

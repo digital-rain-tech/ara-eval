@@ -531,6 +531,26 @@ _LEVEL_SCALE = {
 }
 
 
+def build_chat_request(system: str, user_content: str, model: Optional[str] = None) -> dict:
+    """
+    Chat/completions body for a judge call.
+
+    Deliberately minimal: model, max_tokens and the two messages. No sampling
+    params (seed, stop, temperature) are sent, so the request is valid on every
+    endpoint, including ones that reject them (e.g. Meta's meta/muse-wonder
+    endpoint lists neither seed nor stop), and each model runs at its
+    provider defaults, including its default reasoning effort.
+    """
+    return {
+        "model": model or MODEL,
+        "max_tokens": 16384,
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user_content},
+        ],
+    }
+
+
 def build_systemone_request(system: str, user_content: str, model: Optional[str] = None) -> dict:
     """
     Turn the composed judge prompt into a System One request.
@@ -630,14 +650,7 @@ def evaluate_scenario(
         request_body = build_systemone_request(system, user_content)
     else:
         url = OPENROUTER_URL
-        request_body = {
-            "model": MODEL,
-            "max_tokens": 16384,
-            "messages": [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user_content},
-            ],
-        }
+        request_body = build_chat_request(system, user_content)
 
     request_id = str(uuid.uuid4())
     start = time.monotonic()

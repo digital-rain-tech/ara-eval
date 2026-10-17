@@ -21,7 +21,7 @@ from __future__ import annotations
 import glob
 import json
 import sys
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 
 _root = Path(__file__).resolve().parent.parent
@@ -243,6 +243,27 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Paid GA endpoint of Hunyuan 3.0 (295B MoE); supersedes the earlier hy3-preview:free run (which was mislabeled 'Hunyuan T1'). A targeted re-run of genai-data-leakage-001 under the rubric-v2 scope note clears its only false alarm, though two personas then sit one level below the reference on that dimension. Probe only, not a full re-score, and not ranked here because the board is scored on v1 — see ADR-018.",
         "is_default": False,
     },
+    "google-gemini-4-argon": {
+        "id": "google/gemini-4-argon",
+        "label": "Gemini 4 Argon",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Reasoning is mandatory on this model; run at its default (medium) effort.",
+        "is_default": False,
+    },
+    "deepseek-v4.1-flash-1017": {
+        "id": "deepseek/deepseek-v4.1-flash-1017",
+        "label": "DeepSeek V4.1 Flash 1017",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Run at the endpoint's default reasoning setting.",
+        "is_default": False,
+    },
+    "meta-muse-wonder": {
+        "id": "meta/muse-wonder",
+        "label": "Meta Muse Wonder",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Reasoning is mandatory on this model; run at its default (medium) effort. Meta's endpoint rejects seed and stop, which the pipeline never sends.",
+        "is_default": False,
+    },
     "typesafe-jev-1.14": {
         "id": "typesafe/jev-1.14",
         "label": "TypeSafe Jev 1.14",
@@ -326,16 +347,61 @@ def load_run_metadata() -> dict[str, dict]:
                     break  # use most recent
             except (json.JSONDecodeError, KeyError):
                 continue
+        if model_dir.name not in metadata:
+            window = subagent_orchestration_window(model_dir)
+            if window is not None:
+                metadata[model_dir.name] = {"orchestration_window_seconds": window}
     return metadata
 
 
-def build_model_entry(score: dict, meta: dict, duration_seconds: int | None, cost_usd: float | None = None, prompt_version: str | None = None) -> dict:
+def _parse_iso(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value)
+    except ValueError:
+        return None
+
+
+def subagent_orchestration_window(model_dir: Path) -> int | None:
+    """
+    Seconds from lab-05 dispatch to assembly for a subagent run, or None.
+
+    lab-05 stamps manifest.json "created_at" when it writes the dispatch
+    manifest and the assembled result "_run.assembled_at" when it collects
+    the subagent outputs. The gap is a real, recorded measurement, but it is
+    not a benchmark wall time: it includes orchestration, and subagents may
+    run in parallel. It is published as orchestration_window_seconds and
+    never as eval_duration_seconds, so it cannot sit on the same axis as
+    lab-01 pipeline runs by accident.
+    """
+    manifest_path = model_dir / "manifest.json"
+    if not manifest_path.exists():
+        return None
+    try:
+        created = _parse_iso(json.loads(manifest_path.read_text()).get("created_at"))
+    except json.JSONDecodeError:
+        return None
+    if created is None:
+        return None
+    for result_file in sorted(model_dir.glob("*-lab-01*.json"), reverse=True):
+        try:
+            run = json.loads(result_file.read_text()).get("_run", {})
+        except json.JSONDecodeError:
+            continue
+        assembled = _parse_iso(run.get("assembled_at"))
+        if assembled is not None and assembled >= created:
+            return round((assembled - created).total_seconds())
+    return None
+
+
+def build_model_entry(score: dict, meta: dict, duration_seconds: int | None, cost_usd: float | None = None, prompt_version: str | None = None, orchestration_window_seconds: int | None = None) -> dict:
     """Convert a results score entry + metadata into a shared leaderboard entry."""
     successful = score.get("successful", 0)
     total = score.get("total", 0)
     completion = f"{successful}/{total}" if total > 0 else "0/0"
 
-    return {
+    entry = {
         "id": meta["id"],
         "label": meta["label"],
         "method": meta["method"],
@@ -354,6 +420,9 @@ def build_model_entry(score: dict, meta: dict, duration_seconds: int | None, cos
         "eval_duration_seconds": duration_seconds,
         "prompt_version": prompt_version,
     }
+    if orchestration_window_seconds is not None:
+        entry["orchestration_window_seconds"] = orchestration_window_seconds
+    return entry
 
 
 def sort_key(m: dict) -> tuple:
@@ -445,7 +514,10 @@ def main():
         run_meta = run_metadata.get(model_key, {})
         duration = run_meta.get("duration_seconds")
         cost_usd = run_meta.get("cost_usd")
-        entry = build_model_entry(score, meta, duration, cost_usd, run_meta.get("prompt_version"))
+        entry = build_model_entry(
+            score, meta, duration, cost_usd, run_meta.get("prompt_version"),
+            run_meta.get("orchestration_window_seconds"),
+        )
         models.append(entry)
         synced_ids.add(entry["id"])
 
@@ -457,8 +529,17 @@ def main():
 
     models.sort(key=sort_key)
 
-    shared["last_updated"] = date.today().isoformat()
+    # Only restamp the date when the board actually changed, so --check stays
+    # green on later days and a no-op publish does not churn the file.
+    previous_models = shared.get("models", [])
+    if models != previous_models or not shared.get("last_updated"):
+        shared["last_updated"] = date.today().isoformat()
     shared["models"] = models
+    shared.setdefault("metrics", {})["orchestration_window_seconds"] = (
+        "Subagent runs only: seconds from lab-05 dispatch (manifest created_at) to result "
+        "assembly (assembled_at). Includes orchestration and possible parallelism, so it is "
+        "not comparable to eval_duration_seconds and should not be plotted as run time"
+    )
 
     output = json.dumps(shared, indent=2, ensure_ascii=False) + "\n"
 
