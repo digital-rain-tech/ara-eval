@@ -66,7 +66,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Even-keeled | — | 71s |
 | 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Even-keeled | — | 10.2m |
 | 4 | TypeSafe Jev 1.14 | api | **96%** | **100%** | 83% | 80% | 17% | Jittery | $0.004 | 8s |
-| 5 | Ox Alpha (stealth) | api | **96%** | **100%** | 83% | 73% | 24% | Jittery | — | 79.7m |
+| 5 | Ox Alpha (Z.ai GLM-5.3-Flash preview) | api | **96%** | **100%** | 83% | 73% | 24% | Jittery | — | 79.7m |
 | 6 | GLM 5.2 | api | **95%** | 93% | **100%** | 76% | 40% | Even-keeled | $0.224 | 36.0m |
 | 7 | Tencent Hunyuan Hy3 | api | 93% | 93% | 93% | 73% | 45% | Even-keeled | $0.067 | 32.1m |
 | 8 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 72% | 38% | Jittery | — | 17.0m |

@@ -217,9 +217,9 @@ MODEL_MAP: dict[str, dict] = {
     },
     "ox-alpha": {
         "id": "stealth/ox-alpha",
-        "label": "Ox Alpha (stealth)",
+        "label": "Ox Alpha (Z.ai GLM-5.3-Flash preview)",
         "method": "api",
-        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Re-run under the rubric-v2 scope note scores F2 1.00 with 0 false alarms (even-keeled); that result is not ranked here because the board is scored on v1 — see ADR-018.",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Run 2026-08-24 on the free stealth endpoint, before Z.ai revealed it on 2026-08-26 as an early build of GLM-5.3-Flash (now z-ai/glm-5.3-flash); scores reflect that preview build, not the GA release. Re-run under the rubric-v2 scope note scores F2 1.00 with 0 false alarms (even-keeled); that result is not ranked here because the board is scored on v1 — see ADR-018.",
         "is_default": False,
     },
     "glm-5.2": {
