@@ -68,6 +68,14 @@ Several models are available for free on OpenRouter. Use a **specific** free mod
 
 **Important:** Free models are rate-limited and may change without notice. Run Lab 03 (reliability) to measure consistency before trusting results. In our testing, free models achieved ~47% reference accuracy vs ~54% for Qwen3 235B.
 
+### Decision Models (System One API)
+
+These are not chat models. OpenRouter rejects them on `chat/completions` and serves them on TypeSafe's System One API (`/api/v1/systemone`): state plus typed questions in, calibrated answers out. `ara_eval/core.py` routes any `typesafe/` model there automatically. The judge prompt is sent as `state` and each dimension becomes one A–D Choice question, so the output has level probabilities and confidence instead of a reasoning sentence. Scores still come from the same rubric, but treat the method as different when comparing against chat judges.
+
+| Model | OpenRouter ID | Input/1M | Output/1M | Context | Notes |
+|-------|---------------|----------|-----------|---------|-------|
+| TypeSafe Jev 1.14 | `typesafe/jev-1.14` | $0.042 | free | 262K | Trained (RLCD) for calibrated decisions; ~2.3K input tokens and ~0.2s per call; not in OpenRouter's `/models` list but callable. Not on the hosted demo allowlist (the web app only speaks chat/completions). |
+
 ## Cost Estimates
 
 Each ARA-Eval run evaluates 6 core scenarios x 3 personalities = 18 LLM calls.

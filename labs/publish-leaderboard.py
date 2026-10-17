@@ -243,6 +243,13 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Paid GA endpoint of Hunyuan 3.0 (295B MoE); supersedes the earlier hy3-preview:free run (which was mislabeled 'Hunyuan T1'). A targeted re-run of genai-data-leakage-001 under the rubric-v2 scope note clears its only false alarm, though two personas then sit one level below the reference on that dimension. Probe only, not a full re-score, and not ranked here because the board is scored on v1 — see ADR-018.",
         "is_default": False,
     },
+    "typesafe-jev-1.14": {
+        "id": "typesafe/jev-1.14",
+        "label": "TypeSafe Jev 1.14",
+        "method": "api",
+        "method_note": "OpenRouter System One API (not chat/completions) via lab-01 pipeline, structured prompts, 13 scenarios. Decision model: the same judge prompt is sent as state, with one A\u2013D Choice question per dimension; levels are the argmax of calibrated probabilities and there is no free-text reasoning.",
+        "is_default": False,
+    },
 }
 
 

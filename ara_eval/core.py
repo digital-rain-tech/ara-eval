@@ -62,7 +62,17 @@ DEFAULT_MODEL = next(m["id"] for m in _models_config if m.get("is_default"))
 DEFAULT_CALL_DELAY = 17.0
 
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+# Decision models (TypeSafe Jev) don't serve chat/completions. OpenRouter
+# exposes them on TypeSafe's System One API instead: state + typed questions in,
+# calibrated answers out. See https://docs.typesafe.ai/api.
+OPENROUTER_SYSTEMONE_URL = "https://openrouter.ai/api/v1/systemone"
+DECISION_MODEL_PREFIXES = ("typesafe/", "~typesafe/")
 MODEL = os.environ.get("ARA_MODEL", DEFAULT_MODEL)
+
+
+def is_decision_model(model: str) -> bool:
+    """True for models served by the System One API rather than chat/completions."""
+    return model.startswith(DECISION_MODEL_PREFIXES)
 
 
 def make_headers(api_key: str) -> dict:
@@ -381,12 +391,17 @@ def apply_gating_rules(fingerprint: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 def extract_usage(data: dict) -> Dict[str, Optional[int]]:
-    """Extract token usage from OpenRouter response."""
+    """Extract token usage from an OpenRouter response (chat or System One)."""
     usage = data.get("usage", {})
+    input_tokens = usage.get("prompt_tokens", usage.get("input_tokens"))
+    output_tokens = usage.get("completion_tokens", usage.get("output_tokens"))
+    total_tokens = usage.get("total_tokens")
+    if total_tokens is None and input_tokens is not None and output_tokens is not None:
+        total_tokens = input_tokens + output_tokens
     return {
-        "input_tokens": usage.get("prompt_tokens"),
-        "output_tokens": usage.get("completion_tokens"),
-        "total_tokens": usage.get("total_tokens"),
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "total_tokens": total_tokens,
     }
 
 
@@ -488,6 +503,96 @@ def parse_llm_json(text: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
+# Decision models (TypeSafe System One)
+# ---------------------------------------------------------------------------
+
+# "N. **Label**: question? A=..., B=..., C=..., D=..." in the rubric
+_RUBRIC_DIM_LINE = re.compile(
+    r"^\s*\d+\.\s+\*\*(?P<label>[^*]+)\*\*:\s*(?P<question>.*?)\s+"
+    r"A=(?P<A>.*?),\s*B=(?P<B>.*?),\s*C=(?P<C>.*?),\s*D=(?P<D>.*?)\s*$",
+    re.MULTILINE,
+)
+
+_LEVEL_SCALE = {
+    "A": "Highest risk / most restrictive",
+    "B": "Significant risk / requires safeguards",
+    "C": "Moderate risk / manageable with audit trails",
+    "D": "Low risk / suitable for autonomy",
+}
+
+
+def build_systemone_request(system: str, user_content: str, model: Optional[str] = None) -> dict:
+    """
+    Turn the composed judge prompt into a System One request.
+
+    The judge reads the same text a chat model reads — personality, rubric,
+    jurisdiction, scenario — passed as `state`. The JSON output-format section
+    is dropped because the answer shape comes from the questions instead: one
+    Choice per dimension over the levels A–D, with each level's rubric
+    definition as its criteria.
+    """
+    brief = system.split("## Output Format", 1)[0].strip()
+    definitions = {m.group("label").strip(): m for m in _RUBRIC_DIM_LINE.finditer(brief)}
+
+    questions = {}
+    for dim in DIMENSIONS:
+        label = DIMENSION_LABELS[dim]
+        match = definitions.get(label)
+        question = match.group("question").strip() if match else ""
+        criteria = {
+            level: f"Level {level} ({_LEVEL_SCALE[level]})"
+            + (f": {match.group(level).strip()}" if match else "")
+            for level in LEVEL_ORDER
+        }
+        questions[dim] = {
+            "type": "choice",
+            "instructions": (
+                f"Acting as the judge described in `judge_brief`, classify the scenario in "
+                f"`scenario` on the {label} dimension. {question}"
+            ).strip(),
+            "criteria": criteria,
+        }
+
+    return {
+        "model": model or MODEL,
+        "state": {"judge_brief": brief, "scenario": user_content},
+        "questions": questions,
+    }
+
+
+def parse_systemone_answers(data: dict) -> dict:
+    """
+    Map System One Choice answers into the lab-01 fingerprint shape.
+
+    Jev returns no free text, so `reasoning` carries the level probabilities
+    and confidence instead of a sentence. Dimensions missing from the answers
+    are left out so the caller's validation reports them.
+    """
+    answers = data.get("answers")
+    if not isinstance(answers, dict):
+        raise ValueError(f"System One response missing 'answers'. Got keys: {list(data.keys())}")
+    dims = {}
+    for dim in DIMENSIONS:
+        answer = answers.get(dim)
+        if not isinstance(answer, dict):
+            continue
+        probs = answer.get("probabilities") or {}
+        confidence = answer.get("confidence")
+        prob_str = ", ".join(f"{lvl}={probs[lvl]:.2f}" for lvl in LEVEL_ORDER if lvl in probs)
+        conf_str = f", confidence {confidence:.2f}" if isinstance(confidence, (int, float)) else ""
+        dims[dim] = {
+            "level": answer.get("choice"),
+            "reasoning": f"p({prob_str}){conf_str}",
+            "probabilities": probs,
+            "confidence": confidence,
+        }
+    return {
+        "dimensions": dims,
+        "interpretation": "Decision model (System One): calibrated level probabilities, no free-text reasoning.",
+    }
+
+
+# ---------------------------------------------------------------------------
 # LLM evaluation via OpenRouter
 # ---------------------------------------------------------------------------
 
@@ -509,20 +614,26 @@ def evaluate_scenario(
     system = build_system_prompt(personality_id, jurisdiction, rubric)
     user_content = build_user_prompt(scenario, structured=structured)
 
-    request_body = {
-        "model": MODEL,
-        "max_tokens": 16384,
-        "messages": [
-            {"role": "system", "content": system},
-            {"role": "user", "content": user_content},
-        ],
-    }
+    decision_model = is_decision_model(MODEL)
+    if decision_model:
+        url = OPENROUTER_SYSTEMONE_URL
+        request_body = build_systemone_request(system, user_content)
+    else:
+        url = OPENROUTER_URL
+        request_body = {
+            "model": MODEL,
+            "max_tokens": 16384,
+            "messages": [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user_content},
+            ],
+        }
 
     request_id = str(uuid.uuid4())
     start = time.monotonic()
 
     try:
-        response = http_client.post(OPENROUTER_URL, json=request_body)
+        response = http_client.post(url, json=request_body)
         elapsed_ms = int((time.monotonic() - start) * 1000)
 
         response.raise_for_status()
@@ -533,14 +644,17 @@ def evaluate_scenario(
         provider_info = extract_provider_info(data)
         cost = extract_cost(data)
 
-        # Parse the LLM's JSON output
-        content = data["choices"][0]["message"]["content"]
-        if content is None:
-            raise ValueError("LLM returned empty content (None)")
-        text = content.strip()
-        if not text:
-            raise ValueError("LLM returned empty content (blank string)")
-        parsed = parse_llm_json(text)
+        if decision_model:
+            parsed = parse_systemone_answers(data)
+        else:
+            # Parse the LLM's JSON output
+            content = data["choices"][0]["message"]["content"]
+            if content is None:
+                raise ValueError("LLM returned empty content (None)")
+            text = content.strip()
+            if not text:
+                raise ValueError("LLM returned empty content (blank string)")
+            parsed = parse_llm_json(text)
 
         # Validate parsed structure before applying gating rules
         if not isinstance(parsed, dict) or "dimensions" not in parsed:
@@ -770,7 +884,7 @@ def load_scenarios(use_all: bool = False, scenarios_file: str = "starter-scenari
 def _is_rate_limit_error(exc: Exception) -> bool:
     """Check if an exception indicates rate-limiting or empty response."""
     status = getattr(getattr(exc, "response", None), "status_code", None)
-    if status == 429:
+    if status in (429, 529):  # 529 = TypeSafe overloaded
         return True
     msg = str(exc)
     if "empty content" in msg.lower():

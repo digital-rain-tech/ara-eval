@@ -311,3 +311,40 @@ class TestLab05Validation:
         for sid in ["My Scenario", "test.json", "UPPER", "a_b"]:
             with pytest.raises(SystemExit):
                 validate(sid)
+
+
+class TestDecisionModel:
+    """TypeSafe Jev (System One API) request building and answer parsing."""
+
+    def test_is_decision_model(self):
+        from ara_eval.core import is_decision_model
+        assert is_decision_model("typesafe/jev-1.14")
+        assert not is_decision_model("deepseek/deepseek-v4-flash")
+
+    def test_request_has_one_choice_per_dimension(self):
+        from ara_eval.core import build_system_prompt, build_systemone_request
+        req = build_systemone_request(build_system_prompt("cro"), "Evaluate this scenario: x", model="typesafe/jev-1.14")
+        assert req["model"] == "typesafe/jev-1.14"
+        assert set(req["questions"]) == set(DIMENSIONS)
+        assert "## Output Format" not in req["state"]["judge_brief"]
+        for q in req["questions"].values():
+            assert q["type"] == "choice"
+            assert set(q["criteria"]) == {"A", "B", "C", "D"}
+        # Rubric definitions are carried into the criteria
+        assert "irreversible" in req["questions"]["decision_reversibility"]["criteria"]["A"]
+
+    def test_parse_answers(self):
+        from ara_eval.core import parse_systemone_answers
+        answers = {
+            d: {"type": "choice", "choice": "B",
+                "probabilities": {"A": 0.1, "B": 0.7, "C": 0.2, "D": 0.0}, "confidence": 0.6}
+            for d in DIMENSIONS
+        }
+        parsed = parse_systemone_answers({"answers": answers})
+        assert apply_gating_rules(parsed["dimensions"])["fingerprint_string"] == "-".join("B" * 7)
+        assert "B=0.70" in parsed["dimensions"]["regulatory_exposure"]["reasoning"]
+
+    def test_parse_missing_answers_raises(self):
+        from ara_eval.core import parse_systemone_answers
+        with pytest.raises(ValueError):
+            parse_systemone_answers({"error": "nope"})
