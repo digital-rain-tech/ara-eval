@@ -66,7 +66,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Even-keeled | — | 71s |
 | 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Even-keeled | — | 10.2m |
 | 4 | TypeSafe Jev 1.14 | api | **96%** | **100%** | 83% | 80% | 17% | Jittery | $0.004 | 8s |
-| 5 | Ox Alpha (stealth) | api | **96%** | **100%** | 83% | 73% | 24% | Jittery | — | 79.7m |
+| 5 | Ox Alpha (Z.ai GLM-5.3-Flash) | api | **96%** | **100%** | 83% | 73% | 24% | Jittery | — | 79.7m |
 | 6 | GLM 5.2 | api | **95%** | 93% | **100%** | 76% | 40% | Even-keeled | $0.224 | 36.0m |
 | 7 | Tencent Hunyuan Hy3 | api | 93% | 93% | 93% | 73% | 45% | Even-keeled | $0.067 | 32.1m |
 | 8 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 72% | 38% | Jittery | — | 17.0m |
@@ -93,7 +93,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 29 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 27% | 62% | Sleepy | — | 2.3m |
 | 30 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — | — |
 
-*30 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-10-17.*
+*30 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-10-18.*
 
 **Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Even-keeled | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Cost** = total OpenRouter cost per full eval run (39 calls). **Time** = wall-clock benchmark duration (39 calls).
 <!-- LEADERBOARD:END -->
