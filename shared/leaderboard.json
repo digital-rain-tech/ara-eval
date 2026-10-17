@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-17",
+  "last_updated": "2026-10-18",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "Risk Detection — F2 (F-beta, beta=2): weights recall 4x over precision — penalises missed risk gates heavily",
@@ -10,7 +10,8 @@
     "fingerprint_match": "Exact dimension-level match vs reference fingerprint across all 7 dimensions",
     "differentiation": "% of dimensions where CO/CRO/Ops personalities disagree",
     "bias": "Error bias direction: where FN >> FP the model under-detects risk (sleepy); where FP >> FN it over-triggers (jittery); balanced means errors go both ways; even-keeled means few errors overall",
-    "eval_duration_seconds": "Wall-clock time to complete the full benchmark run (39 calls for API models, 18 for subagent/manual)"
+    "eval_duration_seconds": "Wall-clock time to complete the full benchmark run (39 calls for API models, 18 for subagent/manual)",
+    "orchestration_window_seconds": "Subagent runs only: seconds from lab-05 dispatch (manifest created_at) to result assembly (assembled_at). Includes orchestration and possible parallelism, so it is not comparable to eval_duration_seconds and should not be plotted as run time"
   },
   "bias_labels": {
     "even-keeled": "Even-keeled — few errors in either direction",
@@ -36,7 +37,8 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": null,
-      "prompt_version": null
+      "prompt_version": null,
+      "orchestration_window_seconds": 179
     },
     {
       "id": "google/gemini-2.5-flash-lite-preview-09-2025",

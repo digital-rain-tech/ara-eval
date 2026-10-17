@@ -93,7 +93,7 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 29 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 27% | 62% | Sleepy | — | 2.3m |
 | 30 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — | — |
 
-*30 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-10-17.*
+*30 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-10-18.*
 
 **Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Even-keeled | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Cost** = total OpenRouter cost per full eval run (39 calls). **Time** = wall-clock benchmark duration (39 calls).
 <!-- LEADERBOARD:END -->
