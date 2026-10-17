@@ -243,6 +243,27 @@ MODEL_MAP: dict[str, dict] = {
         "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Paid GA endpoint of Hunyuan 3.0 (295B MoE); supersedes the earlier hy3-preview:free run (which was mislabeled 'Hunyuan T1'). A targeted re-run of genai-data-leakage-001 under the rubric-v2 scope note clears its only false alarm, though two personas then sit one level below the reference on that dimension. Probe only, not a full re-score, and not ranked here because the board is scored on v1 — see ADR-018.",
         "is_default": False,
     },
+    "google-gemini-4-argon": {
+        "id": "google/gemini-4-argon",
+        "label": "Gemini 4 Argon",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Reasoning is mandatory on this model; run at its default (medium) effort.",
+        "is_default": False,
+    },
+    "deepseek-v4.1-flash-1017": {
+        "id": "deepseek/deepseek-v4.1-flash-1017",
+        "label": "DeepSeek V4.1 Flash 1017",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Run at the endpoint's default reasoning setting.",
+        "is_default": False,
+    },
+    "meta-muse-wonder": {
+        "id": "meta/muse-wonder",
+        "label": "Meta Muse Wonder",
+        "method": "api",
+        "method_note": "OpenRouter API via lab-01 pipeline, structured prompts, 13 scenarios, 39/39 calls completed. Reasoning is mandatory on this model; run at its default (medium) effort. Meta's endpoint rejects seed and stop, which the pipeline never sends.",
+        "is_default": False,
+    },
     "typesafe-jev-1.14": {
         "id": "typesafe/jev-1.14",
         "label": "TypeSafe Jev 1.14",
