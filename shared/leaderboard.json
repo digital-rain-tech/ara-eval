@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-10-18",
+  "last_updated": "2026-10-17",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "Risk Detection — F2 (F-beta, beta=2): weights recall 4x over precision — penalises missed risk gates heavily",
