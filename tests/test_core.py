@@ -348,3 +348,92 @@ class TestDecisionModel:
         from ara_eval.core import parse_systemone_answers
         with pytest.raises(ValueError):
             parse_systemone_answers({"error": "nope"})
+
+
+class TestRetryBackoff:
+    """Exponential backoff with full jitter and Retry-After handling."""
+
+    @staticmethod
+    def _http_error(status, headers=None):
+        import httpx
+        req = httpx.Request("POST", "https://openrouter.ai/api/v1/chat/completions")
+        resp = httpx.Response(status, headers=headers or {}, request=req)
+        return httpx.HTTPStatusError(f"HTTP {status}", request=req, response=resp)
+
+    def test_full_jitter_doubles_and_caps(self):
+        from ara_eval.core import backoff_delay
+        upper = lambda: 1.0  # jitter at its maximum
+        delays = [backoff_delay(a, base=1.0, cap=30.0, rand=upper) for a in range(7)]
+        assert delays == [1.0, 2.0, 4.0, 8.0, 16.0, 30.0, 30.0]
+        assert backoff_delay(3, base=1.0, cap=30.0, rand=lambda: 0.5) == 4.0
+
+    def test_retry_after_seconds(self):
+        from ara_eval.core import backoff_delay
+        e = self._http_error(429, {"Retry-After": "7"})
+        assert backoff_delay(0, e, cap=60.0, rand=lambda: 1.0) == 7.0
+
+    def test_retry_after_capped(self):
+        from ara_eval.core import backoff_delay
+        e = self._http_error(529, {"Retry-After": "600"})
+        assert backoff_delay(0, e, cap=60.0) == 60.0
+
+    def test_retry_after_ms_and_http_date(self):
+        from datetime import datetime, timezone
+        from ara_eval.core import parse_retry_after
+        assert parse_retry_after({"retry-after-ms": "1500"}) == 1.5
+        now = datetime(2026, 10, 17, 12, 0, 0, tzinfo=timezone.utc)
+        assert parse_retry_after({"retry-after": "Sat, 17 Oct 2026 12:00:10 GMT"}, now=now) == 10.0
+        assert parse_retry_after({"retry-after": "garbage"}) is None
+        assert parse_retry_after({}) is None
+
+    def test_retry_after_ignored_on_other_statuses(self):
+        from ara_eval.core import backoff_delay
+        e = self._http_error(500, {"Retry-After": "7"})
+        assert backoff_delay(1, e, base=1.0, cap=60.0, rand=lambda: 1.0) == 2.0
+
+    def test_evaluate_with_retry_sleep_sequence(self, monkeypatch):
+        import ara_eval.core as core
+        sleeps = []
+        monkeypatch.setattr(core.time, "sleep", sleeps.append)
+        monkeypatch.setattr(core.random, "random", lambda: 1.0)
+        errors = [self._http_error(500), self._http_error(429, {"Retry-After": "3"}), self._http_error(502)]
+
+        def fake_eval(*args, **kwargs):
+            if errors:
+                raise errors.pop(0)
+            return {"ok": True}
+
+        monkeypatch.setattr(core, "evaluate_scenario", fake_eval)
+        result = core.evaluate_with_retry(None, None, "run", {"id": "s"}, "cro", max_retries=5, verbose=False)
+        assert result == {"ok": True}
+        assert sleeps == [1.0, 3.0, 4.0]  # backoff, Retry-After, backoff (2^2)
+
+    def test_gives_up_after_max_retries(self, monkeypatch):
+        import ara_eval.core as core
+        sleeps = []
+        monkeypatch.setattr(core.time, "sleep", sleeps.append)
+        monkeypatch.setattr(core.random, "random", lambda: 1.0)
+
+        def always_fail(*args, **kwargs):
+            raise ValueError("Missing dimensions: x")
+
+        monkeypatch.setattr(core, "evaluate_scenario", always_fail)
+        with pytest.raises(ValueError):
+            core.evaluate_with_retry(None, None, "run", {"id": "s"}, "cro", max_retries=3, verbose=False)
+        assert sleeps == [1.0, 2.0, 4.0]
+
+    def test_non_retryable_status_raises_immediately(self, monkeypatch):
+        import ara_eval.core as core
+        sleeps = []
+        monkeypatch.setattr(core.time, "sleep", sleeps.append)
+        calls = []
+
+        def unauthorized(*args, **kwargs):
+            calls.append(1)
+            raise self._http_error(401)
+
+        monkeypatch.setattr(core, "evaluate_scenario", unauthorized)
+        import httpx
+        with pytest.raises(httpx.HTTPStatusError):
+            core.evaluate_with_retry(None, None, "run", {"id": "s"}, "cro", verbose=False)
+        assert calls == [1] and sleeps == []
