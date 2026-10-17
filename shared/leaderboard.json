@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-08-25",
+  "last_updated": "2026-10-17",
   "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
   "metrics": {
     "f2": "Risk Detection — F2 (F-beta, beta=2): weights recall 4x over precision — penalises missed risk gates heavily",
@@ -73,6 +73,25 @@
       "cost_per_eval": null,
       "is_default": false,
       "eval_duration_seconds": 613
+    },
+    {
+      "id": "typesafe/jev-1.14",
+      "label": "TypeSafe Jev 1.14",
+      "method": "api",
+      "method_note": "OpenRouter System One API (not chat/completions) via lab-01 pipeline, structured prompts, 13 scenarios. Decision model: the same judge prompt is sent as state, with one A–D Choice question per dimension; levels are the argmax of calibrated probabilities and there is no free-text reasoning.",
+      "completion": "18/18",
+      "f2": 0.96,
+      "hard_gate_recall": 1.0,
+      "hard_gate_precision": 0.83,
+      "false_negatives": 0,
+      "false_positives": 3,
+      "fingerprint_match": 0.8,
+      "differentiation": 0.17,
+      "bias": "jittery",
+      "cost_per_eval": 0.0037,
+      "is_default": false,
+      "eval_duration_seconds": 8,
+      "prompt_version": "0c6a1b25d5ec"
     },
     {
       "id": "stealth/ox-alpha",

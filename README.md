@@ -65,34 +65,35 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 1 | Claude Opus 4.6 | subagent | **100%** | **100%** | **100%** | 89% | 31% | Even-keeled | — | — |
 | 2 | Gemini 2.5 Flash Lite | api | **99%** | **100%** | 94% | 60% | 36% | Even-keeled | — | 71s |
 | 3 | Qwen3 235B | api | **97%** | **100%** | 88% | 66% | 19% | Even-keeled | — | 10.2m |
-| 4 | Ox Alpha (stealth) | api | **96%** | **100%** | 83% | 73% | 24% | Jittery | — | 79.7m |
-| 5 | GLM 5.2 | api | **95%** | 93% | **100%** | 76% | 40% | Even-keeled | $0.224 | 36.0m |
-| 6 | Tencent Hunyuan Hy3 | api | 93% | 93% | 93% | 73% | 45% | Even-keeled | $0.067 | 32.1m |
-| 7 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 72% | 38% | Jittery | — | 17.0m |
-| 8 | Claude Haiku 3.5 | api | 92% | 93% | 88% | 71% | 29% | Jittery | $0.092 | 6.7m |
-| 9 | Gemini 3.1 Flash Lite | api | 92% | 93% | 88% | 71% | 43% | Jittery | $0.035 | 2.6m |
-| 10 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — | — |
-| 11 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 90% | 26% | Even-keeled | — | — |
-| 12 | Owl Alpha (Meituan LongCat-2.0) | api | 89% | 87% | **100%** | 75% | 19% | Even-keeled | — | 16.2m |
-| 13 | MiniMax M2.7 | api | 87% | 87% | 87% | 75% | 36% | Noisy | — | 20.4m |
-| 14 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | — | 8.4m |
-| 15 | Baidu CoBuddy | api | 83% | 80% | **100%** | 68% | 50% | Sleepy | — | 22.7m |
-| 16 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | — | 21.3m |
-| 17 | MiMo v2.5 | api | 80% | 80% | 80% | 75% | 48% | Noisy | $0.036 | 55.7m |
-| 18 | Claude Haiku 4.5 (api) | api | 79% | 80% | 75% | 68% | 24% | Noisy | $0.218 | 6.2m |
-| 19 | DeepSeek V4 Flash | api | 79% | 80% | 75% | 63% | 50% | Noisy | $0.015 | 40.2m |
-| 20 | InclusionAI Ring 2.6 1T | api | 75% | 73% | 85% | 70% | 40% | Sleepy | — | 15.9m |
-| 21 | Hunter Alpha (Xiaomi MiMo-V2-Pro) | api | 74% | 73% | 79% | 43% | 64% | Noisy | — | 17.2m |
-| 22 | Poolside Laguna XS 2 | api | 73% | 73% | 73% | 47% | 57% | Noisy | — | 2.1m |
-| 23 | Qwen3.6 Plus | api | 70% | 67% | 91% | 63% | 67% | Sleepy | $0.016 | 51.4m |
-| 24 | Healer Alpha (Xiaomi MiMo-V2-Omni) | api | 62% | 60% | 75% | 47% | 60% | Sleepy | — | 6.8m |
-| 25 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 58% | 52% | Sleepy | $0.029 | 102s |
-| 26 | Arcee Trinity (free) | api | 57% | 53% | 80% | 49% | 69% | Sleepy | $0.002 | 4.3m |
-| 27 | Gemma 4 26B A4B | api | 45% | 40% | 86% | 59% | 50% | Sleepy | — | 57.3m |
-| 28 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 27% | 62% | Sleepy | — | 2.3m |
-| 29 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — | — |
+| 4 | TypeSafe Jev 1.14 | api | **96%** | **100%** | 83% | 80% | 17% | Jittery | $0.004 | 8s |
+| 5 | Ox Alpha (stealth) | api | **96%** | **100%** | 83% | 73% | 24% | Jittery | — | 79.7m |
+| 6 | GLM 5.2 | api | **95%** | 93% | **100%** | 76% | 40% | Even-keeled | $0.224 | 36.0m |
+| 7 | Tencent Hunyuan Hy3 | api | 93% | 93% | 93% | 73% | 45% | Even-keeled | $0.067 | 32.1m |
+| 8 | Poolside Laguna M.1 | api | 92% | 93% | 88% | 72% | 38% | Jittery | — | 17.0m |
+| 9 | Claude Haiku 3.5 | api | 92% | 93% | 88% | 71% | 29% | Jittery | $0.092 | 6.7m |
+| 10 | Gemini 3.1 Flash Lite | api | 92% | 93% | 88% | 71% | 43% | Jittery | $0.035 | 2.6m |
+| 11 | Claude Sonnet 4.6 | subagent | 89% | 92% | 79% | 39% | 62% | Jittery | — | — |
+| 12 | Claude Opus 4.6 | manual | 89% | 87% | **100%** | 90% | 26% | Even-keeled | — | — |
+| 13 | Owl Alpha (Meituan LongCat-2.0) | api | 89% | 87% | **100%** | 75% | 19% | Even-keeled | — | 16.2m |
+| 14 | MiniMax M2.7 | api | 87% | 87% | 87% | 75% | 36% | Noisy | — | 20.4m |
+| 15 | Grok 4.1 Fast | api | 87% | 87% | 87% | 67% | 43% | Noisy | — | 8.4m |
+| 16 | Baidu CoBuddy | api | 83% | 80% | **100%** | 68% | 50% | Sleepy | — | 22.7m |
+| 17 | DeepSeek v3.2 | api | 82% | 80% | 92% | 61% | 43% | Sleepy | — | 21.3m |
+| 18 | MiMo v2.5 | api | 80% | 80% | 80% | 75% | 48% | Noisy | $0.036 | 55.7m |
+| 19 | Claude Haiku 4.5 (api) | api | 79% | 80% | 75% | 68% | 24% | Noisy | $0.218 | 6.2m |
+| 20 | DeepSeek V4 Flash | api | 79% | 80% | 75% | 63% | 50% | Noisy | $0.015 | 40.2m |
+| 21 | InclusionAI Ring 2.6 1T | api | 75% | 73% | 85% | 70% | 40% | Sleepy | — | 15.9m |
+| 22 | Hunter Alpha (Xiaomi MiMo-V2-Pro) | api | 74% | 73% | 79% | 43% | 64% | Noisy | — | 17.2m |
+| 23 | Poolside Laguna XS 2 | api | 73% | 73% | 73% | 47% | 57% | Noisy | — | 2.1m |
+| 24 | Qwen3.6 Plus | api | 70% | 67% | 91% | 63% | 67% | Sleepy | $0.016 | 51.4m |
+| 25 | Healer Alpha (Xiaomi MiMo-V2-Omni) | api | 62% | 60% | 75% | 47% | 60% | Sleepy | — | 6.8m |
+| 26 | GPT-5.4 Nano | api | 59% | 53% | **100%** | 58% | 52% | Sleepy | $0.029 | 102s |
+| 27 | Arcee Trinity (free) | api | 57% | 53% | 80% | 49% | 69% | Sleepy | $0.002 | 4.3m |
+| 28 | Gemma 4 26B A4B | api | 45% | 40% | 86% | 59% | 50% | Sleepy | — | 57.3m |
+| 29 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 27% | 62% | Sleepy | — | 2.3m |
+| 30 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — | — |
 
-*29 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-08-25.*
+*30 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-10-17.*
 
 **Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Even-keeled | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Cost** = total OpenRouter cost per full eval run (39 calls). **Time** = wall-clock benchmark duration (39 calls).
 <!-- LEADERBOARD:END -->
