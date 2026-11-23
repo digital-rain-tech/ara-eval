@@ -95,7 +95,7 @@ Compare risk fingerprints across multiple judge models. Reads from `results/refe
 python labs/lab-04-inter-model-comparison.py
 ```
 
-Scores each model on gate accuracy, dimension match rate, and personality differentiation against human-authored reference fingerprints.
+Scores each model on gate accuracy, dimension match rate, and personality differentiation against model-drafted reference fingerprints.
 
 ### Key Questions
 

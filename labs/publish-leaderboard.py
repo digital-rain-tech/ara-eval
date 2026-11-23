@@ -460,7 +460,7 @@ def generate_readme_table(data: dict) -> str:
         lines.append(f"| {i} | {m['label']} | {m.get('method', 'api')} | {f2} | {hg_rec} | {hg_pre} | {fp_match} | {diff} | {bias} | {cost_str} | {time_str} |")
 
     lines.append("")
-    lines.append(f"*{len(models)} models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: {last_updated}.*")
+    lines.append(f"*{len(models)} models evaluated against model-drafted reference fingerprints (6 core scenarios). Last updated: {last_updated}.*")
     lines.append("")
     lines.append(
         "**Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. "
@@ -493,7 +493,7 @@ def main():
     else:
         shared = {
             "last_updated": "",
-            "gold_standard": "human-authored reference fingerprints (6 core scenarios)",
+            "gold_standard": "model-drafted reference fingerprints (6 core scenarios)",
             "metrics": {},
             "bias_labels": {},
             "models": [],

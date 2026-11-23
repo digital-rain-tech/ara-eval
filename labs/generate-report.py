@@ -604,7 +604,7 @@ def generate_single_report(run: dict, data: dict) -> str:
     # ---- Section 6: Reference Comparison ----
     lines.append("## Reference Comparison")
     lines.append("")
-    lines.append("Accuracy of LLM evaluations vs. human-authored reference fingerprints:")
+    lines.append("Accuracy of LLM evaluations vs. model-drafted reference fingerprints:")
     lines.append("")
 
     total_dim_comparisons = 0

@@ -30,7 +30,7 @@ PERSONALITIES = ["compliance_officer", "cro", "operations_director"]
 
 
 def load_gold_references() -> dict:
-    """Load human-authored reference fingerprints from scenarios."""
+    """Load model-drafted reference fingerprints from scenarios."""
     with open(SCENARIOS_PATH) as f:
         scenarios = json.load(f)
     refs = {}
@@ -217,7 +217,7 @@ def print_leaderboard(scores: list[dict]):
     """Print the model comparison leaderboard."""
     print(f"\n{'='*90}")
     print(f"  ARA-EVAL MODEL LEADERBOARD")
-    print(f"  Gold standard: human-authored reference fingerprints (6 core scenarios)")
+    print(f"  Gold standard: model-drafted reference fingerprints (6 core scenarios)")
     print(f"{'='*90}")
 
     # Sort by F2 (safety-weighted composite), then dimension match rate
