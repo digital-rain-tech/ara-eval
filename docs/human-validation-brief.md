@@ -7,7 +7,7 @@
 
 ## The Ask
 
-We need domain expert validation of our **reference fingerprints** — the human-authored ground truth that every model is scored against. Current inter-model results show 43-49% dimension-level agreement with references across 3 models. Either the models are miscalibrated, the references need adjustment, or both. We can't tell without independent expert review.
+We need domain expert validation of our **reference fingerprints** — the reference that every model is scored against. They were drafted by Claude Opus 4.6 and corrected after a model review (commit `3f1c304`); this expert review has not yet taken place. Current inter-model results show 43-49% dimension-level agreement with references across 3 models. Either the models are miscalibrated, the references need adjustment, or both. We can't tell without independent expert review.
 
 ## What We Have
 

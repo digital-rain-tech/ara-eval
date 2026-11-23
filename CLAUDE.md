@@ -71,7 +71,7 @@ Output goes to `results/` (gitignored): JSON results, markdown reports, and `ara
 3. LLM returns structured JSON with level classifications (A–D) and reasoning per dimension
 4. Gating rules are applied **programmatically** (not by LLM) — hard gates on Regulatory Exposure=A and Blast Radius=A override everything
 5. Personality deltas computed to surface stakeholder disagreement
-6. Results compared against human-authored reference fingerprints
+6. Results compared against model-drafted reference fingerprints
 
 **Lab 02** (`lab-02-grounding-experiment.py`): A/B experiment — runs scenarios under `hk` (framework names only) vs `hk-grounded` (actual regulatory requirements) to measure grounding effects.
 
@@ -85,7 +85,7 @@ Output goes to `results/` (gitignored): JSON results, markdown reports, and `ara
 
 **Prompt template system** (`prompts/`): System prompts are composed from Mustache templates via `chevron`. `build_system_prompt()` combines personality + rubric + jurisdiction + output format. Personalities and jurisdictions are registered in `_index.json` files. `load_prompt()` enforces path traversal protection.
 
-**Scenario format** (`scenarios/starter-scenarios.json`): Each scenario has `id`, `domain`, `industry`, `risk_tier`, `scenario` (narrative), `reference_fingerprint` (human-authored ground truth), and `jurisdiction_notes`. Scenarios are split into `core: true` (6) and extended (13 total). All scenarios include `structured_context` fields for use with `--structured`.
+**Scenario format** (`scenarios/starter-scenarios.json`): Each scenario has `id`, `domain`, `industry`, `risk_tier`, `scenario` (narrative), `reference_fingerprint` (model-drafted reference, see README "Reference fingerprints"), and `jurisdiction_notes`. Scenarios are split into `core: true` (6) and extended (13 total). All scenarios include `structured_context` fields for use with `--structured`.
 
 **Scenario sets** (`scenarios/*.json`, selected via `--scenarios-file`): `starter-scenarios.json` (HK, 13), `singapore-scenarios.json` (6 SG translations of the core HK scenarios), `rwa-scenarios.json` (6 RWA-tokenization scenarios anchored to the sister project `art-verify`/archelu). SG/RWA fingerprints carry a `reference_status` field marking them provisional/reviewed. Key cross-jurisdiction finding: SG has no statutory human-in-loop mandate, so activity-based gates match HK but `claims-denial` diverges (Reg A→B). `load_scenarios(scenarios_file=...)` is path-traversal protected.
 

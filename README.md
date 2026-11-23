@@ -57,7 +57,7 @@ See [`docs/models.md`](docs/models.md) for alternatives and pricing.
 
 ## Model Leaderboard
 
-How well do different judge models reproduce human-authored reference fingerprints? Regenerate with `python labs/lab-04-inter-model-comparison.py`, then `python labs/publish-leaderboard.py`.
+How well do different judge models reproduce model-drafted reference fingerprints? Regenerate with `python labs/lab-04-inter-model-comparison.py`, then `python labs/publish-leaderboard.py`.
 
 <!-- LEADERBOARD:START -->
 | # | Model | Method | Risk Detection | HG Recall | HG Precision | FP Match | Diff | Bias | Cost | Time |
@@ -96,12 +96,20 @@ How well do different judge models reproduce human-authored reference fingerprin
 | 32 | Nvidia Nemotron 3 Nano Omni 30B | api | 37% | 33% | 71% | 27% | 62% | Sleepy | — | 2.3m |
 | 33 | Claude Haiku 4.5 | subagent | 8% | 7% | 50% | 6% | 10% | Broken | — | — |
 
-*33 models evaluated against human-authored reference fingerprints (6 core scenarios). Last updated: 2026-10-18.*
+*33 models evaluated against model-drafted reference fingerprints (6 core scenarios). Last updated: 2026-10-18.*
 
 **Metrics:** **Risk Detection** = F2 (F-beta, beta=2) — weights recall 4x over precision; penalises missed risk gates heavily. **HG Recall/Precision** = hard gate recall/precision (Reg=A, Blast=A gates only). **FP Match** = fingerprint match (exact dimension-level match vs reference). **Diff** = personality differentiation. **Bias** = Even-keeled | Sleepy (misses risks) | Jittery (over-triggers) | Noisy (both). **Cost** = total OpenRouter cost per full eval run (39 calls). **Time** = wall-clock benchmark duration (39 calls).
 <!-- LEADERBOARD:END -->
 
 Previous leaderboard versions are archived in [`shared/archive/`](shared/archive/) with an [`index.json`](shared/archive/index.json) for browsing.
+
+## Reference fingerprints
+
+Each scenario has a reference fingerprint: one rating, A to D, for each of the 7 dimensions. The leaderboard scores models by how closely they match these ratings.
+
+- **Who wrote them.** Claude Opus 4.6 drafted the reference fingerprints. Another model reviewed them against the rubric, and six cells were corrected in commit `3f1c304` (2026-05-29). No hard gate changed.
+- **What has not happened yet.** No independent domain expert has reviewed them. The request for that review is in [`docs/human-validation-brief.md`](docs/human-validation-brief.md).
+- **What this means for the leaderboard.** The leaderboard measures agreement with a model-drafted reference, not accuracy against expert judgement. Claude Opus 4.6, the model that drafted the reference, also scores highest against it.
 
 ## How It Works
 
